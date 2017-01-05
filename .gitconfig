@@ -1,0 +1,7 @@
+[core]
+  editor = emacs
+[user]
+	name = Leo Simmons
+  email = leooscar.simmons@gmail.com
+[push]
+  default = current
