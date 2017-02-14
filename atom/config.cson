@@ -1,0 +1,20 @@
+"*":
+  "atom-clock":
+    dateFormat: "MM/DD h:mm a"
+    showClockIcon: true
+  core:
+    excludeVcsIgnoredPaths: true
+    telemetryConsent: "no"
+  editor:
+    fontSize: 11
+    softWrap: true
+  "markdown-preview":
+    useGitHubStyle: true
+  "tree-view":
+    hideVcsIgnoredFiles: false
+  welcome:
+    showOnStartup: false
+".js.source":
+  editor:
+    commentEnd: "*/}"
+    commentStart: "{/*"
