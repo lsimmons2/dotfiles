@@ -1,3 +1,15 @@
+(require 'mouse)
+(xterm-mouse-mode t)
+(global-set-key [mouse-4] '(lambda ()
+                           (interactive)
+                           (scroll-down 1)))
+(global-set-key [mouse-5] '(lambda ()
+                           (interactive)
+                           (scroll-up 1)))
+
+(setq mouse-sel-mode t)
+(defun track-mouse (e))
+
 
 ;; one line at a time
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
@@ -13,9 +25,9 @@
 
 ;; autosave and backups
 (setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
+      `((".*" . ,"~/.emacs.d/backup-list")))
 (setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+      `((".*" ,"~/.emacs.d/auto-save-list")))
 
 ;; tabs
 (setq-default indent-tabs-mode nil)
