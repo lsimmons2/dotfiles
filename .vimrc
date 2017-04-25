@@ -17,8 +17,15 @@ imap jk <ESC>
 noremap <C-j> 3j
 noremap <C-k> j3k
 
+"color
+try
+	colorscheme desert
+catch
+endtry
+set background=dark
+
 "python 
-au BufNewFile,BufRead *.py
+autocmd BufNewFile,BufRead *.py
     \ set tabstop=4
     \ set softtabstop=4
     \ set shiftwidth=4
@@ -26,5 +33,25 @@ au BufNewFile,BufRead *.py
     \ set expandtab
     \ set autoindent
     \ set fileformat=unix
+
+"other
+set nobackup
+set nowb
+set noswapfile
+let mapleader=","
+
+"split window
+map <leader>swh :topleft  vnew<CR>
+nmap <leader>swl :botright vnew<CR>
+nmap <leader>swk    :topleft  new<CR>
+nmap <leader>swj  :botright new<CR>
+
+"split buffer
+nmap <leader>sh   :leftabove  vnew<CR>
+nmap <leader>sl  :rightbelow vnew<CR>
+nmap <leader>sk     :leftabove  new<CR>
+nmap <leader>sj   :rightbelow new<CR>
+
+
 
 
