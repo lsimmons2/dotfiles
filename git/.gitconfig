@@ -1,5 +1,5 @@
 [core]
-  editor = emacs
+  editor = vim
 [user]
 	name = Leo Simmons
   email = leooscar.simmons@gmail.com
