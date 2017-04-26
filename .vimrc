@@ -13,9 +13,18 @@ set background=dark
 colorscheme solarized
 
 "mappings
-imap jk <ESC>
-noremap <C-j> 3j
-noremap <C-k> j3k
+inoremap jk <ESC>
+inoremap <C-b> <ESC>ha
+inoremap <C-n> <ESC>ja
+inoremap <C-p> <ESC>ka
+inoremap <C-f> <ESC>la
+inoremap ( ()<ESC>i
+inoremap { {}<ESC>i
+inoremap " ""<ESC>i
+inoremap ' ''<ESC>i
+nnoremap <C-j> 3j
+nnoremap <C-k> j3k
+vnoremap jk <ESC>
 
 "color
 try
@@ -25,20 +34,25 @@ endtry
 set background=dark
 
 "python 
-autocmd BufNewFile,BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
-    \ set fileformat=unix
+au BufNewFile,BufRead *.py
+    \ setlocal tabstop=4
+    \ softtabstop=4
+    \ shiftwidth=4
+    \ textwidth=79
+    \ expandtab
+    \ autoindent
+    \ fileformat=unix
 
 "other
 set nobackup
 set nowb
 set noswapfile
-let mapleader=","
+let mapleader=" "
+set hlsearch
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
 
 "split window
 map <leader>swh :topleft  vnew<CR>
@@ -47,11 +61,8 @@ nmap <leader>swk    :topleft  new<CR>
 nmap <leader>swj  :botright new<CR>
 
 "split buffer
-nmap <leader>sh   :leftabove  vnew<CR>
-nmap <leader>sl  :rightbelow vnew<CR>
-nmap <leader>sk     :leftabove  new<CR>
-nmap <leader>sj   :rightbelow new<CR>
-
-
-
+nmap <leader>sh   :leftabove  vnew :e<CR>
+nmap <leader>sl  :rightbelow vnew :e<CR>
+nmap <leader>sk     :leftabove  new :e<CR>
+nmap <leader>sj   :rightbelow new :e<CR>
 
