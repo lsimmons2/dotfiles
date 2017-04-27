@@ -11,5 +11,9 @@ export NVM_DIR="/Users/leosimmons/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # mysql
-export PATH=$PATH:/usr/local/mysql/bin
+export PATH="$PATH:/usr/local/mysql/bin"
 
+alias vea='source venv/bin/activate'
+source ~/.bashrc
+
+alias tree="tree -I 'node_modules|venv|env'"
