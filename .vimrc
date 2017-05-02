@@ -1,4 +1,18 @@
 
+"GENERAL
+set nobackup
+set nowb
+set noswapfile
+let mapleader=" "
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
+set clipboard=unnamed
+filetype plugin indent on
+"for vim-airline
+set laststatus=2
+
 "vundle
 set nocompatible
 filetype off
@@ -12,6 +26,9 @@ Bundle 'joshdick/onedark.vim'
 Bundle 'vim-airline/vim-airline'
 call vundle#end()
 
+"scripts
+source ~/.vim/scripts/autoclose.vim
+
 
 "MAPPINGS
 inoremap jk <ESC>
@@ -22,10 +39,6 @@ inoremap <C-f> <ESC>la
 inoremap <C-e> <ESC>$a
 inoremap <C-a> <ESC>0a
 inoremap <C-d> <ESC>lxi
-inoremap ( ()<ESC>i
-inoremap { {}<ESC>i
-inoremap " ""<ESC>i
-inoremap ' ''<ESC>i
 nnoremap S :w<CR>
 nnoremap AS :wa<CR>
 nnoremap ∆ 3j
@@ -49,10 +62,10 @@ if (empty($TMUX))
 endif
 syntax on
 colorscheme onedark
+"hi Normal guibg=NONE ctermbg=NONE
 
 "PYTHON 
 set expandtab
-set textwidth=120
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -83,19 +96,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-"OTHER
-set nobackup
-set nowb
-set noswapfile
-let mapleader=" "
-if $TERM_PROGRAM =~ "iTerm"
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
-set clipboard=unnamed
-filetype plugin indent on
-"for vim-airline
-set laststatus=2
 
 "todo
 "- make command execution behave like bash, and have line cursor
