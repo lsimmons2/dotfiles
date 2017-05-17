@@ -5,6 +5,20 @@ set noswapfile
 let mapleader=" "
 filetype plugin indent on
 
+"GENERAL
+set nobackup
+set nowb
+set noswapfile
+let mapleader=" "
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
+set clipboard=unnamed
+filetype plugin indent on
+"for vim-airline
+set laststatus=2
+
 "vundle
 set nocompatible
 filetype off
