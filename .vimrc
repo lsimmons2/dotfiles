@@ -37,7 +37,7 @@ source ~/.vim/scripts/autoclose.vim
 "mappings
 inoremap jk <ESC>
 inoremap <C-b> <ESC>ha
-inoremap <C-n> <ESC>ja
+inoremap <C-f> <ESC>la
 inoremap <C-e> <ESC>$a
 inoremap <C-a> <ESC>0a
 inoremap <C-d> <ESC>lxi
@@ -82,6 +82,7 @@ nmap <leader>sl  :rightbelow vnew <CR>
 nmap <leader>sk     :leftabove  new <CR>
 nmap <leader>sj   :rightbelow new<CR>
 
+
 "resize windows
 nnoremap <S-Left> :vertical resize -2<CR>
 nnoremap <S-Right> :vertical resize +2<CR>
@@ -93,6 +94,9 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+"show open buffers
+nnoremap <leader>b :ls<CR>:b
 
 "statusline
 set statusline=%t       "tail of the filename
@@ -119,7 +123,6 @@ set clipboard=unnamed
 filetype plugin indent on
 set timeoutlen=1000 ttimeoutlen=0
 let g:netrw_banner = 0
-
 
 
 "todo
