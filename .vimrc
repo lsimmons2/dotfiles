@@ -102,8 +102,11 @@ set statusline+=%r      "read only flag
 set statusline+=%=      "left/right separator
 set statusline+=%c,     "cursor column
 set statusline+=%l/%L   "cursor line/total lines
-hi StatusLine ctermfg=234 ctermbg=245
+hi StatusLine ctermfg=234 ctermbg=107
+hi StatusLineNC ctermfg=234 ctermbg=245
 
+"netrw
+let g:netrw_list_hide='.*\.pyc'
 "other
 set nobackup
 set nowb
