@@ -4,6 +4,7 @@ set nowb
 set noswapfile
 let mapleader=" "
 filetype plugin indent on
+set backspace=indent,eol,start
 
 "GENERAL
 set nobackup
@@ -14,10 +15,7 @@ if $TERM_PROGRAM =~ "iTerm"
     let &t_SI = "\<Esc>]50;CursorShape=1\x7"
     let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
-set clipboard=unnamed
 filetype plugin indent on
-"for vim-airline
-set laststatus=2
 
 "vundle
 set nocompatible
@@ -82,7 +80,6 @@ nmap <leader>sl  :rightbelow vnew <CR>
 nmap <leader>sk     :leftabove  new <CR>
 nmap <leader>sj   :rightbelow new<CR>
 
-
 "resize windows
 nnoremap <S-Left> :vertical resize -2<CR>
 nnoremap <S-Right> :vertical resize +2<CR>
@@ -106,21 +103,11 @@ set statusline+=%r      "read only flag
 set statusline+=%=      "left/right separator
 set statusline+=%c,     "cursor column
 set statusline+=%l/%L   "cursor line/total lines
-hi StatusLine ctermfg=234 ctermbg=107
-hi StatusLineNC ctermfg=234 ctermbg=245
+hi StatusLine ctermfg=234 guifg=#1c1c1c ctermbg=107 guibg=#87af5f
+hi StatusLineNC ctermfg=234 guifg=#1c1c1c ctermbg=245 guibg=#8a8a8a
 
 "netrw
 let g:netrw_list_hide='.*\.pyc'
-"other
-set nobackup
-set nowb
-set noswapfile
-if $TERM_PROGRAM =~ "iTerm"
-   let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
-set clipboard=unnamed
-filetype plugin indent on
 set timeoutlen=1000 ttimeoutlen=0
 let g:netrw_banner = 0
 
