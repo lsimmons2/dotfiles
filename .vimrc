@@ -27,13 +27,12 @@ Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 Plugin 'alvan/vim-closetag'
+Plugin 'jiangmiao/auto-pairs'
 call vundle#end()
 
 let g:jsx_ext_required = 0
 let g:closetag_filenames = "*.html,*.js,*.jsx"
 
-"scripts
-source ~/.vim/scripts/autoclose.vim
 
 "mappings
 inoremap jk <ESC>
@@ -73,7 +72,7 @@ if (empty($TMUX))
 endif
 syntax on
 colorscheme onedark
-hi Normal guibg=NONE ctermbg=NONE
+"hi Normal guibg=NONE ctermbg=NONE
 hi Search ctermfg=234 guifg=#1c1c1c ctermbg=105 guibg=#8787ff
 
 
