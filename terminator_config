@@ -1,0 +1,28 @@
+[global_config]
+  title_transmit_bg_color = "#9c449e"
+  title_transmit_fg_color = "#c6c6c6"
+[keybindings]
+  close_term = <Alt>w
+  edit_window_title = None
+  go_down = <Alt>j
+  go_left = <Alt>h
+  go_right = <Alt>l
+  go_up = <Alt>k
+  layout_launcher = None
+  new_tab = <Alt>t
+  next_tab = <Alt>bracketright
+  prev_tab = <Alt>bracketleft
+  split_horiz = <Alt>o
+  split_vert = <Alt>e
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_image = None
