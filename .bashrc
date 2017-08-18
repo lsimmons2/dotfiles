@@ -2,7 +2,7 @@ source ~/.sensitive.sh
 
 # general
 PS1='\w\$ ' # make command line prompt the current path
-LS_COLORS=$LS_COLORS:'di=1;32:'; # make directories colored when shown with ls
+LS_COLORS=$LS_COLORS:'di=32:'; # make directories colored when shown with ls
 export LS_COLORS
 alias ls="ls --color=auto"
 alias grep="grep --color=auto"

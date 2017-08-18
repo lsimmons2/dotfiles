@@ -31,7 +31,7 @@ sudo apt-get update
 sudo apt-get install google-chrome-stable
 
 # vim
-sudo git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # terminator
 mkdir /home/leo/.config/terminator
