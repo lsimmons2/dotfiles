@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 
@@ -6,9 +7,9 @@
 ############ PACKAGES ############
 ##################################
 
-apt-get update
-apt-get upgrade
-apt-get -y install vim-gtk\
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get -y install vim-gtk\
  htop\
  git\
  terminator\
@@ -26,13 +27,14 @@ apt-get -y install vim-gtk\
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-apt-get update
-apt-get install google-chrome-stable
+sudo apt-get update
+sudo apt-get install google-chrome-stable
 
 # vim
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+sudo git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # terminator
+mkdir /home/leo/.config/terminator
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/terminator_config > ~/.config/terminator/config
 
 # python
