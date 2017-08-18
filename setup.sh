@@ -20,7 +20,8 @@ apt-get -y install vim-gtk\
  build-essential\
  libssl-dev\
  libffi-dev\
- python-dev
+ python-dev\
+ inotify-tools
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
@@ -79,3 +80,6 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/git/.gitconfig 
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bashrc > ~/.bashrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile > ~/.bash_profile
 
+# remove unused default dirs
+cd /home/leo
+rm -r Documents/ Music/ Templates/ Videos/
