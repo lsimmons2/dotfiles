@@ -70,7 +70,7 @@ sudo echo "echo -n 0x02 > /sys/module/hid_apple/parameters/fnmode" > /etc/rc.loc
 
 # .vimrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.vimrc > ~/.vimrc
-vim +PluginInstall +qall
+
 
 # git
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/git/.gitconfig > ~/.gitconfig
@@ -78,5 +78,4 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/git/.gitconfig 
 # .bashrc/_profile
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bashrc > ~/.bashrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile > ~/.bash_profile
-
 

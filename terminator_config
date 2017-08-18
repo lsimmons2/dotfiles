@@ -25,4 +25,8 @@
 [plugins]
 [profiles]
   [[default]]
+    background_color = "#282c34"
     background_image = None
+    cursor_blink = False
+    font = Ubuntu Mono 11
+    foreground_color = "#abb2bf"
