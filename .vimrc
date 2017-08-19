@@ -28,6 +28,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 Plugin 'alvan/vim-closetag'
 Plugin 'jiangmiao/auto-pairs'
+Plugin 'kien/ctrlp.vim'
 call vundle#end()
 
 let g:jsx_ext_required = 0
@@ -54,14 +55,15 @@ nnoremap <leader>S :wa<CR>
 nnoremap ∆ 3j
 nnoremap ˚ 3k                    
 "close buffer in window without closing window itself
-nnoremap <C-w>b :bp<bar>sp<bar>bn<bar>bd<CR> "show time
-nnoremap time :echo '=== ' . strftime('%c') . ' ==='<CR>
+nnoremap <C-w>b :bp<bar>sp<bar>bn<bar>bd<CR>
+nnoremap time :echo '=== ' . strftime('%c') . ' ==='<CR> "show time
 nnoremap <leader>l :set invnumber<CR> " toggle lines
 nnoremap <leader>h :set hls!<CR> " toggle search highlight
 nnoremap <leader>m :call cursor(0, len(getline('.'))/2)<CR>
 nnoremap <leader>j ddp
 nnoremap <leader>k ddkP
 nnoremap <leader>e :e .<CR>
+nnoremap <leader>:b#<CR>
 vnoremap // y/<C-R>"<CR>  " search visually selected text 
 
 "color
@@ -151,8 +153,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-"show open buffers
-nnoremap <leader>b :ls<CR>:b
 
 "statusline
 set statusline=%f       "tail of the filename

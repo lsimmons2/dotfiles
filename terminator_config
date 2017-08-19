@@ -9,8 +9,12 @@
   go_right = <Alt>l
   go_up = <Alt>k
   layout_launcher = None
+  line_down = <Shift><Alt>j
+  line_up = <Shift><Alt>k
   new_tab = <Alt>t
   next_tab = <Alt>bracketright
+  page_down_half = <Shift><Alt>d
+  page_up_half = <Shift><Alt>u
   prev_tab = <Alt>bracketleft
   split_horiz = <Alt>o
   split_vert = <Alt>e
