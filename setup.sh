@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 
@@ -71,6 +70,10 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/touchpad_settin
 # fn keys
 sudo echo "echo -n 0x02 > /sys/module/hid_apple/parameters/fnmode" > /etc/rc.local
 
+#key repeat and delay
+gsettings set org.gnome.desktop.peripherals.keyboard delay 165
+gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
+
 # .vimrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.vimrc > ~/.vimrc
 
@@ -85,3 +88,4 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile >
 # remove unused default dirs
 cd /home/leo
 rm -r Documents/ Music/ Templates/ Videos/
+
