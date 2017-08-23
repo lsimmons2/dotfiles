@@ -31,9 +31,12 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'kien/ctrlp.vim'
 call vundle#end()
 
+"jsx
 let g:jsx_ext_required = 0
 let g:closetag_filenames = "*.html,*.js,*.jsx"
 
+"ctrlp
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|venv|target|dist)|(\.(swp|pyc|git|svn))$'
 
 "mappings
 inoremap jk <ESC>
@@ -63,7 +66,7 @@ nnoremap <leader>m :call cursor(0, len(getline('.'))/2)<CR>
 nnoremap <leader>j ddp
 nnoremap <leader>k ddkP
 nnoremap <leader>e :e .<CR>
-nnoremap <leader>:b#<CR>
+nnoremap <leader>b :b#<CR>
 vnoremap // y/<C-R>"<CR>  " search visually selected text 
 
 "color
