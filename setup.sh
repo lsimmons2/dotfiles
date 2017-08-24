@@ -89,3 +89,7 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile >
 cd /home/leo
 rm -r Documents/ Music/ Templates/ Videos/
 
+# install node
+source ~/.bashrc
+nvm install 6.11.2
+npm install -g gulp bower nodemon
