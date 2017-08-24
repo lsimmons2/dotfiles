@@ -89,3 +89,6 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile >
 cd /home/leo
 rm -r Documents/ Music/ Templates/ Videos/
 
+#remove print screen feature
+sudo apt-get remove --auto-remove gnome-screenshot
+sudo apt-get purge --auto-remove gnome-screenshot
