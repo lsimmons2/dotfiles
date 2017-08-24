@@ -93,3 +93,7 @@ rm -r Documents/ Music/ Templates/ Videos/
 source ~/.bashrc
 nvm install 6.11.2
 npm install -g gulp bower nodemon
+
+#remove print screen feature
+sudo apt-get remove --auto-remove gnome-screenshot
+sudo apt-get purge --auto-remove gnome-screenshot
