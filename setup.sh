@@ -97,3 +97,7 @@ npm install -g gulp bower nodemon
 #remove print screen feature
 sudo apt-get remove --auto-remove gnome-screenshot
 sudo apt-get purge --auto-remove gnome-screenshot
+
+echo 255 | sudo tee /sys/devices/platform/i8042/serio1/serio2/sensitivity > /dev/null
+echo 150 | sudo tee /sys/devices/platform/i8042/serio1/serio2/speed > /dev/null
+echo 1 | sudo tee /sys/devices/platform/i8042/serio1/serio2/press_to_select > /dev/null
