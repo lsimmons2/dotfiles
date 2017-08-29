@@ -21,13 +21,19 @@ sudo apt-get -y install vim-gtk\
  libssl-dev\
  libffi-dev\
  python-dev\
- inotify-tools
+ inotify-tools\
+ xvfb
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 sudo apt-get update
 sudo apt-get install google-chrome-stable
+
+# chromedriver for selenium
+curl https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip > /home/leo/Downloads/chromedriver.zip
+unzip /home/leo/Downloads/chromedriver.zip
+sudo mv /home/leo/Downloads/chromedriver /usr/local/bin
 
 # vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim

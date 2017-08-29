@@ -16,6 +16,10 @@
   page_down_half = <Shift><Alt>d
   page_up_half = <Shift><Alt>u
   prev_tab = <Alt>bracketleft
+  resize_down = <Shift><Alt>Down
+  resize_left = <Shift><Alt>Left
+  resize_right = <Shift><Alt>Right
+  resize_up = <Shift><Alt>Up
   split_horiz = <Alt>o
   split_vert = <Alt>e
 [layouts]
