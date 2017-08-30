@@ -22,7 +22,8 @@ sudo apt-get -y install vim-gtk\
  libffi-dev\
  python-dev\
  inotify-tools\
- xvfb
+ xvfb\
+ silversearcher-ag
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
@@ -64,6 +65,11 @@ make test
 sudo cp src/redis-server /usr/local/bin/
 sudo cp src/redis-cli /usr/local/bin
 
+# mongo
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
 
 
 ##################################
@@ -85,7 +91,7 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.vimrc > ~/.vim
 
 
 # git
-curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/git/.gitconfig > ~/.gitconfig
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/.gitconfig
 
 # .bashrc/_profile
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bashrc > ~/.bashrc

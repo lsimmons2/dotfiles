@@ -8,6 +8,7 @@ alias ls="ls --color=auto"
 alias grep="grep --color=auto"
 alias h="history"
 alias tree="tree -I 'node_modules|venv|env|*.pyc'"
+alias g="git"
 
 # custom aliases
 alias vea="source venv/bin/activate"

@@ -173,9 +173,10 @@ let g:netrw_list_hide='.*\.pyc'
 set timeoutlen=1000 ttimeoutlen=0
 let g:netrw_banner = 0
 
+" silver searcher
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+endif
+command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+nnoremap <leader>g :Ag<SPACE>
 
-"todo
-"- make command execution behave like bash, and have line cursor
-"- figure out left option iterm mapping
-"- make vim know to open a file in running instance of vim when using the vim command from bash
-"- figure navigating by words w/o punctuation
