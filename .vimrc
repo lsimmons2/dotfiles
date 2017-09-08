@@ -36,7 +36,7 @@ let g:jsx_ext_required = 0
 let g:closetag_filenames = "*.html,*.js,*.jsx"
 
 "ctrlp
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|venv|target|dist)|(\.(swp|pyc|git|svn))$'
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|bower_components|venv|target|dist)|(\.(swp|pyc|git|svn))$'
 
 "mappings
 inoremap jk <ESC>
@@ -90,7 +90,7 @@ function SetPyOptions()
 endfunction
 
 "go
-autocmd BufRead,BufNewFile *.go inoremap call SetGoOptions()
+autocmd BufRead,BufNewFile *.go call SetGoOptions()
 function SetGoOptions()
   log fmt.Println()<ESC>i
   set tabstop=4
@@ -133,16 +133,16 @@ function SetBashOptions()
 endfunction
 
 "create new window entire width or height of
-map <leader>swh :topleft  vnew<CR>
-nmap <leader>swl :botright vnew<CR>
-nmap <leader>swk    :topleft  new<CR>
-nmap <leader>swj  :botright new<CR>
+nnoremap <leader>swh :topleft  vnew<CR>
+nnoremap <leader>swl :botright vnew<CR>
+nnoremap <leader>swk    :topleft  new<CR>
+nnoremap <leader>swj  :botright new<CR>
 
 "split current window
-nmap <leader>sh   :leftabove  vnew <CR>
-nmap <leader>sl  :rightbelow vnew <CR>
-nmap <leader>sk     :leftabove  new <CR>
-nmap <leader>sj   :rightbelow new<CR>
+nnoremap <leader>sh   :leftabove  vnew <CR>
+nnoremap <leader>sl  :rightbelow vnew <CR>
+nnoremap <leader>sk     :leftabove  new <CR>
+nnoremap <leader>sj   :rightbelow new<CR>
 
 "resize windows
 nnoremap <S-Left> :vertical resize -2<CR>
