@@ -35,6 +35,8 @@
   [[default]]
     background_color = "#282c34"
     background_image = None
+    copy_on_selection = True
     cursor_blink = False
     font = Ubuntu Mono 11
     foreground_color = "#abb2bf"
+    scrollback_infinite = True
