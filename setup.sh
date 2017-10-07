@@ -23,7 +23,8 @@ sudo apt-get -y install vim-gtk\
  python-dev\
  inotify-tools\
  xvfb\
- silversearcher-ag
+ silversearcher-ag\
+ xclip
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
@@ -32,8 +33,8 @@ sudo apt-get update
 sudo apt-get install google-chrome-stable
 
 # chromedriver for selenium
-curl https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip > /home/leo/Downloads/chromedriver.zip
-unzip /home/leo/Downloads/chromedriver.zip
+curl -o /home/leo/Downloads/chromedriver.zip https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip 
+unzip /home/leo/Downloads/chromedriver.zip -d /home/leo/Downloads
 sudo mv /home/leo/Downloads/chromedriver /usr/local/bin
 
 # vim
@@ -155,3 +156,8 @@ echo 1 | sudo tee /sys/devices/platform/i8042/serio1/serio2/press_to_select > /d
 
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.lesskey > ~/.lesskey
 lesskey
+
+# TODO
+#hide launcher
+#sign into chrome?
+#hide launcher and only show in built-in display
