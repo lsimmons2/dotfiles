@@ -29,6 +29,7 @@ Plugin 'mxw/vim-jsx'
 Plugin 'alvan/vim-closetag'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-surround'
 call vundle#end()
 
 "jsx
@@ -45,6 +46,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap 0 g0
 nnoremap $ g$
+nnoremap * *N
 inoremap <C-b> <ESC>ha
 inoremap <C-f> <ESC>la
 inoremap <C-e> <ESC>$a
@@ -63,8 +65,6 @@ nnoremap time :echo '=== ' . strftime('%c') . ' ==='<CR> "show time
 nnoremap <leader>l :set invnumber<CR> " toggle lines
 nnoremap <leader>h :set hls!<CR> " toggle search highlight
 nnoremap <leader>m :call cursor(0, len(getline('.'))/2)<CR>
-nnoremap <leader>j ddp
-nnoremap <leader>k ddkP
 nnoremap <leader>e :e .<CR>
 nnoremap <leader>b :b#<CR>
 vnoremap // y/<C-R>"<CR>  " search visually selected text 

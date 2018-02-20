@@ -25,7 +25,8 @@ sudo apt-get -y install vim-gtk\
  xvfb\
  silversearcher-ag\
  libfreetype6-dev\
- lib32ncurses5-dev
+ lib32ncurses5-dev\
+ xclip
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
@@ -34,8 +35,8 @@ sudo apt-get update
 sudo apt-get install google-chrome-stable
 
 # chromedriver for selenium
-curl https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip > /home/leo/Downloads/chromedriver.zip
-unzip /home/leo/Downloads/chromedriver.zip
+curl -o /home/leo/Downloads/chromedriver.zip https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip 
+unzip /home/leo/Downloads/chromedriver.zip -d /home/leo/Downloads
 sudo mv /home/leo/Downloads/chromedriver /usr/local/bin
 
 # vim
@@ -73,6 +74,45 @@ echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb
 sudo apt-get update
 sudo apt-get install -y mongodb-org
 
+# rsyslog and dependencies
+cd
+curl -O http://libestr.adiscon.com/files/download/libestr-0.1.10.tar.gz
+tar xzf libestr-0.1.10.tar.gz
+cd libestr-0.1.10
+./configure --libdir=/usr/lib --includedir=/usr/include
+sudo make
+sudo make install
+
+cd
+curl -O http://www.libee.org/files/download/libee-0.4.1.tar.gz
+tar xzf libee-0.4.1.tar.gz
+cd libee-0.4.1
+./configure --libdir=/usr/lib --includedir=/usr/include
+sudo make
+sudo make install
+
+cd
+curl -O http://download.rsyslog.com/liblogging/liblogging-1.0.6.tar.gz
+tar xfz liblogging-1.0.6.tar.gz
+cd liblogging-1.0.6
+./configure --libdir=/usr/lib --includedir=/usr/include
+
+sudo apt-get install dh-autoreconf
+
+cd
+git clone https://github.com/json-c/json-c.git
+cd json-c/
+sh autogen.sh
+sudo make
+sudo make install
+
+sudo apt-get install uuid-dev
+sudo apt-get install -y libgcrypt11-dev
+
+sudo apt-get install docutils-common
+
+cd /home/leo/rsyslog-7.6.1
+./configure --prefix=/usr
 
 ##################################
 ############ CONFIG ############
@@ -119,3 +159,8 @@ echo 1 | sudo tee /sys/devices/platform/i8042/serio1/serio2/press_to_select > /d
 
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.lesskey > ~/.lesskey
 lesskey
+
+# TODO
+#hide launcher
+#sign into chrome?
+#hide launcher and only show in built-in display
