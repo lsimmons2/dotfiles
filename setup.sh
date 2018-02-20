@@ -23,7 +23,9 @@ sudo apt-get -y install vim-gtk\
  python-dev\
  inotify-tools\
  xvfb\
- silversearcher-ag
+ silversearcher-ag\
+ libfreetype6-dev\
+ lib32ncurses5-dev
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
@@ -110,6 +112,7 @@ npm install -g gulp bower nodemon
 sudo apt-get remove --auto-remove gnome-screenshot
 sudo apt-get purge --auto-remove gnome-screenshot
 
+#thinkpap trackpoint settings
 echo 255 | sudo tee /sys/devices/platform/i8042/serio1/serio2/sensitivity > /dev/null
 echo 150 | sudo tee /sys/devices/platform/i8042/serio1/serio2/speed > /dev/null
 echo 1 | sudo tee /sys/devices/platform/i8042/serio1/serio2/press_to_select > /dev/null
