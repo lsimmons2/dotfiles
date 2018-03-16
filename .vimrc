@@ -29,7 +29,9 @@ Plugin 'mxw/vim-jsx'
 Plugin 'alvan/vim-closetag'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'kien/ctrlp.vim'
+Plugin 'henrik/vim-indexed-search'
 Plugin 'tpope/vim-surround'
+Bundle 'djoshea/vim-autoread'
 call vundle#end()
 
 "jsx
@@ -37,16 +39,23 @@ let g:jsx_ext_required = 0
 let g:closetag_filenames = "*.html,*.js,*.jsx"
 
 "ctrlp
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|bower_components|venv|target|dist)|(\.(swp|pyc|git|svn))$'
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|venv|target|dist)|(\.(swp|pyc|git|svn))$'
 
 "mappings
 inoremap jk <ESC>
 inoremap kj <ESC>
+inoremap KJ <ESC>
+inoremap JK <ESC>
+inoremap kJ <ESC>
+inoremap Kj <ESC>
 nnoremap j gj
 nnoremap k gk
+vnoremap j gj
+vnoremap k gk
 nnoremap 0 g0
 nnoremap $ g$
-nnoremap * *N
+nnoremap <leader>y v$hy
+nnoremap <leader>p v$hp
 inoremap <C-b> <ESC>ha
 inoremap <C-f> <ESC>la
 inoremap <C-e> <ESC>$a
@@ -61,7 +70,7 @@ nnoremap ∆ 3j
 nnoremap ˚ 3k                    
 "close buffer in window without closing window itself
 nnoremap <C-w>b :bp<bar>sp<bar>bn<bar>bd<CR>
-nnoremap time :echo '=== ' . strftime('%c') . ' ==='<CR> "show time
+nnoremap <leader>t :echo '=== ' . strftime('%c') . ' ==='<CR> "show time
 nnoremap <leader>l :set invnumber<CR> " toggle lines
 nnoremap <leader>h :set hls!<CR> " toggle search highlight
 nnoremap <leader>m :call cursor(0, len(getline('.'))/2)<CR>
@@ -77,7 +86,6 @@ if (empty($TMUX))
 endif
 syntax on
 colorscheme onedark
-"hi Normal guibg=NONE ctermbg=NONE
 hi Search ctermfg=234 guifg=#1c1c1c ctermbg=105 guibg=#8787ff
 
 
@@ -90,7 +98,7 @@ function SetPyOptions()
 endfunction
 
 "go
-autocmd BufRead,BufNewFile *.go call SetGoOptions()
+autocmd BufRead,BufNewFile *.go inoremap call SetGoOptions()
 function SetGoOptions()
   log fmt.Println()<ESC>i
   set tabstop=4
@@ -133,16 +141,16 @@ function SetBashOptions()
 endfunction
 
 "create new window entire width or height of
-nnoremap <leader>swh :topleft  vnew<CR>
-nnoremap <leader>swl :botright vnew<CR>
-nnoremap <leader>swk    :topleft  new<CR>
-nnoremap <leader>swj  :botright new<CR>
+map <leader>swh :topleft  vnew<CR>
+nmap <leader>swl :botright vnew<CR>
+nmap <leader>swk    :topleft  new<CR>
+nmap <leader>swj  :botright new<CR>
 
 "split current window
-nnoremap <leader>sh   :leftabove  vnew <CR>
-nnoremap <leader>sl  :rightbelow vnew <CR>
-nnoremap <leader>sk     :leftabove  new <CR>
-nnoremap <leader>sj   :rightbelow new<CR>
+nmap <leader>sh   :leftabove  vnew <CR>
+nmap <leader>sl  :rightbelow vnew <CR>
+nmap <leader>sk     :leftabove  new <CR>
+nmap <leader>sj   :rightbelow new<CR>
 
 "resize windows
 nnoremap <S-Left> :vertical resize -2<CR>
@@ -163,8 +171,9 @@ set statusline+=%h      "help file flag
 set statusline+=%m      "modified flag
 set statusline+=%r      "read only flag
 set statusline+=%=      "left/right separator
-set statusline+=%c,     "cursor column
-set statusline+=%l/%L   "cursor line/total lines
+set statusline+=Line:%-2l/%-6L "cursor line/total lines
+set statusline+=Column:\ %-2c "cursor column
+
 hi StatusLine ctermfg=234 guifg=#1c1c1c ctermbg=107 guibg=#87af5f
 hi StatusLineNC ctermfg=234 guifg=#1c1c1c ctermbg=245 guibg=#8a8a8a
 
@@ -180,3 +189,6 @@ endif
 command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 nnoremap <leader>g :Ag<SPACE>
 
+
+" so I can move files in netrw
+let g:netrw_keepdir=0

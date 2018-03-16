@@ -138,6 +138,7 @@ curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/
 # .bashrc/_profile
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bashrc > ~/.bashrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile > ~/.bash_profile
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.Xmodmap > ~/.Xmodmap
 
 # remove unused default dirs
 cd /home/leo
