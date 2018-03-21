@@ -149,10 +149,6 @@ source ~/.bashrc
 nvm install 6.11.2
 npm install -g gulp bower nodemon
 
-#remove print screen feature
-sudo apt-get remove --auto-remove gnome-screenshot
-sudo apt-get purge --auto-remove gnome-screenshot
-
 #thinkpap trackpoint settings
 echo 255 | sudo tee /sys/devices/platform/i8042/serio1/serio2/sensitivity > /dev/null
 echo 150 | sudo tee /sys/devices/platform/i8042/serio1/serio2/speed > /dev/null
@@ -161,7 +157,12 @@ echo 1 | sudo tee /sys/devices/platform/i8042/serio1/serio2/press_to_select > /d
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.lesskey > ~/.lesskey
 lesskey
 
-# TODO
-#hide launcher
-#sign into chrome?
-#hide launcher and only show in built-in display
+# ==========================
+# THINGS I STILL DO MANUALLY
+# ==========================
+
+# hide launcher
+# sign into chrome
+# hide launcher and only show in built-in display
+# disable left alt as HUD key
+# change screenshot shortcuts

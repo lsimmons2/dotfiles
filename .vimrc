@@ -66,8 +66,6 @@ vnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 let g:NERDCreateDefaultMappings = 0
 nnoremap S :w<CR>
 nnoremap <leader>S :wa<CR>
-nnoremap ∆ 3j
-nnoremap ˚ 3k                    
 "close buffer in window without closing window itself
 nnoremap <C-w>b :bp<bar>sp<bar>bn<bar>bd<CR>
 nnoremap <leader>t :echo '=== ' . strftime('%c') . ' ==='<CR> "show time
@@ -181,6 +179,7 @@ hi StatusLineNC ctermfg=234 guifg=#1c1c1c ctermbg=245 guibg=#8a8a8a
 let g:netrw_list_hide='.*\.pyc'
 set timeoutlen=1000 ttimeoutlen=0
 let g:netrw_banner = 0
+let g:netrw_keepdir=0 "so I can move files in netrw
 
 " silver searcher
 if executable('ag')
@@ -190,5 +189,3 @@ command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 nnoremap <leader>g :Ag<SPACE>
 
 
-" so I can move files in netrw
-let g:netrw_keepdir=0

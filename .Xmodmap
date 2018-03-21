@@ -11,6 +11,6 @@ add mod1 = Alt_L
 
 clear Lock
 keycode 66 = Return
-keycode 108 = BackSpace
+keycode 108 = BackSpace BackSpace
 keycode 36 = NoSymbol
 keycode 22 = NoSymbol
