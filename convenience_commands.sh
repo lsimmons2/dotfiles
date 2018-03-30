@@ -41,3 +41,17 @@ manage_dotfiles(){
 
 alias dotcol="manage_dotfiles collect"
 alias dotdis="manage_dotfiles distribute"
+
+
+screenshot_study_image(){
+    # images in dir are all numbers (1.png, 2.png) -
+    # take a screenshot with a file name 1 higher than last
+    STUDY_IMAGES_DIR=~/study_images
+    mkdir -p $STUDY_IMAGES_DIR
+    last_image_file_name=$(ls -v $STUDY_IMAGES_DIR | tail -n 1)
+    last_image_file_number="$(echo $last_image_file_name | cut -d'.' -f1)"
+    new_image_file_name=$((last_image_file_number+1)).png
+    new_image_file_path=$STUDY_IMAGES_DIR/$new_image_file_name
+    gnome-screenshot -a -f $new_image_file_path
+    echo $new_image_file_name | xclip -selection clipboard
+}
