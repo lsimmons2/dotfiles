@@ -6,11 +6,12 @@ PS1='\w\$ ' # make command line prompt the current path
 LS_COLORS=$LS_COLORS:'di=32:'; # make directories colored when shown with ls
 export LS_COLORS
 alias ls="ls --color=auto"
-alias grep="grep --color=auto"
+alias grep="grep --color=auto --binary-files=without-match --exclude-dir=venv --exclude-dir=node_modules --exclude-dir=bower_components --exclude-dir=.git --exclude-dir=.cache --exclude-dir=.config --exclude-dir=.nvm --exclude-dir=.npm --exclude-dir=.local --exclude='*.osp'"
 alias h="history"
 alias tree="tree -I 'node_modules|venv|env|*.pyc'"
 alias g="git"
 alias p="python"
+alias o="gnome-open"
 
 # custom aliases
 alias vea="source venv/bin/activate"
@@ -21,4 +22,3 @@ alias nm="nodemon --exec"
 # misc
 export NVM_DIR="$HOME/.nvm" # nvm
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-

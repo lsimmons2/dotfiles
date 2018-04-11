@@ -54,8 +54,14 @@ vnoremap j gj
 vnoremap k gk
 nnoremap 0 g0
 nnoremap $ g$
-nnoremap <leader>y v$hy
-nnoremap <leader>p v$hp
+nnoremap <M-y> v$hy
+nnoremap <M-p> v$hp
+nnoremap <M-P> v$hP
+nnoremap <leader>y "+y
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>P "+P
 inoremap <C-b> <ESC>ha
 inoremap <C-f> <ESC>la
 inoremap <C-e> <ESC>$a

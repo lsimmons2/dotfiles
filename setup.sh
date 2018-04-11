@@ -131,13 +131,13 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 # .vimrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.vimrc > ~/.vimrc
 
-
 # git
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/.gitconfig
 
 # .bashrc/_profile
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bashrc > ~/.bashrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile > ~/.bash_profile
+# .Xmodmap
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.Xmodmap > ~/.Xmodmap
 
 # remove unused default dirs
@@ -156,6 +156,8 @@ echo 1 | sudo tee /sys/devices/platform/i8042/serio1/serio2/press_to_select > /d
 
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.lesskey > ~/.lesskey
 lesskey
+
+
 
 # ==========================
 # THINGS I STILL DO MANUALLY
