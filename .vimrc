@@ -3,10 +3,6 @@ set nobackup
 set nowb
 set noswapfile
 let mapleader=" "
-if $TERM_PROGRAM =~ "iTerm"
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
 filetype plugin indent on
 set backspace=indent,eol,start
 set ic
@@ -21,8 +17,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'Vimjas/vim-python-pep8-indent'
-Plugin 'joshdick/onedark.vim'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
@@ -33,6 +27,9 @@ Plugin 'henrik/vim-indexed-search'
 Plugin 'tpope/vim-surround'
 Bundle 'djoshea/vim-autoread'
 call vundle#end()
+
+"enables code coloring
+syntax on
 
 "jsx
 let g:jsx_ext_required = 0
@@ -57,11 +54,6 @@ nnoremap $ g$
 nnoremap <M-y> v$hy
 nnoremap <M-p> v$hp
 nnoremap <M-P> v$hP
-nnoremap <leader>y "+y
-nnoremap <leader>p "+p
-vnoremap <leader>p "+p
-nnoremap <leader>P "+P
-vnoremap <leader>P "+P
 inoremap <C-b> <ESC>ha
 inoremap <C-f> <ESC>la
 inoremap <C-e> <ESC>$a
@@ -74,75 +66,35 @@ nnoremap S :w<CR>
 nnoremap <leader>S :wa<CR>
 "close buffer in window without closing window itself
 nnoremap <C-w>b :bp<bar>sp<bar>bn<bar>bd<CR>
-nnoremap <leader>t :echo '=== ' . strftime('%c') . ' ==='<CR> "show time
+nnoremap <leader>t :set noexpandtab<CR>
 nnoremap <leader>l :set invnumber<CR> " toggle lines
 nnoremap <leader>h :set hls!<CR> " toggle search highlight
 nnoremap <leader>m :call cursor(0, len(getline('.'))/2)<CR>
 nnoremap <leader>e :e .<CR>
 nnoremap <leader>b :b#<CR>
 vnoremap // y/<C-R>"<CR>  " search visually selected text 
+nnoremap <leader>y v$hy
+nnoremap <leader>p v$hp
 
-"color
-if (empty($TMUX))
-  if (has("termguicolors"))
-      set termguicolors
-  endif
-endif
-syntax on
-colorscheme onedark
-hi Search ctermfg=234 guifg=#1c1c1c ctermbg=105 guibg=#8787ff
+"java
+autocmd FileType java set tabstop=4
+autocmd FileType java set shiftwidth=4
+autocmd FileType java inoremap psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
+autocmd FileType java inoremap sop System.out.println();<ESC>hi
+autocmd FileType java inoremap forr for (int i = 0; i < array.length; i++) {}<ESC>BBBce
 
-
-"python 
-autocmd BufRead,BufNewFile *.py call SetPyOptions()
-function SetPyOptions()
-  set tabstop=4
-  set softtabstop=4
-  set shiftwidth=4
-endfunction
+"python
+autocmd FileType python set tabstop=4
+autocmd FileType python set shiftwidth=4
 
 "go
-autocmd BufRead,BufNewFile *.go inoremap call SetGoOptions()
-function SetGoOptions()
-  log fmt.Println()<ESC>i
-  set tabstop=4
-  set softtabstop=4
-  set shiftwidth=4
-endfunction
+"log fmt.Println()<ESC>i
+autocmd FileType go set tabstop=4
+autocmd FileType go set shiftwidth=4
 
-"js
-autocmd BufRead,BufNewFile *.js call SetJsOptions()
-function SetJsOptions()
-  setlocal tabstop=2
-  set softtabstop=2
-  set shiftwidth=2
-  inoremap log console.log();<ESC>hi
-endfunction
+".txt files
+"setlocal spell spelllang=en_us
 
-"html
-autocmd BufRead,BufNewFile *.html call SetHtmlOptions()
-function SetHtmlOptions()
-  setlocal tabstop=2
-  set softtabstop=2
-  set shiftwidth=2
-endfunction
-
-"txt
-autocmd BufRead,BufNewFile *.txt call SetTxtOptions()
-function SetTxtOptions()
-  setlocal tabstop=4
-  set softtabstop=4
-  set shiftwidth=4
-  setlocal spell spelllang=en_us
-endfunction
-
-"bash
-autocmd BufRead,BufNewFile *.sh call SetBashOptions()
-function SetBashOptions()
-  setlocal tabstop=4
-  set softtabstop=4
-  set shiftwidth=4
-endfunction
 
 "create new window entire width or height of
 map <leader>swh :topleft  vnew<CR>
@@ -193,5 +145,3 @@ if executable('ag')
 endif
 command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 nnoremap <leader>g :Ag<SPACE>
-
-
