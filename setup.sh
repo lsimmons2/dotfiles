@@ -1,7 +1,6 @@
 #!/bin/bash
 
 
-
 ##################################
 ############ PACKAGES ############
 ##################################
@@ -13,7 +12,6 @@ sudo apt-get -y install vim-gtk\
  git\
  terminator\
  curl\
- golang-go\
  python-pip\
  mysql-server\
  libmysqlclient-dev\
@@ -26,7 +24,18 @@ sudo apt-get -y install vim-gtk\
  silversearcher-ag\
  libfreetype6-dev\
  lib32ncurses5-dev\
- xclip
+ xclip\
+ default-jdk
+
+
+
+
+# golang
+cd
+sudo curl -O https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
+sudo tar -xvf go1.8.linux-amd64.tar.gz
+sudo mv go /usr/local
+
 
 # chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
@@ -63,8 +72,6 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | b
 wget http://download.redis.io/redis-stable.tar.gz
 tar xvzf redis-stable.tar.gz
 cd redis-stable
-make
-make test
 sudo cp src/redis-server /usr/local/bin/
 sudo cp src/redis-cli /usr/local/bin
 
@@ -131,12 +138,13 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 # .vimrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.vimrc > ~/.vimrc
 
-# git
+# gitconfig
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/.gitconfig
 
 # .bashrc/_profile
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bashrc > ~/.bashrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.bash_profile > ~/.bash_profile
+
 # .Xmodmap
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.Xmodmap > ~/.Xmodmap
 
@@ -149,7 +157,7 @@ source ~/.bashrc
 nvm install 6.11.2
 npm install -g gulp bower nodemon
 
-#thinkpap trackpoint settings
+#thinkpad trackpoint settings
 echo 255 | sudo tee /sys/devices/platform/i8042/serio1/serio2/sensitivity > /dev/null
 echo 150 | sudo tee /sys/devices/platform/i8042/serio1/serio2/speed > /dev/null
 echo 1 | sudo tee /sys/devices/platform/i8042/serio1/serio2/press_to_select > /dev/null
@@ -163,8 +171,12 @@ lesskey
 # THINGS I STILL DO MANUALLY
 # ==========================
 
-# hide launcher
+# hide launcher and only show in built-in display - system settings > display > behavior, system settings > displays
 # sign into chrome
-# hide launcher and only show in built-in display
-# disable left alt as HUD key
-# change screenshot shortcuts
+# vim PluginInstall
+# create usr/share/applications/t3.desktop, t4.desktop, t5.desktop
+# remove apps from launcher and put ones I use in the correct order
+# remove screenshot functionality from PrtSc key - system settings > keyboard > shortcuts > screenshots
+# add ~/.vim/spell/en.utf-8.add
+# make terminator copy selected text
+# gradle https://askubuntu.com/questions/932083/how-do-i-upgrade-gradle
