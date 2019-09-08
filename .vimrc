@@ -59,7 +59,7 @@ nnoremap <leader>m :GoImports<CR>
 
 "LANGUAGE-SPECIFIC MAPPINGS
 autocmd FileType java inoremap psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
-autocmd FileType java inoremap psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
+autocmd FileType java inoremap sop System.out.println();<ESC>hi
 autocmd FileType go inoremap sop fmt.Println()<ESC>i
 
 
@@ -141,7 +141,7 @@ nmap <silent> <leader>t <Plug>(coc-type-definition)
 nmap <silent> <leader>r <Plug>(coc-references)
 
 
-""VIM-GO
+"VIM-GO
 let g:go_fmt_experimental = 1 " since vim-go default formatting clears fold state
 let g:go_info_mode='gopls'
 let g:go_def_mapping_enabled=0 "disable default mapping for GoDef
