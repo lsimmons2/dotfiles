@@ -50,17 +50,25 @@ vnoremap <leader>p "+p
 nnoremap <leader>Y "+Y
 nnoremap <leader>P "+P
 nnoremap <C-t> :tabnew<CR>
-nnoremap <C-]> :tabnext<CR>
-nnoremap <C-[> :tabprevious<CR>
+nnoremap <leader>] :tabnext<CR>
+nnoremap <leader>[ :tabprevious<CR>
 inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("j")) "allow C-j and C-k to scroll in autocomplete windows
 inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("k"))
 nnoremap <leader>m :GoImports<CR>
 
 
-"LANGUAGE-SPECIFIC MAPPINGS
+"LANGUAGE-SPECIFIC MAPPINGS/SETTINGS
 autocmd FileType java inoremap psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
 autocmd FileType java inoremap sop System.out.println();<ESC>hi
 autocmd FileType go inoremap sop fmt.Println()<ESC>i
+autocmd FileType java set tabstop=4
+autocmd FileType java set shiftwidth=4
+autocmd FileType go set tabstop=4
+autocmd FileType go set shiftwidth=4
+autocmd FileType python set tabstop=4
+autocmd FileType python set shiftwidth=4
+autocmd FileType text set tabstop=2
+autocmd FileType text set shiftwidth=2
 
 
 "SPLIT CURRENT WINDOW
@@ -116,7 +124,6 @@ set hidden " if hidden is not set, TextEdit might fail. - "Vim's windowing is ba
 set cmdheight=2 " Better display for messages
 set updatetime=300 " Smaller updatetime for CursorHold & CursorHoldI
 set shortmess+=c " don't give |ins-completion-menu| messages.
-set signcolumn=yes " always show signcolumns
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
