@@ -10,6 +10,7 @@ set expandtab
 set autoindent
 set ruler
 set foldmethod=syntax
+set foldopen-=hor
 syntax on "enables code coloring
 set ignorecase "Case-insensitive searching.
 set smartcase "But case-sensitive if expression contains a capital letter.
@@ -49,7 +50,7 @@ vnoremap <leader>y "+y
 vnoremap <leader>p "+p
 nnoremap <leader>Y "+Y
 nnoremap <leader>P "+P
-nnoremap <C-t> :tabnew<CR>
+nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>] :tabnext<CR>
 nnoremap <leader>[ :tabprevious<CR>
 inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("j")) "allow C-j and C-k to scroll in autocomplete windows
@@ -58,17 +59,33 @@ nnoremap <leader>m :GoImports<CR>
 
 
 "LANGUAGE-SPECIFIC MAPPINGS/SETTINGS
-autocmd FileType java inoremap psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
-autocmd FileType java inoremap sop System.out.println();<ESC>hi
-autocmd FileType go inoremap sop fmt.Println()<ESC>i
+autocmd FileType java inoremap <buffer>psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
+autocmd FileType java inoremap <buffer>sop System.out.println();<ESC>hi
+autocmd FileType go inoremap <buffer>sop fmt.Printf()<ESC>i
+autocmd FileType go inoremap <buffer>sff fmt.Sprintf()<ESC>i"%s", 
+autocmd FileType go inoremap <buffer>sleep time.Sleep(*time.Millisecond)<ESC>bbbba 
 autocmd FileType java set tabstop=4
 autocmd FileType java set shiftwidth=4
 autocmd FileType go set tabstop=4
 autocmd FileType go set shiftwidth=4
-autocmd FileType python set tabstop=4
-autocmd FileType python set shiftwidth=4
 autocmd FileType text set tabstop=2
 autocmd FileType text set shiftwidth=2
+autocmd FileType python set noexpandtab tabstop=4 shiftwidth=4
+autocmd FileType python set foldmethod=indent
+autocmd FileType python inoremap sop print()<ESC>i
+
+autocmd FileType html set foldmethod=indent
+autocmd FileType html set tabstop=4
+autocmd FileType html set shiftwidth=4
+autocmd FileType html set noexpandtab
+
+autocmd FileType css set foldmethod=syntax
+autocmd FileType css set tabstop=4
+autocmd FileType css set shiftwidth=4
+autocmd FileType css set noexpandtab
+
+"autocmd FileType python set tabstop=4
+"autocmd FileType python set shiftwidth=4
 
 
 "SPLIT CURRENT WINDOW
@@ -93,6 +110,7 @@ nnoremap <C-H> <C-W><C-H>
 
 
 "STATUSLINE
+set laststatus=2        "have statusline always show (even with single window)
 set statusline=%f       "tail of the filename
 set statusline+=%h      "help file flag
 set statusline+=%m      "modified flag
@@ -116,6 +134,8 @@ Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/auto-pairs-gentle'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 
@@ -143,8 +163,8 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 
 nmap <silent> [e <Plug>(coc-diagnostic-prev)
 nmap <silent> ]e <Plug>(coc-diagnostic-next)
-nmap <silent> <leader>d <Plug>(coc-definition)
-nmap <silent> <leader>t <Plug>(coc-type-definition)
+nmap <silent> <leader>df <Plug>(coc-definition)
+nmap <silent> <leader>dc <Plug>(coc-type-definition)
 nmap <silent> <leader>r <Plug>(coc-references)
 
 
@@ -169,5 +189,34 @@ nnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 vnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 let g:NERDCreateDefaultMappings = 0
 
+set updatetime=10
+
+function! HighlightWordUnderCursor()
+    if getline(".")[col(".")-1] !~# '[[:punct:][:blank:]]' 
+        exec 'match' 'Search' '/\V\<'.expand('<cword>').'\>/' 
+    else 
+        match none 
+    endif
+endfunction
+
+autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
+
+"https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2
+" --column: Show column number
+" --line-number: Show line number
+" --no-heading: Do not show file headings in results
+" --fixed-strings: Search term as a literal string
+" --ignore-case: Case insensitive search
+" --no-ignore: Do not respect .gitignore, etc...
+" --hidden: Search hidden files and folders
+" --follow: Follow symlinks
+" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+" --color: Search color options
+nnoremap <leader>f :Find 
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+
+set cmdheight=1
 
 "https://github.com/codegangsta/dotfiles/blob/master/vim/.vimrc#L108
+"https://github.com/kien/ctrlp.vim/issues/51
+"https://realpython.com/vim-and-python-a-match-made-in-heaven/#lets-make-an-ide
