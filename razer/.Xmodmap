@@ -1,13 +1,16 @@
 clear mod1
 clear mod4
+clear Control
 
 keycode 108 = BackSpace BackSpace
 keycode 133 = Alt_L Meta_L Alt_L Meta_L
 keycode 64 = Super_L NoSymbol Super_L
+keycode 66 = Control_L
 
 !Add the Super_L and Super_R keys to the modifier mod4
 add mod4 = Super_L
 add mod1 = Alt_L
+add Control = Control_L
 
 clear Lock
-keycode 66 = Return
+keycode 105 = Return
