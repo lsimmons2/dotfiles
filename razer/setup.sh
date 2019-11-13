@@ -11,7 +11,9 @@ sudo apt-get -y install\
         ca-certificates \
         curl \
         gnupg-agent \
-        software-properties-common
+        software-properties-common\
+        build-essential\
+        chrome-gnome-shell
 
 # apt-transport-https -> software-properties-common for docker
 
@@ -64,7 +66,21 @@ sudo apt remove xserver-xorg-input-synaptics
 sudo apt install xserver-xorg-core
 sudo apt install xserver-xorg-input-libinput
 
+# DISABLE SUPER-* DOCK SHORTCUTS
+dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys "false"
+
+# SHORTCUTS FOR CHANGING WORKSPACES
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-1 "['<Super>0']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-2 "['<Super>1']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-3 "['<Super>2']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-4 "['<Super>3']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-5 "['<Super>4']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-6 "['<Super>5']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-7 "['<Super>6']"
+
+
 
 # MANUALLY
 # download chrome, spotify, slack
- # make dock small, on the bottom, hidden
+# make dock small, on the bottom, hidden
+# make workspace switching animation fast - https://extensions.gnome.org/extension/1328 / https://askubuntu.com/a/1083797/725311
