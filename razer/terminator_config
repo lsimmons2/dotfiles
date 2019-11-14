@@ -2,58 +2,52 @@
   title_transmit_bg_color = "#4287f5"
   title_transmit_fg_color = "#c6c6c6"
 [keybindings]
-  cycle_prev = None
-  next_tab = <Alt>bracketright
-  close_window = None
-  group_tab = None
-  resize_left = <Shift><Alt>Left
   broadcast_all = None
-  rotate_ccw = None
-  reset_clear = None
-  go_right = <Alt>l
-  new_tab = <Alt>t
-  resize_right = <Shift><Alt>Right
-  resize_down = <Shift><Alt>Down
-  toggle_zoom = None
-  group_all = None
-  move_tab_right = None
-  prev_tab = <Alt>bracketleft
-  split_vert = <Alt>e
-  ungroup_all = None
-  broadcast_off = None
-  ungroup_tab = None
-  insert_number = None
-  cycle_next = None
   broadcast_group = None
-  go_prev = None
+  broadcast_off = None
   close_term = <Alt>w
-  go_next = None
+  close_window = None
+  cycle_next = None
+  cycle_prev = None
+  edit_window_title = None
+  go_down = <Alt>j
   go_left = <Alt>h
-  hide_window = None
-  reset = None
+  go_next = None
+  go_prev = None
+  go_right = <Alt>l
   go_up = <Alt>k
+  group_all = None
+  group_tab = None
+  hide_window = None
+  insert_number = None
+  layout_launcher = None
+  line_down = <Shift><Alt>j
+  line_up = <Shift><Alt>k
+  move_tab_left = None
+  move_tab_right = None
+  new_tab = <Alt>t
+  new_window = None
+  next_tab = <Alt>bracketright
+  page_down = None
+  page_down_half = <Shift><Alt>d
+  page_up_half = <Shift><Alt>u
+  paste = <Primary><Shift>v
+  prev_tab = <Alt>bracketleft
+  reset = None
+  reset_clear = None
+  resize_down = <Shift><Alt>Down
+  resize_left = <Shift><Alt>Left
+  resize_right = <Shift><Alt>Right
   resize_up = <Shift><Alt>Up
+  rotate_ccw = None
   rotate_cw = None
   split_horiz = <Alt>o
-  zoom_normal = None
-  go_down = <Alt>j
-  new_window = None
-  paste = <Primary><Shift>v
-  edit_window_title = None
-  move_tab_left = None
+  split_vert = <Alt>e
   toggle_scrollbar = None
-[profiles]
-  [[default]]
-    palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#002b36:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
-    font = Ubuntu Mono 17
-    background_image = None
-    use_system_font = False
-    cursor_color = "#abb2bf"
-    foreground_color = "#839496"
-    copy_on_selection = True
-    background_color = "#002b36"
-    cursor_blink = False
-    scrollback_infinite = True
+  toggle_zoom = None
+  ungroup_all = None
+  ungroup_tab = None
+  zoom_normal = None
 [layouts]
   [[default]]
     [[[child1]]]
@@ -63,3 +57,14 @@
       parent = ""
       type = Window
 [plugins]
+[profiles]
+  [[default]]
+    background_color = "#002b36"
+    copy_on_selection = True
+    cursor_blink = False
+    cursor_color = "#abb2bf"
+    font = Ubuntu Mono 17
+    foreground_color = "#839496"
+    palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#002b36:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
+    scrollback_infinite = True
+    use_system_font = False

@@ -31,7 +31,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # TERMINATOR
 mkdir /home/leo/.config/terminator
-curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/terminator_config > ~/.config/terminator/config
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/terminator_config > ~/.config/terminator/config
 
 # NVM/NODE
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
@@ -45,6 +45,9 @@ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt update && sudo apt install --no-install-recommends yarn
 
+# XMODMAP
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/.Xmodmap > ~/.Xmodmap
+
 # VIM
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -55,7 +58,7 @@ gsettings set org.gnome.desktop.peripherals.keyboard delay 165
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 
 # GITCONFIG
-curl https://raw.githubusercontent.com/lsimmons2/dotfiles/razer/master/.gitconfig > ~/.gitconfig
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/.gitconfig
 
 # BASHRC/PROFILE
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/razer//master/.bashrc > ~/.bashrc
