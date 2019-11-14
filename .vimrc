@@ -188,6 +188,7 @@ nnoremap <C-b> :CtrlPMRU<CR>
 nnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 vnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 let g:NERDCreateDefaultMappings = 0
+let NERDSpaceDelims=1
 
 set updatetime=10
 
