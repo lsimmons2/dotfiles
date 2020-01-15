@@ -15,6 +15,9 @@ syntax on "enables code coloring
 set ignorecase "Case-insensitive searching.
 set smartcase "But case-sensitive if expression contains a capital letter.
 "setlocal spell spelllang=en_us
+"set dictionary+=/usr/share/dict/american-english
+set complete+=k " make complete use dictionaries as well
+
 
 
 "VANILLA MAPPINGS
@@ -53,8 +56,8 @@ nnoremap <leader>P "+P
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>] :tabnext<CR>
 nnoremap <leader>[ :tabprevious<CR>
-inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("j")) "allow C-j and C-k to scroll in autocomplete windows
-inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("k"))
+inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>")) "allow C-j and C-k to scroll in autocomplete windows
+inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 nnoremap <leader>m :GoImports<CR>
 
 
@@ -72,20 +75,25 @@ autocmd FileType text set tabstop=2
 autocmd FileType text set shiftwidth=2
 autocmd FileType python set noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType python set foldmethod=indent
-autocmd FileType python inoremap sop print()<ESC>i
+autocmd FileType python inoremap <buffer>sop print()<ESC>i
+autocmd FileType python inoremap <buffer>stw st.write()<ESC>i
 
 autocmd FileType html set foldmethod=indent
 autocmd FileType html set tabstop=4
 autocmd FileType html set shiftwidth=4
 autocmd FileType html set noexpandtab
+autocmd FileType html inoremap <buffer>sop console.log();<ESC>hi
 
 autocmd FileType css set foldmethod=syntax
 autocmd FileType css set tabstop=4
 autocmd FileType css set shiftwidth=4
 autocmd FileType css set noexpandtab
 
-"autocmd FileType python set tabstop=4
-"autocmd FileType python set shiftwidth=4
+autocmd FileType javascript set foldmethod=syntax
+autocmd FileType javascript inoremap <buffer>sop console.log();<ESC>hi
+autocmd FileType javascript set tabstop=4
+autocmd FileType javascript set shiftwidth=4
+autocmd FileType javascript set noexpandtab
 
 
 "SPLIT CURRENT WINDOW
@@ -127,6 +135,21 @@ set timeoutlen=1000 ttimeoutlen=0
 let g:netrw_banner = 0
 
 
+"HIGHLIGHTING
+hi Search cterm=NONE ctermfg=Black ctermbg=DarkGreen
+hi DiffChange cterm=NONE ctermfg=DarkBlue ctermbg=LightMagenta
+set updatetime=5
+
+function! HighlightWordUnderCursor()
+	   if getline(".")[col(".")-1] !~# '[[:punct:][:blank:]]' 
+			   exec 'match' 'DiffChange' '/\V\<'.expand('<cword>').'\>/' 
+	   else 
+			   match none 
+	   endif
+endfunction
+
+autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
+
 "PLUGINS
 call plug#begin("~/.vim/plugged")
 Plug 'fatih/vim-go'
@@ -134,32 +157,34 @@ Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/auto-pairs-gentle'
+Plug 'davidhalter/jedi-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+Plug 'vim-scripts/ZoomWin'
 call plug#end()
 
 
 "COC STUFF
 set hidden " if hidden is not set, TextEdit might fail. - "Vim's windowing is basically unusable without hidden."
-set cmdheight=2 " Better display for messages
 set updatetime=300 " Smaller updatetime for CursorHold & CursorHoldI
 set shortmess+=c " don't give |ins-completion-menu| messages.
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+     \ pumvisible() ? "\<C-n>" :
+     \ <SID>check_back_space() ? "\<TAB>" :
+     \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+ let col = col('.') - 1
+ return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-n>\<CR>"
 
 nmap <silent> [e <Plug>(coc-diagnostic-prev)
 nmap <silent> ]e <Plug>(coc-diagnostic-next)
@@ -180,7 +205,8 @@ nnoremap Q :GoDocBrowser<CR>
 
 
 "CTRL-P
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|venv|target|dist|.git|build)|(\.(swp|pyc|git|svn|class))$'
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|venv|target|dist|.git|build)|(\.(swp|pyc|git|svn|class|csv|tsv|txt|american-english))$'
+
 nnoremap <C-b> :CtrlPMRU<CR>
 
 
@@ -188,22 +214,11 @@ nnoremap <C-b> :CtrlPMRU<CR>
 nnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 vnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 let g:NERDCreateDefaultMappings = 0
-let NERDSpaceDelims=1
+" let NERDSpaceDelims=1
 
-set updatetime=10
 
-function! HighlightWordUnderCursor()
-    if getline(".")[col(".")-1] !~# '[[:punct:][:blank:]]' 
-        exec 'match' 'Search' '/\V\<'.expand('<cword>').'\>/' 
-    else 
-        match none 
-    endif
-endfunction
-
-autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
 
 "https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2
-" --column: Show column number
 " --line-number: Show line number
 " --no-heading: Do not show file headings in results
 " --fixed-strings: Search term as a literal string
@@ -216,8 +231,10 @@ autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
 nnoremap <leader>f :Find 
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
-set cmdheight=1
 
 "https://github.com/codegangsta/dotfiles/blob/master/vim/.vimrc#L108
 "https://github.com/kien/ctrlp.vim/issues/51
 "https://realpython.com/vim-and-python-a-match-made-in-heaven/#lets-make-an-ide
+"MANUALLY
+"- install coc correctly
+"- :CocInstall coc-word
