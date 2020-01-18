@@ -20,7 +20,8 @@ sudo apt-get -y install\
         chrome-gnome-shell\
         python3-venv\
         gnome-tweaks\
-        tree
+        tree\
+        terminology
 
 # apt-transport-https -> software-properties-common for docker
 
@@ -40,13 +41,16 @@ sudo usermod -aG docker $USER
 mkdir /home/leo/.config/terminator
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/terminator_config > ~/.config/terminator/config
 
+# GNOME TERMINAL
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/gnome_terminal_config.dconf
+dconf load /org/gnome/terminal/legacy/profiles:/ < gnome_terminal_config.dconf
+
 # NVM/NODE
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm install 8.10.0
 npm install -g nodemon
-
 # YARN
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
@@ -73,6 +77,10 @@ sudo apt-get update && sudo apt-get install spotify-client
 wget https://downloads.slack-edge.com/linux_releases/slack-desktop-4.0.2-amd64.deb
 sudo apt-get install ./slack-desktop-4.0.2-amd64.deb
 
+# TELEGRAM
+sudo add-apt-repository ppa:atareao/telegram
+sudo apt-get update && sudo apt-get install -y telegram
+
 # KEY REPEAT AND DELAY
 gsettings set org.gnome.desktop.peripherals.keyboard delay 165
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
@@ -81,9 +89,11 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/.gitconfig
 
 # BASHRC/PROFILE
-curl https://raw.githubusercontent.com/lsimmons2/dotfiles/razer/master/.bashrc > ~/.bashrc
-curl https://raw.githubusercontent.com/lsimmons2/dotfiles/razer/master/.bash_profile > ~/.bash_profile
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/.bashrc > ~/.bashrc
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/.bash_profile > ~/.bash_profile
 
+# NVIDIA DRIVERS
+sudo ubuntu-drivers autoinstall
 
 # enables gpu support for docker containers... which comes by default with docker 19.03
 # sudo apt-get install -y docker nvidia-container-toolkit
@@ -118,6 +128,5 @@ sudo dpkg -i ripgrep_11.0.2_amd64.deb
 
 # MANUALLY
 # make dock small, on the bottom, hidden
-# solarized
 # node/yarn install doesn't work
 # copy keys and make ~/.ssh/config
