@@ -44,7 +44,7 @@
   split_horiz = <Alt>o
   split_vert = <Alt>e
   toggle_scrollbar = None
-  toggle_zoom = None
+  toggle_zoom = <Primary>9
   ungroup_all = None
   ungroup_tab = None
   zoom_normal = None
@@ -59,12 +59,14 @@
 [plugins]
 [profiles]
   [[default]]
-    background_color = "#002b36"
+    background_color = "#fdf6e3"
     copy_on_selection = True
     cursor_blink = False
     cursor_color = "#abb2bf"
-    font = Ubuntu Mono 17
-    foreground_color = "#839496"
+    custom_command = cd /home/leo/org/foxy_annoy_work; bash
+    font = Ubuntu Mono 15
+    foreground_color = "#657b83"
     palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#002b36:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
     scrollback_infinite = True
+    use_custom_command = True
     use_system_font = False
