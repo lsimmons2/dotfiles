@@ -81,30 +81,30 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/.gitconfig
 
 # BASHRC/PROFILE
-curl https://raw.githubusercontent.com/lsimmons2/dotfiles/razer//master/.bashrc > ~/.bashrc
+curl https://raw.githubusercontent.com/lsimmons2/dotfiles/razer/master/.bashrc > ~/.bashrc
 curl https://raw.githubusercontent.com/lsimmons2/dotfiles/razer/master/.bash_profile > ~/.bash_profile
 
 
-enables gpu support for docker containers... which comes by default with docker 19.03
-sudo apt-get install -y docker nvidia-container-toolkit
+# enables gpu support for docker containers... which comes by default with docker 19.03
+# sudo apt-get install -y docker nvidia-container-toolkit
 
 # CUDA DRIVERS/TOOLKIT
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
-sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
-wget http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda-repo-ubuntu1804-10-1-local-10.1.243-418.87.00_1.0-1_amd64.deb
-sudo dpkg -i cuda-repo-ubuntu1804-10-1-local-10.1.243-418.87.00_1.0-1_amd64.deb
-sudo apt-key add /var/cuda-repo-10-1-local-10.1.243-418.87.00/7fa2af80.pub
-sudo apt-get update
-sudo apt-get -y install cuda
+#wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
+#sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
+#wget http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda-repo-ubuntu1804-10-1-local-10.1.243-418.87.00_1.0-1_amd64.deb
+#sudo dpkg -i cuda-repo-ubuntu1804-10-1-local-10.1.243-418.87.00_1.0-1_amd64.deb
+#sudo apt-key add /var/cuda-repo-10-1-local-10.1.243-418.87.00/7fa2af80.pub
+#sudo apt-get update
+#sudo apt-get -y install cuda
 
 # NVIDIA DOCKER
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-sudo apt-get update
-sudo apt-get install -y nvidia-container-toolkit
-sudo systemctl restart docker
+#distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+#curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+#curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+#curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+#sudo apt-get update
+#sudo apt-get install -y nvidia-container-toolkit
+#sudo systemctl restart docker
 
 # PREY
 wget https://downloads.preyproject.com/prey-client-releases/node-client/1.9.2/prey_1.9.2_amd64.deb
@@ -118,7 +118,6 @@ sudo dpkg -i ripgrep_11.0.2_amd64.deb
 
 # MANUALLY
 # make dock small, on the bottom, hidden
-# make workspace switching animation fast - https://extensions.gnome.org/extension/1328 / https://askubuntu.com/a/1083797/725311
 # solarized
 # node/yarn install doesn't work
 # copy keys and make ~/.ssh/config
