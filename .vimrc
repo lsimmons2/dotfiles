@@ -17,6 +17,9 @@ set smartcase "But case-sensitive if expression contains a capital letter.
 "setlocal spell spelllang=en_us
 "set dictionary+=/usr/share/dict/american-english
 set complete+=k " make complete use dictionaries as well
+set wildmode=longest,list,full
+set wildmenu
+map <leader>2 mqgg=G'qzz
 
 
 
@@ -62,38 +65,44 @@ nnoremap <leader>m :GoImports<CR>
 
 
 "LANGUAGE-SPECIFIC MAPPINGS/SETTINGS
-autocmd FileType java inoremap <buffer>psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
-autocmd FileType java inoremap <buffer>sop System.out.println();<ESC>hi
-autocmd FileType go inoremap <buffer>sop fmt.Printf()<ESC>i
-autocmd FileType go inoremap <buffer>sff fmt.Sprintf()<ESC>i"%s", 
-autocmd FileType go inoremap <buffer>sleep time.Sleep(*time.Millisecond)<ESC>bbbba 
+"https://www.reddit.com/r/vim/comments/99ylz8/confused_about_the_difference_between_tabstop_and/
+autocmd FileType java iabbrev <buffer>psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
+autocmd FileType java iabbrev <buffer>sop System.out.println();<ESC>hi
 autocmd FileType java set tabstop=4
 autocmd FileType java set shiftwidth=4
-autocmd FileType go set tabstop=4
-autocmd FileType go set shiftwidth=4
-autocmd FileType text set tabstop=2
-autocmd FileType text set shiftwidth=2
+
 autocmd FileType python set noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType python set foldmethod=indent
-autocmd FileType python inoremap <buffer>sop print()<ESC>i
-autocmd FileType python inoremap <buffer>stw st.write()<ESC>i
+autocmd FileType python iabbrev <buffer>sop print()<ESC>i
+autocmd FileType python iabbrev <buffer>stw st.write()<ESC>i
+
+autocmd FileType go set tabstop=4
+autocmd FileType go set shiftwidth=4
+autocmd FileType go iabbrev <buffer>sop fmt.Printf()<ESC>i
+autocmd FileType go iabbrev <buffer>sff fmt.Sprintf()<ESC>i"%s", 
+autocmd FileType go iabbrev <buffer>sleep time.Sleep(*time.Millisecond)<ESC>bbbba 
 
 autocmd FileType html set foldmethod=indent
 autocmd FileType html set tabstop=4
 autocmd FileType html set shiftwidth=4
 autocmd FileType html set noexpandtab
-autocmd FileType html inoremap <buffer>sop console.log();<ESC>hi
+autocmd FileType html iabbrev <buffer>sop console.log();<ESC>hi
 
 autocmd FileType css set foldmethod=syntax
 autocmd FileType css set tabstop=4
 autocmd FileType css set shiftwidth=4
 autocmd FileType css set noexpandtab
 
-autocmd FileType javascript set foldmethod=syntax
-autocmd FileType javascript inoremap <buffer>sop console.log();<ESC>hi
-autocmd FileType javascript set tabstop=4
-autocmd FileType javascript set shiftwidth=4
-autocmd FileType javascript set noexpandtab
+autocmd FileType javascript set foldmethod=indent
+autocmd FileType javascript iabbrev <buffer>sop console.log();<ESC>hi
+autocmd FileType javascript set noexpandtab tabstop=2 shiftwidth=2
+autocmd FileType javascript iabbrev <buffer>ffor for (let i = 0; i < .length; i++){<CR>}<ESC>kwwwwwwwwwi
+
+autocmd FileType text set tabstop=2
+autocmd FileType text set shiftwidth=2
+
+autocmd FileType yaml set expandtab
+autocmd FileType yaml set shiftwidth=2
 
 
 "SPLIT CURRENT WINDOW
@@ -150,19 +159,22 @@ endfunction
 
 autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
 
-"PLUGINS
+".jsxPLUGINS
 call plug#begin("~/.vim/plugged")
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'fatih/vim-go'
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/auto-pairs-gentle'
-Plug 'davidhalter/jedi-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-scripts/ZoomWin'
+Plug 'dhruvasagar/vim-table-mode'
 call plug#end()
 
+"VIM-TABLE-MODE
+nnoremap <leader>1 :TableModeToggle<CR>
 
 "COC STUFF
 set hidden " if hidden is not set, TextEdit might fail. - "Vim's windowing is basically unusable without hidden."
@@ -184,7 +196,7 @@ endfunction
 
 
 " inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-n>\<CR>"
+"inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-n>\<CR>"
 
 nmap <silent> [e <Plug>(coc-diagnostic-prev)
 nmap <silent> ]e <Plug>(coc-diagnostic-next)
@@ -213,7 +225,13 @@ nnoremap <C-b> :CtrlPMRU<CR>
 "NERDCOMMENT
 nnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 vnoremap <leader>c :call NERDComment('n',"toggle")<CR>
+
+let g:NERDAltDelims_javascript = 1
 let g:NERDCreateDefaultMappings = 0
+let g:NERDCustomDelimiters={
+	\ 'javascript': { 'left': '//', 'right': '', 'leftAlt': '{/*', 'rightAlt': '*/}' },
+\}
+map <leader>3 <plug>NERDCommenterAltDelims
 " let NERDSpaceDelims=1
 
 
