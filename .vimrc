@@ -11,6 +11,7 @@ set autoindent
 set ruler
 set foldmethod=syntax
 set foldopen-=hor
+set nofoldenable
 syntax on "enables code coloring
 set ignorecase "Case-insensitive searching.
 set smartcase "But case-sensitive if expression contains a capital letter.
@@ -127,8 +128,18 @@ nnoremap <C-H> <C-W><C-H>
 
 
 "STATUSLINE
+function! GitBranch()
+  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+endfunction
+
+function! StatuslineGit()
+  let l:branchname = GitBranch()
+  return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+endfunction
+
 set laststatus=2        "have statusline always show (even with single window)
 set statusline=%f       "tail of the filename
+set statusline+=%{StatuslineGit()}
 set statusline+=%h      "help file flag
 set statusline+=%m      "modified flag
 set statusline+=%r      "read only flag
@@ -167,7 +178,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/auto-pairs-gentle'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-scripts/ZoomWin'
 Plug 'dhruvasagar/vim-table-mode'
@@ -247,7 +258,9 @@ map <leader>3 <plug>NERDCommenterAltDelims
 " --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 " --color: Search color options
 nnoremap <leader>f :Find 
+nnoremap <C-m> :BufferTags<CR>
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+command! -bang -nargs=* BufferTags call fzf#vim#buffer_tags("")
 
 
 "https://github.com/codegangsta/dotfiles/blob/master/vim/.vimrc#L108
