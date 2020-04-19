@@ -67,27 +67,27 @@ nnoremap <leader>m :GoImports<CR>
 
 "LANGUAGE-SPECIFIC MAPPINGS/SETTINGS
 "https://www.reddit.com/r/vim/comments/99ylz8/confused_about_the_difference_between_tabstop_and/
-autocmd FileType java iabbrev <buffer>psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
-autocmd FileType java iabbrev <buffer>sop System.out.println();<ESC>hi
+autocmd FileType java inoremap <buffer>psvm public static void main(String[] args) {}<ESC>i<CR><CR><ESC>kcc
+autocmd FileType java inoremap <buffer>sop System.out.println();<ESC>hi
 autocmd FileType java set tabstop=4
 autocmd FileType java set shiftwidth=4
 
 autocmd FileType python set noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType python set foldmethod=indent
-autocmd FileType python iabbrev <buffer>sop print()<ESC>i
-autocmd FileType python iabbrev <buffer>stw st.write()<ESC>i
+autocmd FileType python inoremap <buffer>sop print()<ESC>i
+autocmd FileType python inoremap <buffer>stw st.write()<ESC>i
 
 autocmd FileType go set tabstop=4
 autocmd FileType go set shiftwidth=4
-autocmd FileType go iabbrev <buffer>sop fmt.Printf()<ESC>i
-autocmd FileType go iabbrev <buffer>sff fmt.Sprintf()<ESC>i"%s", 
-autocmd FileType go iabbrev <buffer>sleep time.Sleep(*time.Millisecond)<ESC>bbbba 
+autocmd FileType go inoremap <buffer>sop fmt.Printf()<ESC>i
+autocmd FileType go inoremap <buffer>sff fmt.Sprintf()<ESC>i"%s", 
+autocmd FileType go inoremap <buffer>sleep time.Sleep(*time.Millisecond)<ESC>bbbba 
 
 autocmd FileType html set foldmethod=indent
 autocmd FileType html set tabstop=4
 autocmd FileType html set shiftwidth=4
 autocmd FileType html set noexpandtab
-autocmd FileType html iabbrev <buffer>sop console.log();<ESC>hi
+autocmd FileType html inoremap <buffer>sop console.log();<ESC>hi
 
 autocmd FileType css set foldmethod=syntax
 autocmd FileType css set tabstop=4
@@ -95,9 +95,9 @@ autocmd FileType css set shiftwidth=4
 autocmd FileType css set noexpandtab
 
 autocmd FileType javascript set foldmethod=indent
-autocmd FileType javascript iabbrev <buffer>sop console.log();<ESC>hi
+autocmd FileType javascript inoremap <buffer>sop console.log();<ESC>hi
 autocmd FileType javascript set noexpandtab tabstop=2 shiftwidth=2
-autocmd FileType javascript iabbrev <buffer>ffor for (let i = 0; i < .length; i++){<CR>}<ESC>kwwwwwwwwwi
+autocmd FileType javascript inoremap <buffer>ffor for (let i = 0; i < .length; i++){<CR>}<ESC>kwwwwwwwwwi
 
 autocmd FileType text set tabstop=2
 autocmd FileType text set shiftwidth=2
