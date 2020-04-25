@@ -1,29 +1,22 @@
-"""VANILLA OPTIONS
+"""VANILLA OPTIONS/COMMANDS
 set nobackup
-set nowb
+set nowritebackup
 set noswapfile
-let mapleader=" "
-filetype plugin indent on
-set backspace=indent,eol,start
-set ic
-set expandtab
-set autoindent
-set nocompatible
-set ruler
-"set foldmethod=syntax
-"set foldopen-=hor
-set nofoldenable
-syntax on "enables code coloring
+set backspace=indent,eol,start "non-vim behavior of backspace in insert mode
+set autoindent "copy indent from currenlt line when using o,O, cr in insert mode
+set nocompatible "don't behave like vi
+set ruler "show line number of cursor
+set foldopen-=hor "don't open folds with h,l
+set nofoldenable "open all folds by default
 set ignorecase "Case-insensitive searching.
 set smartcase "But case-sensitive if expression contains a capital letter.
-"setlocal spell spelllang=en_us
 set wildmode=longest,list,full
 set wildmenu
-map <leader>2 mqgg=G'qzz
-
-
+syntax on "enables code coloring
+filetype plugin indent on
 
 """VANILLA MAPPINGS
+let mapleader=" "
 inoremap jk <ESC>
 inoremap kj <ESC>
 inoremap KJ <ESC>
@@ -36,20 +29,13 @@ vnoremap j gj
 vnoremap k gk
 nnoremap 0 g0
 nnoremap $ g$
-nnoremap <M-y> v$hy
-nnoremap <M-p> v$hp
-inoremap <C-b> <ESC>ha
-inoremap <C-f> <ESC>la
-inoremap <C-e> <ESC>$a
-inoremap <C-a> <ESC>0a
-inoremap <C-d> <ESC>lxi
 nnoremap S :w<CR>
+vnoremap // y/<C-R>"<CR>  " search visually selected text 
 nnoremap <leader>S :wa<CR>
 nnoremap <leader>l :set invnumber<CR> " toggle lines
 nnoremap <leader>h :set hls!<CR> " toggle search highlight
 nnoremap <leader>e :e .<CR>
 nnoremap <leader>b :b#<CR>
-vnoremap // y/<C-R>"<CR>  " search visually selected text 
 nnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>y "+y
@@ -59,27 +45,27 @@ nnoremap <leader>P "+P
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>] :tabnext<CR>
 nnoremap <leader>[ :tabprevious<CR>
-inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>")) "allow C-j and C-k to scroll in autocomplete windows
+nnoremap <leader>sv :source ~/.vimrc<CR> :e<CR> "source vimrc and trigger filetype event for autocmds
+"allow C-j and C-k to scroll in autocomplete windows
+inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
 inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
-"SPLIT CURRENT WINDOW
+"split current window
 nmap <leader>sh   :leftabove  vnew <CR>
 nmap <leader>sl  :rightbelow vnew <CR>
 nmap <leader>sk     :leftabove  new <CR>
 nmap <leader>sj   :rightbelow new<CR>
-"RESIZE WINDOWS
+nnoremap <leader>se :rightbelow vnew $MYVIMRC<cr> "with vimrc open
+"resize windows
 nnoremap <S-Left> :vertical resize -2<CR>
 nnoremap <S-Right> :vertical resize +2<CR>
 nnoremap <S-Up> : resize +2<CR>
 nnoremap <S-Down> : resize -2<CR>
-"NAVIGATE WINDOWS
+"navigate windows
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-nnoremap <leader>ev :rightbelow vnew $MYVIMRC<cr>
-
-
-
+nnoremap <leader>2 mqgg=G'qzz
 
 """LANGUAGE-SPECIFIC MAPPINGS/SETTINGS
 "https://www.reddit.com/r/vim/comments/99ylz8/confused_about_the_difference_between_tabstop_and/
@@ -122,7 +108,7 @@ autocmd FileType text set shiftwidth=2
 autocmd FileType text set complete+=k
 autocmd FileType text set dictionary=/home/leo/.10k.txt
 autocmd FileType text set completeopt+=menuone,noselect
-let g:mucomplete#enable_auto_at_startup = 1
+autocmd FileType text setlocal spell spelllang=en_us
 
 autocmd FileType yaml set expandtab
 autocmd FileType yaml set shiftwidth=2
@@ -183,12 +169,10 @@ Plug 'vim-scripts/auto-pairs-gentle'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'lifepillar/vim-mucomplete'
 call plug#end()
 
 """"VIM-TABLE-MODE
 nnoremap <leader>1 :TableModeToggle<CR>
-nnoremap <leader>sv :source ~/.vimrc<CR> :e<CR>
 
 
 """"CTRL-P
