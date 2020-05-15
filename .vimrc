@@ -15,6 +15,9 @@ set wildmenu
 set nospell "disable spell-check by default
 syntax on "enables code coloring
 filetype plugin indent on
+set number
+set relativenumber
+set incsearch
 
 """VANILLA MAPPINGS
 let mapleader=" "
@@ -49,6 +52,8 @@ nnoremap <leader>vs :source ~/.vimrc<CR> :e<CR> " source vimrc and trigger filet
 "allow C-j and C-k to scroll in autocomplete windows
 inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
 inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
+inoremap <TAB> <C-n>
+inoremap <S-TAB> <C-p>
 "split current window
 nmap <leader>sh   :leftabove  vnew <CR>
 nmap <leader>sl  :rightbelow vnew <CR>
@@ -69,6 +74,7 @@ nnoremap <leader>ol :set invnumber<CR> " toggle lines
 nnoremap <leader>or :set invrelativenumber<CR> " toggle relative lines
 nnoremap <leader>os :set invspell<CR> " toggle spellcheck
 nnoremap <leader>oh :set hls!<CR> " toggle search highlight
+nnoremap <leader>ac A <C-v>u2713<ESC>
 
 """LANGUAGE-SPECIFIC MAPPINGS/SETTINGS
 "https://www.reddit.com/r/vim/comments/99ylz8/confused_about_the_difference_between_tabstop_and/
@@ -85,7 +91,8 @@ autocmd FileType python inoremap <buffer>stw st.write()<ESC>i
 autocmd FileType go set tabstop=4
 autocmd FileType go set shiftwidth=4
 autocmd FileType go set foldmethod=syntax
-autocmd FileType go inoremap <buffer>sop fmt.Printf()<ESC>i
+autocmd FileType go inoremap <buffer>sopl log.Info("")<ESC>hi
+autocmd FileType go inoremap <buffer>sopf log.Infof("\n")<ESC>hhhi
 autocmd FileType go inoremap <buffer>sff fmt.Sprintf()<ESC>i"%s", 
 autocmd FileType go inoremap <buffer>sleep time.Sleep(*time.Millisecond)<ESC>bbbba 
 autocmd FileType html set foldmethod=indent
@@ -109,11 +116,16 @@ autocmd FileType text set tabstop=2
 autocmd FileType text set shiftwidth=2
 autocmd FileType text set complete+=k
 autocmd FileType text set dictionary=/home/leo/.10k.txt
-autocmd FileType text set completeopt+=menuone,noselect
-autocmd FileType text setlocal spell lang=en_us
+autocmd FileType text setlocal spelllang=en_us
 
 autocmd FileType yaml set expandtab
 autocmd FileType yaml set shiftwidth=2
+
+autocmd FileType help wincmd L " open help windows in vertical split to the right
+
+autocmd FileType vim wincmd L " open help windows in vertical split to the right
+autocmd FileType vim set expandtab
+autocmd FileType vim set shiftwidth=4
 
 """HIGHLIGHTING
 hi Search cterm=NONE ctermfg=Black ctermbg=DarkGreen
@@ -125,20 +137,29 @@ function! DisplayPUM()
 endfunction
 autocmd InsertCharPre echom call DisplayPUM()
 
-set updatetime=5
-function! HighlightWordUnderCursor()
-	if getline(".")[col(".")-1] !~# '[[:punct:][:blank:]]' 
-		exec 'match' 'DiffChange' '/\V\<'.expand('<cword>').'\>/' 
-	else 
-		match none 
-	endif
-endfunction
-autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
+nnoremap ; :<C-P><CR>
 
-function! Meow()
-	return "Meow string!"
-endfunction
-nnoremap <M-h> echo "hola"
+"function! MessageWindow()
+  "echom "in this func bro"
+  "new
+  "redir => messages_output
+  "silent messages
+  "redir END
+  "silent put=messages_output
+"endfunction
+"autocmd FileType text nnoremap <leader>l call MessageWindow()
+
+"set updatetime=5
+"function! HighlightWordUnderCursor()
+	"if getline(".")[col(".")-1] !~# '[[:punct:][:blank:]]' 
+		"exec 'match' 'DiffChange' '/\V\<'.expand('<cword>').'\>/' 
+	"else 
+		"match none 
+	"endif
+"endfunction
+"autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
+
+
 
 """STATUSLINE
 set laststatus=2        "have statusline always show (even with single window)
@@ -161,32 +182,94 @@ call plug#begin("~/.vim/plugged")
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
+Plug 'junegunn/seoul256.vim'
 Plug 'vim-scripts/auto-pairs-gentle'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
+
+color seoul256
+set background=light
+
+"""AUTOCOMPLETE
+"autocmd FileType text set completeopt+=menuone,noselect
+"autocmd FileType text set completeopt=menu,menuone,noinsert,longest
+"inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+"fun! AutoComplete()
+function! AutoComplete()
+    echom v:char
+    echom "\K"
+    "if v:char =~ '\K'
+	"\ && getline('.')[col('.') - 4] !~ '\K'
+	"\ && getline('.')[col('.') - 3] =~ '\K'
+	"\ && getline('.')[col('.') - 2] =~ '\K' " last char
+	"\ && getline('.')[col('.') - 1] !~ '\K'
+
+	"call feedkeys("\<C-P>", 'n')
+    "end
+endfun
+autocmd InsertCharPre * call AutoComplete()
+
+"function! Meow()
+	"echom "Meow bro!"
+"endfunction
+""nnoremap <M-h> echo "hola"
+"autocmd CursorMovedI * call Meow()
+
+
 """"COC.NVIM
-set hidden " if hidden is not set, TextEdit might fail. - "Vim's windowing is basically unusable without hidden."
-set updatetime=300 " Smaller updatetime for CursorHold & CursorHoldI
-set shortmess+=c " don't give |ins-completion-menu| messages.
+"set hidden " if hidden is not set, TextEdit might fail. - "Vim's windowing is basically unusable without hidden."
+"set updatetime=300 " Smaller updatetime for CursorHold & CursorHoldI
+"set shortmess+=c " don't give |ins-completion-menu| messages.
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-     \ pumvisible() ? "\<C-n>" :
-     \ <SID>check_back_space() ? "\<TAB>" :
-     \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+""Use tab for trigger completion with characters ahead and navigate.
+""Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+"nmap ]e <Plug>(coc-diagnostic-next)
+"nmap [e <Plug>(coc-diagnostic-prev)
+"nmap <leader>d <Plug>(coc-definition)
+"nmap <leader>q <Plug>(coc-type-definition)
+"nmap <leader>r <Plug>(coc-references)
 
-function! s:check_back_space() abort
- let col = col('.') - 1
- return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+"inoremap <silent><expr> <TAB>
+		 "\ pumvisible() ? "\<C-n>" :
+		 "\ <SID>check_back_space() ? "\<TAB>" :
+		 "\ coc#refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+"function! s:check_back_space() abort
+ "let col = col('.') - 1
+ "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+
+""""VIM-GO
+let g:go_def_mapping_enabled = 0
+let g:go_code_completion_enabled = 0
+let g:go_doc_keywordprg_enabled = 0
+au FileType go nmap <leader>l <Plug>(go-imports)
+au FileType go nmap <leader>i <Plug>(go-info)
+au FileType go nmap <leader>m :GoDeclsDir<CR>
+
+""""MUCOMPLETE
+"set completeopt+=menuone,noinsert
+"set completeopt+=noselect
+"set completeopt+=noinsert
+"let g:mucomplete#enable_auto_at_startup = 1
+
+""""JEDI-VIM
+"let g:jedi#completions_command = "<TAB>"
+"set noshowmode
+"let g:jedi#show_call_signatures_delay = "0"
+"let g:jedi#show_call_signatures = "0"
+"let g:jedi#goto_command = "gd"
 
 """"VIM-TABLE-MODE
+"let g:table_mode_disable_mappings = 1
+map <Plug>(table-mode-tableize) <Nop>
+map <Plug>(table-mode-tableize-delimiter) <Nop>
 nnoremap <leader>ot :TableModeToggle<CR>
 
 """"CTRL-P
@@ -198,12 +281,14 @@ command! -bang -nargs=* BufferTags call fzf#vim#buffer_tags("")
 """"NERDCOMMENT
 nnoremap <leader>c :call NERDComment('n',"toggle")<CR>
 vnoremap <leader>c :call NERDComment('n',"toggle")<CR>
-let g:NERDAltDelims_javascript = 1
 let g:NERDCreateDefaultMappings = 0
 let g:NERDCustomDelimiters={
 			\ 'javascript': { 'left': '//', 'right': '', 'leftAlt': '{/*', 'rightAlt': '*/}' },
 			\}
-nnoremap <leader>oc <plug>NERDCommenterAltDelims
+map <leader>oc <Plug>NERDCommenterAltDelims
+
+
+
 
 """OTHER
 "https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2
