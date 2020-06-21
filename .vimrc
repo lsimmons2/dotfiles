@@ -163,6 +163,12 @@ augroup filetype_yaml
     autocmd FileType yaml set shiftwidth=2
 augroup END
 
+augroup filetype_json
+    autocmd!
+    autocmd FileType json set expandtab
+    autocmd FileType json set shiftwidth=4
+augroup END
+
 augroup filetype_help
     autocmd!
     autocmd FileType help wincmd L " open help windows in vertical split to the right
@@ -407,6 +413,9 @@ let g:table_mode_map_prefix='<Leader><Up>'
 nnoremap <C-m> :call fzf#vim#buffer_tags("")<CR>
 nnoremap / :BLines<CR>
 nnoremap <C-a> :Tags<CR>
+nnoremap <Backspace>c :Commands<CR>
+nnoremap <Backspace>h :History:<CR>
+nnoremap <Backspace>m :Tags<CR>
 "function! s:format_mark(line)
     "return a:line
   ""return substitute(a:line, '\S', '\=s:yellow(submatch(0), "Number")', '')
