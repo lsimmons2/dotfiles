@@ -181,7 +181,7 @@ hi Search cterm=NONE ctermfg=Black ctermbg=DarkGreen
 hi DiffChange cterm=NONE ctermfg=DarkBlue ctermbg=LightMagenta
 
 """FUNCTIONS AND THEIR MAPPINGS
-nnoremap ; :<C-P><CR>
+"nnoremap ; :<C-P><CR>
 
 "function! MessageWindow()
   "echom "in this func bro"
@@ -236,6 +236,7 @@ Plug 'dhruvasagar/vim-table-mode'
     "\ 'do': 'bash install.sh',
     "\ }
 "Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
+"folding in this file
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'prabirshrestha/async.vim'
 "Plug 'prabirshrestha/vim-lsp'
@@ -298,7 +299,7 @@ call plug#end()
 "nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 
 """"GITGUTTER
-autocmd VimEnter * GitGutterDisable
+"autocmd VimEnter * GitGutterDisable
 nnoremap <leader>oq :GitGutterTo<CR>
 nnoremap q] :GitGutterNextHunk<CR>:GitGutterPreviewHunk<CR>
 nnoremap q[ :GitGutterPrevHunk<CR>:GitGutterPreviewHunk<CR>
@@ -353,13 +354,18 @@ nmap <leader>q <Plug>(coc-type-definition)
 "nnoremap <leader>r :echo "hola"<CR>
 nmap <leader>r <Plug>(coc-references)
 nmap <leader>f <Plug>(coc-format)
-let blacklist = ['py']
-autocmd BufWritePre * if index(blacklist, &ft) < 0 | inoremap <silent><expr> <TAB>
-     \ pumvisible() ? "\<C-n>" :
-     \ <SID>check_back_space() ? "\<TAB>" :
-     \ coc#refresh()
-autocmd BufWritePre * if index(blacklist, &ft) < 0 | 
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"let whitelist = ['python']
+"autocmd BufWritePre * if index(whitelist, &ft) >= 0 | silent call CocActionAsync('organizeImport')
+"autocmd CursorHold * silent call CocActionAsync('highlight')
+"
+"let blacklist = ['python']
+"autocmd BufWritePre * if index(blacklist, &ft) < 0 | inoremap <silent><expr> <TAB>
+     "\ pumvisible() ? "\<C-n>" :
+     "\ <SID>check_back_space() ? "\<TAB>" :
+     "\ coc#refresh()
+
+"autocmd BufWritePre * if index(blacklist, &ft) < 0 | inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
 function! s:check_back_space() abort
  let col = col('.') - 1
  return !col || getline('.')[col - 1]  =~# '\s'
