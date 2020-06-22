@@ -167,7 +167,7 @@ augroup END
 augroup filetype_json
     autocmd!
     autocmd FileType json set expandtab
-    autocmd FileType json set shiftwidth=4
+    autocmd FileType json set shiftwidth=2
 augroup END
 
 augroup filetype_help
@@ -243,7 +243,6 @@ Plug 'dhruvasagar/vim-table-mode'
     "\ 'do': 'bash install.sh',
     "\ }
 "Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
-"folding in this file
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'prabirshrestha/async.vim'
 "Plug 'prabirshrestha/vim-lsp'
@@ -291,8 +290,8 @@ call plug#end()
 "augroup END
 
 
-"inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 "inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 "imap <c-space> <Plug>(asyncomplete_force_refresh)
 
@@ -389,19 +388,6 @@ au FileType go nmap <leader>i <Plug>(go-info)
 au FileType go nmap <C-p> :GoDeclsDir<CR>
 "au FileType go nmap <leader>m :GoDeclsDir<CR>
 
-""""MUCOMPLETE
-"set completeopt+=menuone,noinsert
-"set completeopt+=noselect
-"set completeopt+=noinsert
-"let g:mucomplete#enable_auto_at_startup = 1
-
-""""JEDI-VIM
-"let g:jedi#completions_command = "<TAB>"
-"set noshowmode
-"let g:jedi#show_call_signatures_delay = "0"
-"let g:jedi#show_call_signatures = "0"
-"let g:jedi#goto_command = "gd"
-
 """"VIM-TABLE-MODE
 "let g:table_mode_disable_mappings = 1
 map <Plug>(table-mode-tableize) <Nop>
@@ -411,8 +397,8 @@ nnoremap <leader>ot :TableModeToggle<CR>
 let g:table_mode_map_prefix='<Leader><Up>'
 
 """"FZF
-nnoremap <C-m> :call fzf#vim#buffer_tags("")<CR>
-nnoremap / :BLines<CR>
+let g:fzf_tags_command = 'ctags -R --Python-kinds=f --exclude=.git --exclude=venv'
+nnoremap <C-m> :BTags<CR>
 nnoremap <C-a> :Tags<CR>
 nnoremap <Backspace>c :Commands<CR>
 nnoremap <Backspace>h :History:<CR>
@@ -431,41 +417,7 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
-"function! s:format_mark(line)
-    "return a:line
-  ""return substitute(a:line, '\S', '\=s:yellow(submatch(0), "Number")', '')
-"endfunction
 
-"function! Change_sink(lines)
-  "if len(a:lines) < 2
-    "return
-  "endif
-  "let cmd = s:action_for(a:lines[0])
-  "if !empty(cmd)
-    "execute 'silent' cmd
-  "endif
-  "execute 'normal! `'.matchstr(a:lines[1], '\S').'zz'
-"endfunction
-
-"function! Changes(...)
-  "redir => cout
-  "silent changes
-  "redir END
-  "let list = split(cout, "\n")
-  "return s:fzf('changes', {
-  "\ 'source':  extend(list[0:0], map(list[1:], 's:format_mark(v:val)')),
-  "\ 'sink*':   Change_sink,
-  "\ 'options': '+m -x --ansi --tiebreak=index --header-lines 1 --tiebreak=begin --prompt "Changes> "'}, a:000)
-"endfunction
-
-"nnoremap <C-n> :call Changes("")<CR>
-""nnoremap <C-n> :call fzf#run({'source':'','sink': 'edit'})<CR>
-"nnoremap <C-n> :call fzf#run({'source':'','sink': 'edit'})<CR>
-
-"nnoremap <C-n> :BLines<CR>
-"nnoremap <C-\<> :BLines<CR>
-"nnoremap <C-m> :BufferTags<CR>
-"command! -bang -nargs=* BufferTags call fzf#vim#buffer_tags("")
 
 """"CTRL-P
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|venv|target|dist|.git|build)|(\.(swp|pyc|git|svn|class|csv|tsv|txt|american-english))$'
