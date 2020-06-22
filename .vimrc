@@ -188,6 +188,14 @@ hi Search cterm=NONE ctermfg=Black ctermbg=DarkGreen
 hi DiffChange cterm=NONE ctermfg=DarkBlue ctermbg=LightMagenta
 
 """FUNCTIONS AND THEIR MAPPINGS
+function! PythonPrintVar()
+    let wordUnderCursor = expand("<cword>")
+    let toPrint = "print(\"" . wordUnderCursor . ":\\n\", " . wordUnderCursor . ")"
+    let currentLine   = getline(".")
+    call append(".", toPrint)
+endfunction
+command! -bang PythonPrintVar call PythonPrintVar()
+
 "nnoremap ; :<C-P><CR>
 
 "function! MessageWindow()
