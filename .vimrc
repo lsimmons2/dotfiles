@@ -20,6 +20,7 @@ set relativenumber
 set incsearch
 set cursorline
 set hlsearch
+set modelineexpr
 
 """VANILLA MAPPINGS
 let mapleader=" "
