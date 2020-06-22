@@ -416,6 +416,20 @@ nnoremap <C-a> :Tags<CR>
 nnoremap <Backspace>c :Commands<CR>
 nnoremap <Backspace>h :History:<CR>
 nnoremap <Backspace>m :Tags<CR>
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 "function! s:format_mark(line)
     "return a:line
   ""return substitute(a:line, '\S', '\=s:yellow(submatch(0), "Number")', '')
