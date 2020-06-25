@@ -446,9 +446,18 @@ map <leader>oc <Plug>NERDCommenterAltDelims
 
 
 """OTHER
-"https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2
-nnoremap <C-f> :Find 
-command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!*tags" --glob "!*venv*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+nnoremap <C-f> :RG<CR>
+
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading -g !*venv* -g !tags -T txt --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
 
 """NOTES
 "https://github.com/codegangsta/dotfiles/blob/master/vim/.vimrc#L108
