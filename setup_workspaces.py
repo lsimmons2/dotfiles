@@ -3,8 +3,11 @@
 import subprocess
 import time
 import datetime
+import sys
+
 
 def log(to_log):
+    print(to_log)
     with open("/home/leo/startup.log", "a") as f:
         f.write("%s\n" % to_log)
 
@@ -14,6 +17,17 @@ def run_command_in_background(command):
 
 def get_wmctrl_lines():
     return subprocess.run(["wmctrl", "-l"], capture_output=True, text=True).stdout.splitlines()
+
+
+finito_ids = set()
+def get_running_app_window_id_desktop_nb(search_term):
+    for line in get_wmctrl_lines():
+        if search_term in line.lower():
+            split = line.split()
+            window_id = split[0]
+            if window_id not in finito_ids:
+                return split[0], int(split[1])
+    return None, None
 
 def move_window_to_desktop(window_id, desktop_number):
     # desktop = workspace??
@@ -25,42 +39,37 @@ log("Running startup script at %s" % log_datetime)
 
 run_command_in_background(["xmodmap", "/home/leo/.Xmodmap"])
 
-# START APPS
-for _ in range(3):
-    run_command_in_background(["terminator"])
-run_command_in_background(["vivaldi"])
-run_command_in_background(["google-chrome"])
-run_command_in_background(["snap","run","spotify"])
-time.sleep(5)
+apps = [
+        (["vivaldi"],2,"vivaldi",False,False,False),
+        (["terminator"],3,"leo@fiona",True,False,False),
+        (["terminator"],4,"leo@fiona",True,False,False),
+        (["terminator"],5,"leo@fiona",True,False,False),
+        (["snap","run","spotify"],6,"spotify",False,False,False),
+        (["google-chrome"],8,"chrome",False,False,False),
+        ]
+
 
 # MOVE APPS
-terminator_count = 0
-for line in get_wmctrl_lines():
-    if "leo@fiona" in line:
-        window_id = line.split(" ")[0]
-        move_window_to_desktop(window_id, terminator_count+3)
-        run_command_in_background(["wmctrl", "-i", "-r", str(window_id), "-b", "toggle,fullscreen"])
-        terminator_count += 1
-
-
-# CREATE AND MOVE OTHER APPS
-app_map = {
-        "vivaldi":2,
-        "spotify":6,
-        "chrome":8,
-        }
-
-lines = get_wmctrl_lines()
-log("%d many lines" % len(lines))
-for app_search_string, desktop_number in app_map.items():
-    for line in lines:
-        if app_search_string in line.lower():
-            log("this string")
-            log(line)
-            window_id = line.split(" ")[0]
-            #if app_search_string == "spotify":
-            #    log("aqui quey")
-            #    run_command_in_background(["wmctrl", "-a", window_id])
-            #    time.sleep(5)
-            move_window_to_desktop(window_id, desktop_number)
-            break
+while False in [a[-1] for a in apps]:
+    new_apps = []
+    for app in apps:
+        app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted = app
+        if not has_been_spawned:
+            log("spawning app %s" % search_term)
+            run_command_in_background(app_command)
+            has_been_spawned = True
+        else:
+            app_window_id, current_desktop_nb = get_running_app_window_id_desktop_nb(search_term)
+            if app_window_id is not None:
+                log("moving app %s in window %s to desktop %s" % (search_term, app_window_id, desktop_nb))
+                run_command_in_background(["wmctrl", "-i", "-r", app_window_id, "-t", str(desktop_nb)])
+                if should_be_full_screen:
+                    run_command_in_background(["wmctrl", "-i", "-r", app_window_id, "-b", "toggle,fullscreen"])
+                has_been_formatted = True
+                finito_ids.add(app_window_id)
+            else:
+                print("app %s still not running" % search_term)
+        new_apps.append((app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted))
+    apps = new_apps
+    print(apps)
+    time.sleep(1)
