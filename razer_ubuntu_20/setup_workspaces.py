@@ -46,9 +46,9 @@ run_command_in_background(["xmodmap", "/home/leo/.Xmodmap"])
 apps = [
         # app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted
         (["vivaldi"],2,"vivaldi",False,False,False),
-        (["terminator"],3,"leo@fiona",True,False,False),
-        (["terminator"],4,"leo@fiona",True,False,False),
-        (["terminator"],5,"leo@fiona",True,False,False),
+        (["terminator"],3,"/bin/bash",True,False,False),
+        (["terminator"],4,"/bin/bash",True,False,False),
+        (["terminator"],5,"/bin/bash",True,False,False),
         (["snap","run","spotify"],6,"spotify",False,False,False),
         (["google-chrome"],8,"chrome",False,False,False),
         ]
