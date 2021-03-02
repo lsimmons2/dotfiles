@@ -37,9 +37,14 @@ def move_window_to_desktop(window_id, desktop_number):
 log_datetime = datetime.datetime.now().strftime("%m-%d-%y %H:%M:%S")
 log("Running startup script at %s" % log_datetime)
 
+for i in range(1,9):
+    command = ["gsettings", "set", "org.gnome.shell.keybindings", "switch-to-application-%s" % i, "[]"]
+    #run_command_in_background(command)
+
 run_command_in_background(["xmodmap", "/home/leo/.Xmodmap"])
 
 apps = [
+        # app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted
         (["vivaldi"],2,"vivaldi",False,False,False),
         (["terminator"],3,"leo@fiona",True,False,False),
         (["terminator"],4,"leo@fiona",True,False,False),
@@ -71,5 +76,6 @@ while False in [a[-1] for a in apps]:
                 print("app %s still not running" % search_term)
         new_apps.append((app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted))
     apps = new_apps
-    print(apps)
     time.sleep(1)
+
+run_command_in_background(["notify-send", "Hola we", "apps/workspaces are set up"])
