@@ -23,7 +23,6 @@ set wildmenu
 map <leader>2 mqgg=G'qzz
 
 
-
 "VANILLA MAPPINGS
 inoremap jk <ESC>
 inoremap kj <ESC>
@@ -62,6 +61,7 @@ nnoremap <leader>[ :tabprevious<CR>
 inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>")) "allow C-j and C-k to scroll in autocomplete windows
 inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 
+nnoremap <leader>vs :source ~/.vimrc<CR>
 " "OPTIONS"
 nnoremap <leader>ol :set invnumber<CR> " toggle lines
 nnoremap <leader>oh :set hls!<CR> " toggle search highlight
@@ -74,8 +74,6 @@ set statusline+=%m      "modified flag
 set statusline+=%r      "read only flag
 set statusline+=%=      "left/right separator
 set statusline+=Line:%-2l/%-6L "cursor line/total lines
-"hi StatusLine ctermfg=234 guifg=#1c1c1c ctermbg=107 guibg=#87af5f
-"hi StatusLineNC ctermfg=234 guifg=#1c1c1c ctermbg=245 guibg=#8a8a8a
 
 
 "NETRW
@@ -97,7 +95,7 @@ function! HighlightWordUnderCursor()
 	endif
 endfunction
 
-let blacklist = ['txt', 'md']
+let blacklist = ['text', 'markdown']
 autocmd BufWritePre * if index(blacklist, &ft) < 0 | autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
 
 "SPLIT CURRENT WINDOW
@@ -128,11 +126,16 @@ augroup filetype_python
 	autocmd FileType python iabbrev <buffer>sop print()<ESC>i
 augroup END
 
-
 augroup filetype_vim
 	autocmd!
 	autocmd FileType vim set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType vim set foldmethod=indent
+augroup END
+
+augroup filetype_text
+	autocmd!
+	autocmd FileType text set noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType text set foldmethod=indent
 augroup END
 
 ".jsxPLUGINS
@@ -143,10 +146,28 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin("~/.vim/plugged")
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/auto-pairs-gentle'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'dhruvasagar/vim-table-mode'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
+
+" FZF
+nnoremap <C-b> :Buffers<CR>
+nnoremap <C-p> :Files<CR>
+nnoremap / :BLines<CR>
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always -F --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
+nnoremap <leader>/ :Rg<CR>
+
+
+" NERDCOMMENTER
+let g:NERDCreateDefaultMappings = 0
+nnoremap <leader>c :call NERDComment(0,"toggle")<CR>
+vnoremap <leader>c :call NERDComment(0,"toggle")<CR>

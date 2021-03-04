@@ -8,6 +8,7 @@
 #curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#nvm install node
 #npm install -g nodemon
 #
 ## YARN
@@ -32,6 +33,7 @@
 #sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 #sudo groupadd docker
 #sudo usermod -aG docker $USER
+#newgrp docker
 #
 ## VIM
 #curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
@@ -44,3 +46,7 @@
 ## BASHRC/PROFILE
 #curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/.bashrc > ~/.bashrc
 #curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/.bash_profile > ~/.bash_profile
+
+#ln -s /home/leo/dotfiles/razer_ubuntu_20/.vimrc /home/leo/.vimrc
+#ln -s /home/leo/dotfiles/razer_ubuntu_20/.bashrc /home/leo/.bashrc
+#ln -s /home/leo/dotfiles/razer_ubuntu_20/.bash_profile /home/leo/.bash_profile
