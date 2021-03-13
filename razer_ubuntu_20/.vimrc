@@ -45,7 +45,6 @@ inoremap <C-a> <ESC>0i
 inoremap <C-d> <ESC>lxi
 nnoremap S :w<CR>
 nnoremap <leader>S :wa<CR>
-
 nnoremap <leader>e :e .<CR>
 nnoremap <leader>b :b#<CR>
 vnoremap // y/<C-R>"<CR>  " search visually selected text 
@@ -55,16 +54,22 @@ vnoremap <leader>y "+y
 vnoremap <leader>p "+p
 nnoremap <leader>Y "+Y
 nnoremap <leader>P "+P
+vnoremap $ $h
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>] :tabnext<CR>
 nnoremap <leader>[ :tabprevious<CR>
 inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>")) "allow C-j and C-k to scroll in autocomplete windows
 inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
-
 nnoremap <leader>vs :source ~/.vimrc<CR>
+
+" "THINGS TO APPEND"
+nnoremap <leader>ac A <C-k>OK<ESC>
+nnoremap <leader>ax A <C-k>XX<ESC>
+
 " "OPTIONS"
 nnoremap <leader>ol :set invnumber<CR> " toggle lines
 nnoremap <leader>oh :set hls!<CR> " toggle search highlight
+nnoremap <leader>os :set spell!<CR> " toggle search highlight
 
 " STATUSLINE
 set laststatus=2        "have statusline always show (even with single window)
@@ -123,7 +128,7 @@ augroup filetype_python
 	autocmd!
 	autocmd FileType python set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType python set foldmethod=indent
-	autocmd FileType python iabbrev <buffer>sop print()<ESC>i
+	autocmd FileType python inoremap <buffer>sop print()<ESC>i
 augroup END
 
 augroup filetype_vim
@@ -134,8 +139,20 @@ augroup END
 
 augroup filetype_text
 	autocmd!
+	autocmd FileType sh set noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType sh set foldmethod=indent
+augroup END
+
+augroup filetype_shell
+	autocmd!
 	autocmd FileType text set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType text set foldmethod=indent
+augroup END
+
+augroup filetype_makefile
+	autocmd!
+	autocmd FileType make set noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType make set foldmethod=indent
 augroup END
 
 ".jsxPLUGINS
@@ -146,18 +163,19 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin("~/.vim/plugged")
-"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/auto-pairs-gentle'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'dhruvasagar/vim-table-mode'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
+"colorscheme dracula
 
 " FZF
-nnoremap <C-b> :Buffers<CR>
 nnoremap <C-p> :Files<CR>
 nnoremap / :BLines<CR>
 command! -bang -nargs=* Rg
@@ -166,8 +184,18 @@ command! -bang -nargs=* Rg
   \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
 nnoremap <leader>/ :Rg<CR>
 
+nnoremap <leader>m :call fzf#run({'source': 'fasd -d -l', 'sink': 'lcd'})<CR>
+
+"CTRL-P
+nnoremap <C-b> :CtrlPMRU<CR>
+
 
 " NERDCOMMENTER
 let g:NERDCreateDefaultMappings = 0
 nnoremap <leader>c :call NERDComment(0,"toggle")<CR>
 vnoremap <leader>c :call NERDComment(0,"toggle")<CR>
+
+" TABLE MODE
+let g:table_mode_disable_mappings = 1
+let g:table_mode_disable_tableize_mappings = 1
+let g:table_mode_map_prefix = "<Leader>xxxxxxxxxxxxxxxxxx"

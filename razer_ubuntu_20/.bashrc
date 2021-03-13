@@ -23,27 +23,73 @@ alias sd="skaffold dev"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
+#fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+#fasd
+eval "$(fasd --init bash-hook bash-ccomp bash-ccomp-install)"
 
-FZF_CTRL_J_COMMAND="docker ps"
+
 __fzf_get_docker_container() {
-  local cmd="${FZF_CTRL_J_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
-    -o -type f -print \
-    -o -type d -print \
-    -o -type l -print 2> /dev/null | cut -b3-"}"
+  local cmd="docker ps"
   eval "$cmd" | FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" $(__fzfcmd) -m "$@" | while read -r item; do
     rv=$(echo $item | awk '{print $1}')
     printf '%q' "$rv"
   done
   echo
 }
-
 __find_docker_container() {
-  local selected="$(__fzf_get_docker_container)"
-  READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
-  READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
+	local selected="$(__fzf_get_docker_container)"
+	local containerId=${selected%:*}
+
+	if [[ -z "${containerId// }" ]]; then
+		return
+	fi
+
+	if [ "$READLINE_LINE" ]; then
+		READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$containerId${READLINE_LINE:$READLINE_POINT}"
+		READLINE_POINT=$(( READLINE_POINT + ${#containerId} ))
+	else
+		docker exec -it $containerId bash
+	fi
+}
+bind -x '"\ev": __find_docker_container'
+
+
+__directory_function() {
+   local cmd="fasd -d"
+  eval "$cmd" | FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" $(__fzfcmd) -m "$@" | while read -r item; do
+    rv=$(echo $item | awk '{print $2}')
+    printf '%q' "$rv"
+  done
+  echo
+}
+__directory_thing() {
+
+	local selected="$(__directory_function)"
+	if [[ -z "${selected// }" ]]; then
+		return
+	fi
+
+	if [ "$READLINE_LINE" ]; then
+		#echo something
+		READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
+		READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
+	else
+		#echo nothing
+		cd $selected
+	fi
+
+	#cd "$thing"
+	#printf 'cd %q' "$thing"
+
 }
 
-#bind -m emacs-standard -x '"\ed": __find_docker_container'
+bind -x '"\em": __directory_thing'
+
+
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+#https://medium.com/@christoph.schranz/set-up-your-own-gpu-based-jupyterlab-e0d45fcacf43
+export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
