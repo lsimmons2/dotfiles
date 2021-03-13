@@ -46,6 +46,10 @@
 #        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 #curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.vimrc > ~/.vimrc
 
+#TELEGRAM
+#sudo add-apt-repository ppa:atareao/telegram
+#sudo apt-get update && sudo apt-get install -y telegram
+
 # GITCONFIG
 #curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.gitconfig > ~/.gitconfig
 #

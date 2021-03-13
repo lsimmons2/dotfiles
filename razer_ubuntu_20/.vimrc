@@ -143,6 +143,23 @@ augroup filetype_text
 	autocmd FileType sh set foldmethod=indent
 augroup END
 
+augroup filetype_javascript
+	autocmd!
+	autocmd FileType javascript set noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType javascript set foldmethod=indent
+	autocmd FileType javascript inoremap <buffer>sop console.log();<ESC>hi
+augroup END
+
+augroup filetype_typescriptjavascript
+	autocmd!
+	autocmd FileType typescriptreact set noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType typescriptreact set foldmethod=indent
+	autocmd FileType typescriptreact inoremap <buffer>sop console.log();<ESC>hi
+	autocmd FileType typescriptreact inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
+
+
+augroup END
+
 augroup filetype_shell
 	autocmd!
 	autocmd FileType text set noexpandtab tabstop=4 shiftwidth=4
@@ -168,8 +185,8 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/auto-pairs-gentle'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'dhruvasagar/vim-table-mode'
+Plug 'leafgarland/typescript-vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
