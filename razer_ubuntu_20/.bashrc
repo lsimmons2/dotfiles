@@ -80,9 +80,6 @@ __directory_thing() {
 		cd $selected
 	fi
 
-	#cd "$thing"
-	#printf 'cd %q' "$thing"
-
 }
 
 bind -x '"\em": __directory_thing'
@@ -93,3 +90,6 @@ bind -x '"\em": __directory_thing'
 #https://medium.com/@christoph.schranz/set-up-your-own-gpu-based-jupyterlab-e0d45fcacf43
 export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+alias sd="bash /home/leo/dotfiles/razer_ubuntu_20/change_color_scheme.sh dark"
+alias sl="bash /home/leo/dotfiles/razer_ubuntu_20/change_color_scheme.sh light"

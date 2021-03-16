@@ -201,7 +201,7 @@ command! -bang -nargs=* Rg
   \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
 nnoremap <leader>/ :Rg<CR>
 
-nnoremap <leader>m :call fzf#run({'source': 'fasd -d -l', 'sink': 'lcd'})<CR>
+nnoremap <leader>m :call fzf#run({'source': 'fasd -d -l', 'sink': 'lcd'})<CR>:e .<CR>
 
 "CTRL-P
 nnoremap <C-b> :CtrlPMRU<CR>
