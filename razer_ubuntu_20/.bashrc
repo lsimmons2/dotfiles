@@ -56,7 +56,7 @@ __find_docker_container() {
 bind -x '"\ev": __find_docker_container'
 
 
-__directory_function() {
+_get_dir_fzf() {
    local cmd="fasd -d"
   eval "$cmd" | FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" $(__fzfcmd) -m "$@" | while read -r item; do
     rv=$(echo $item | awk '{print $2}')
@@ -64,26 +64,28 @@ __directory_function() {
   done
   echo
 }
-__directory_thing() {
+__insert_dir_or_cd() {
 
-	local selected="$(__directory_function)"
+	local selected="$(_get_dir_fzf)"
 	if [[ -z "${selected// }" ]]; then
 		return
 	fi
 
 	if [ "$READLINE_LINE" ]; then
-		#echo something
 		READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
 		READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
 	else
-		#echo nothing
 		cd $selected
 	fi
 
 }
 
-bind -x '"\em": __directory_thing'
+foo(){
+	dir="/home/leo/notes"
+	cd $dir
+}
 
+bind '"\em": "\C-ex\C-u __insert_dir_or_cd\C-m\C-y\C-b\C-d"'
 
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
