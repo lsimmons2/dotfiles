@@ -21,6 +21,9 @@ set complete+=k " make complete use dictionaries as well
 set wildmode=longest,list,full
 set wildmenu
 map <leader>2 mqgg=G'qzz
+"
+"https://webpack.js.org/guides/development/#adjusting-your-text-editor
+set backupcopy=yes
 
 
 "VANILLA MAPPINGS
@@ -187,11 +190,16 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'leafgarland/typescript-vim'
+Plug 'alvan/vim-closetag'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 "colorscheme dracula
 
+
+"VIM-CLOSETAG
+
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.tsx,*.jsx'
 " FZF
 nnoremap <C-p> :Files<CR>
 nnoremap / :BLines<CR>

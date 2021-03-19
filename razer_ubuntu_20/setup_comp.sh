@@ -89,3 +89,6 @@ sudo systemctl restart docker
 #vim shortcut to lcd to directory ✓
 
 #command for running program on change
+
+#in /etc/default/grub
+#GRUB_CMDLINE_LINUX_DEFAULT="quiet splash button.lid_init_state=open acpi=on"
