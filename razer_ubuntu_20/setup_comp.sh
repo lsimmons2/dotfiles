@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#sudo apt-get install wmctrl, git, fzf, ripgrep, make, python3-pip, fasd
+#sudo apt-get install wmctrl, git, fzf, ripgrep, make, python3-pip, fasd, exuberant-ctags
 
 
 #FASD
@@ -46,6 +46,10 @@
 #        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 #curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/.vimrc > ~/.vimrc
 
+#CTAGS
+#curl https://raw.githubusercontent.com/romainl/ctags-patterns-for-javascript/master/ctagsrc > ~/.ctags
+
+
 #TELEGRAM
 #sudo add-apt-repository ppa:atareao/telegram
 #sudo apt-get update && sudo apt-get install -y telegram
@@ -57,6 +61,7 @@
 #curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/.bashrc > ~/.bashrc
 #curl https://raw.githubusercontent.com/lsimmons2/dotfiles/master/razer/.bash_profile > ~/.bash_profile
 
+
 #ln -s /home/leo/dotfiles/razer_ubuntu_20/.vimrc /home/leo/.vimrc
 #ln -s /home/leo/dotfiles/razer_ubuntu_20/.bashrc /home/leo/.bashrc
 #ln -s /home/leo/dotfiles/razer_ubuntu_20/.bash_profile /home/leo/.bash_profile
@@ -66,16 +71,16 @@
 #ubuntu-drivers devices
 #sudo ubuntu-drivers autoinstall
 
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-echo $distribution   # this shows your version
-curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list  # if not available, "ubuntu18.04" must be used as fallback
+#distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+#echo $distribution   # this shows your version
+#curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+#curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list  # if not available, "ubuntu18.04" must be used as fallback
 # fallback case: curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu18.04/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-sudo apt-get install nvidia-container-runtime
+#sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+#sudo apt-get install nvidia-container-runtime
 
-sudo systemctl daemon-reload
-sudo systemctl restart docker
+#sudo systemctl daemon-reload
+#sudo systemctl restart docker
 
 #bash hotkey to fuzzy find most recent directories ✓
 #bash hotkey to fuzzy find most recent files

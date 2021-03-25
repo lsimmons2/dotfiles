@@ -64,10 +64,16 @@ nnoremap <leader>[ :tabprevious<CR>
 inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>")) "allow C-j and C-k to scroll in autocomplete windows
 inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 nnoremap <leader>vs :source ~/.vimrc<CR>
-
+inoremap <Left>a á
+inoremap <Left>e é
+inoremap <Left>o ó
+inoremap <Left>u ú
+inoremap <Left>i í
+inoremap <Left>n ñ
 " "THINGS TO APPEND"
 nnoremap <leader>ac A <C-k>OK<ESC>
 nnoremap <leader>ax A <C-k>XX<ESC>
+
 
 " "OPTIONS"
 nnoremap <leader>ol :set invnumber<CR> " toggle lines
@@ -191,15 +197,67 @@ Plug 'junegunn/fzf.vim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'leafgarland/typescript-vim'
 Plug 'alvan/vim-closetag'
-Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'preservim/tagbar'
 call plug#end()
-"colorscheme dracula
 
+"GUTENTAGS
+let g:gutentags_ctags_exclude = [
+      \ '*.git', '*.svg', '*.hg',
+      \ '*/tests/*',
+      \ 'build',
+      \ 'dist',
+      \ '*sites/*/files/*',
+      \ 'bin',
+      \ 'node_modules',
+      \ 'bower_components',
+      \ 'cache',
+      \ 'compiled',
+      \ 'docs',
+      \ 'example',
+      \ 'bundle',
+      \ 'vendor',
+      \ '*.md',
+      \ '*-lock.json',
+      \ '*.lock',
+      \ '*bundle*.js',
+      \ '*build*.js',
+      \ '.*rc*',
+      \ '*.json',
+      \ '*.min.*',
+      \ '*.map',
+      \ '*.bak',
+      \ '*.zip',
+      \ '*.pyc',
+      \ '*.class',
+      \ '*.sln',
+      \ '*.Master',
+      \ '*.csproj',
+      \ '*.tmp',
+      \ '*.csproj.user',
+      \ '*.cache',
+      \ '*.pdb',
+      \ 'tags*',
+      \ 'cscope.*',
+      \ '*.css',
+      \ '*.less',
+      \ '*.scss',
+      \ '*.exe', '*.dll',
+      \ '*.mp3', '*.ogg', '*.flac',
+      \ '*.swp', '*.swo',
+      \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
+      \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
+      \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
+      \ ]
+
+
+"TAGBAR
+nnoremap <leader>ob :TagbarToggle<CR>
 
 "VIM-CLOSETAG
-
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.tsx,*.jsx'
+
 " FZF
 nnoremap <C-p> :Files<CR>
 nnoremap / :BLines<CR>
@@ -209,10 +267,15 @@ command! -bang -nargs=* Rg
   \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
 nnoremap <leader>/ :Rg<CR>
 
-nnoremap <leader>m :call fzf#run({'source': 'fasd -d -l', 'sink': 'lcd'})<CR>:e .<CR>
+nnoremap <leader>l :call fzf#run({'source': 'fasd -d -l', 'sink': 'lcd'})<CR>
+nnoremap <C-m> :BTags<CR>
+nnoremap <leader>m :Tags<CR>
+
+"let g:fzf_tags_command = 'ctags -R'
 
 "CTRL-P
 nnoremap <C-b> :CtrlPMRU<CR>
+let g:ctrlp_switch_buffer = 0
 
 
 " NERDCOMMENTER

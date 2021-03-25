@@ -2,6 +2,7 @@
 PS1='\w\$ '
 
 alias ls="ls --color=auto"
+alias ll="ls -lha"
 alias grep="grep --color=auto -i"
 alias h="history"
 alias tree="tree -I 'node_modules|venv|env|*.pyc'"
@@ -18,6 +19,7 @@ alias w1="watch -n1"
 alias kubectl="microk8s.kubectl"
 alias kc="kubectl"
 alias sd="skaffold dev"
+alias sb="source ~/.bashrc"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
