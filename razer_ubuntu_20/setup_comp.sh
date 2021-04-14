@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#sudo apt-get install wmctrl, git, fzf, ripgrep, make, python3-pip, fasd, exuberant-ctags
+#sudo apt-get install wmctrl, git, fzf, ripgrep, make, python3-pip, fasd, exuberant-ctags, mpg123
 
 
 #FASD

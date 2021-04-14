@@ -165,8 +165,6 @@ augroup filetype_typescriptjavascript
 	autocmd FileType typescriptreact set foldmethod=indent
 	autocmd FileType typescriptreact inoremap <buffer>sop console.log();<ESC>hi
 	autocmd FileType typescriptreact inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
-
-
 augroup END
 
 augroup filetype_shell
@@ -179,6 +177,10 @@ augroup filetype_makefile
 	autocmd!
 	autocmd FileType make set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType make set foldmethod=indent
+augroup END
+
+augroup filetype_dockerfile
+	autocmd BufEnter Dockerfile* :setlocal filetype=dockerfile
 augroup END
 
 ".jsxPLUGINS

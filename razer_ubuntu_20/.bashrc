@@ -20,6 +20,8 @@ alias kubectl="microk8s.kubectl"
 alias kc="kubectl"
 alias sd="skaffold dev"
 alias sb="source ~/.bashrc"
+alias wn="watch -n 1 nvidia-smi"
+alias m="make"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
