@@ -22,6 +22,15 @@ alias sd="skaffold dev"
 alias sb="source ~/.bashrc"
 alias wn="watch -n 1 nvidia-smi"
 alias m="make"
+alias op="open_pdfs"
+
+
+open_pdfs(){
+	for var in "$@"
+	do
+		xdg-open "$var"
+	done
+}
 
 # nvm
 export NVM_DIR="$HOME/.nvm"

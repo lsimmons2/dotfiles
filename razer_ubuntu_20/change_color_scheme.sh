@@ -12,7 +12,7 @@ xdotool click 3
 xdotool mousemove 140 350
 xdotool click 1
 xdotool mousemove 140 100
-sleep 1
+sleep 0.1
 xdotool click 1
 xdotool mousemove 420 140
 xdotool click 1
