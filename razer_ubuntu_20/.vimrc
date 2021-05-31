@@ -202,6 +202,7 @@ Plug 'alvan/vim-closetag'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'preservim/tagbar'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 "GUTENTAGS
@@ -261,17 +262,26 @@ nnoremap <leader>ob :TagbarToggle<CR>
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.tsx,*.jsx'
 
 " FZF
+"mapping to OOB fzf.vim functions
 nnoremap <C-p> :Files<CR>
-nnoremap / :BLines<CR>
+nnoremap <C-m> :BTags<CR>
+nnoremap <leader>m :Tags<CR>
+
+"idk know where I got this code below...
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always -F --smart-case -- '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
 nnoremap <leader>/ :Rg<CR>
 
+"defining own function with fzf (not fzf.vim) package
 nnoremap <leader>l :call fzf#run({'source': 'fasd -d -l', 'sink': 'lcd'})<CR>
-nnoremap <C-m> :BTags<CR>
-nnoremap <leader>m :Tags<CR>
+
+"overwriting fzf.vim BLines function to have -e/"exact match" option
+command! -bang -nargs=? -complete=dir BLines
+	\ call fzf#vim#buffer_lines(<q-args>, {'options': ['-e']}, <bang>0)
+nnoremap / :BLines<CR>
+
 
 "let g:fzf_tags_command = 'ctags -R'
 
@@ -289,3 +299,14 @@ vnoremap <leader>c :call NERDComment(0,"toggle")<CR>
 let g:table_mode_disable_mappings = 1
 let g:table_mode_disable_tableize_mappings = 1
 let g:table_mode_map_prefix = "<Leader>xxxxxxxxxxxxxxxxxx"
+
+"VIM GUTTER
+nnoremap <leader>oq :GitGutterToggle<CR>
+nmap ]q <Plug>(GitGutterNextHunk)
+nmap [q <Plug>(GitGutterPrevHunk)
+nmap q] <Plug>(GitGutterNextHunk)
+nmap q[ <Plug>(GitGutterPrevHunk)
+nmap qs <Plug>(GitGutterStageHunk)
+nmap qu <Plug>(GitGutterUndoHunk)
+nmap qp <Plug>(GitGutterPreviewHunk)
+let g:gitgutter_preview_win_floating = 1
