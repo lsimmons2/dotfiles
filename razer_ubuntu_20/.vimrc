@@ -150,12 +150,14 @@ augroup filetype_text
 	autocmd!
 	autocmd FileType sh set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType sh set foldmethod=indent
+	autocmd FileType sh inoremap <buffer>sop echo 
 augroup END
 
 augroup filetype_javascript
 	autocmd!
 	autocmd FileType javascript set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType javascript set foldmethod=indent
+	"autocmd FileType javascript inoremap <buffer>sop logger.Debug();<ESC>hi
 	autocmd FileType javascript inoremap <buffer>sop console.log();<ESC>hi
 augroup END
 
@@ -163,7 +165,8 @@ augroup filetype_typescriptjavascript
 	autocmd!
 	autocmd FileType typescriptreact set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType typescriptreact set foldmethod=indent
-	autocmd FileType typescriptreact inoremap <buffer>sop console.log();<ESC>hi
+	"autocmd FileType typescriptreact inoremap <buffer>sop console.log();<ESC>hi
+	autocmd FileType typescriptreact inoremap <buffer>sop logger.Debug();<ESC>hi
 	autocmd FileType typescriptreact inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
 augroup END
 
@@ -205,54 +208,59 @@ Plug 'preservim/tagbar'
 Plug 'airblade/vim-gitgutter'
 call plug#end()
 
+"COC.NVIM
+nmap <silent> [e <Plug>(coc-diagnostic-prev)
+nmap <silent> ]e <Plug>(coc-diagnostic-next)
+
 "GUTENTAGS
+set statusline+=%{gutentags#statusline()}
 let g:gutentags_ctags_exclude = [
-      \ '*.git', '*.svg', '*.hg',
-      \ '*/tests/*',
-      \ 'build',
-      \ 'dist',
-      \ '*sites/*/files/*',
-      \ 'bin',
-      \ 'node_modules',
-      \ 'bower_components',
-      \ 'cache',
-      \ 'compiled',
-      \ 'docs',
-      \ 'example',
-      \ 'bundle',
-      \ 'vendor',
-      \ '*.md',
-      \ '*-lock.json',
-      \ '*.lock',
-      \ '*bundle*.js',
-      \ '*build*.js',
-      \ '.*rc*',
-      \ '*.json',
-      \ '*.min.*',
-      \ '*.map',
-      \ '*.bak',
-      \ '*.zip',
-      \ '*.pyc',
-      \ '*.class',
-      \ '*.sln',
-      \ '*.Master',
-      \ '*.csproj',
-      \ '*.tmp',
-      \ '*.csproj.user',
-      \ '*.cache',
-      \ '*.pdb',
-      \ 'tags*',
-      \ 'cscope.*',
-      \ '*.css',
-      \ '*.less',
-      \ '*.scss',
-      \ '*.exe', '*.dll',
-      \ '*.mp3', '*.ogg', '*.flac',
-      \ '*.swp', '*.swo',
-      \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
-      \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
-      \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
-      \ ]
+	  \ '*.git', '*.svg', '*.hg',
+	  \ '*/tests/*',
+	  \ 'build',
+	  \ 'dist',
+	  \ '*sites/*/files/*',
+	  \ 'bin',
+	  \ 'node_modules',
+	  \ 'bower_components',
+	  \ 'cache',
+	  \ 'compiled',
+	  \ 'docs',
+	  \ 'example',
+	  \ 'bundle',
+	  \ 'vendor',
+	  \ '*.md',
+	  \ '*-lock.json',
+	  \ '*.lock',
+	  \ '*bundle*.js',
+	  \ '*build*.js',
+	  \ '.*rc*',
+	  \ '*.json',
+	  \ '*.min.*',
+	  \ '*.map',
+	  \ '*.bak',
+	  \ '*.zip',
+	  \ '*.pyc',
+	  \ '*.class',
+	  \ '*.sln',
+	  \ '*.Master',
+	  \ '*.csproj',
+	  \ '*.tmp',
+	  \ '*.csproj.user',
+	  \ '*.cache',
+	  \ '*.pdb',
+	  \ 'tags*',
+	  \ 'cscope.*',
+	  \ '*.css',
+	  \ '*.less',
+	  \ '*.scss',
+	  \ '*.exe', '*.dll',
+	  \ '*.mp3', '*.ogg', '*.flac',
+	  \ '*.swp', '*.swo',
+	  \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
+	  \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
+	  \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
+	  \ ]
 
 
 "TAGBAR
@@ -267,12 +275,18 @@ nnoremap <C-p> :Files<CR>
 nnoremap <C-m> :BTags<CR>
 nnoremap <leader>m :Tags<CR>
 
-"idk know where I got this code below...
+"these examples taken/modified from https://github.com/junegunn/fzf.vim
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always -F --smart-case -- '.shellescape(<q-args>), 1,
+  \   'rg --column --line-number --no-heading --color=always --ignore-file=/home/leo/.gitignore_global -F --smart-case -- '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
 nnoremap <leader>/ :Rg<CR>
+
+command! -bang -nargs=* RgGlobal
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --ignore-file=/home/leo/.gitignore_global -F --smart-case ~/code -e '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
+nnoremap <leader>? :RgGlobal<CR>
 
 "defining own function with fzf (not fzf.vim) package
 nnoremap <leader>l :call fzf#run({'source': 'fasd -d -l', 'sink': 'lcd'})<CR>

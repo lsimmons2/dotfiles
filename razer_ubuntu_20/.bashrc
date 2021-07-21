@@ -108,3 +108,12 @@ export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH:+:${LD_LIBRARY_PA
 
 alias sd="bash /home/leo/dotfiles/razer_ubuntu_20/change_color_scheme.sh dark"
 alias sl="bash /home/leo/dotfiles/razer_ubuntu_20/change_color_scheme.sh light"
+
+#my inotify-wait
+mi () {
+	echo $@
+	eval $@
+	cmd="while inotifywait -q -q -r . -e create,delete,modify; do { echo; echo $@; eval $@; }; done"
+	#echo "$cmd"
+	eval "$cmd"
+}

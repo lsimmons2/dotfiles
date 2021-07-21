@@ -39,16 +39,18 @@ for i in range(1,9):
     command = ["gsettings", "set", "org.gnome.shell.keybindings", "switch-to-application-%s" % i, "[]"]
     #run_command_in_background(command)
 
-#run_command_in_background(["setxkbmap", "-option", "lv3:rwin_switch"])
+# run_command_in_background(["setxkbmap", "-option", "lv3:rwin_switch"])
 run_command_in_background(["xmodmap", "/home/leo/.Xmodmap"])
 
 apps = [
         # app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted
-        (["vivaldi"],2,"vivaldi",False,False,False),
+        # (["vivaldi"],2,"vivaldi",False,False,False),
+        (["google-chrome"],2,"chrome",False,False,False),
         (["terminator"],3,"/bin/bash",True,False,False),
         (["terminator"],4,"/bin/bash",True,False,False),
         (["terminator"],5,"/bin/bash",True,False,False),
-        (["snap","run","spotify"],6,"spotify",False,False,False),
+        # (["snap","run","spotify"],6,"spotify",False,False,False),
+        (["terminator"],7,"/bin/bash",False,False,False),
         (["google-chrome"],8,"chrome",False,False,False),
         ]
 
