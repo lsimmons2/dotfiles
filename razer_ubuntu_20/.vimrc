@@ -24,6 +24,9 @@ map <leader>2 mqgg=G'qzz
 "
 "https://webpack.js.org/guides/development/#adjusting-your-text-editor
 set backupcopy=yes
+" make n/N always go in the same direction
+nnoremap <expr> n 'Nn'[v:searchforward] . "zv"
+nnoremap <expr> N 'nN'[v:searchforward] . "zv"
 
 
 "VANILLA MAPPINGS
@@ -284,7 +287,7 @@ nnoremap <leader>/ :Rg<CR>
 
 command! -bang -nargs=* RgGlobal
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --ignore-file=/home/leo/.gitignore_global -F --smart-case ~/code -e '.shellescape(<q-args>), 1,
+  \   'rg --column --line-number --no-heading --color=always --ignore-file=/home/leo/.gitignore_global -F --smart-case --glob=*.py --glob=*.go --glob=*.js --glob=*.jsx --glob=*.ts --glob=*.tsx --glob=*.sh /home/leo -e '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview({ 'options': '-e' }), <bang>0)
 nnoremap <leader>? :RgGlobal<CR>
 

@@ -113,7 +113,13 @@ alias sl="bash /home/leo/dotfiles/razer_ubuntu_20/change_color_scheme.sh light"
 mi () {
 	echo $@
 	eval $@
-	cmd="while inotifywait -q -q -r . -e create,delete,modify; do { echo; echo $@; eval $@; }; done"
+	sleep 0.5
+	# -q specified twice on purpose - see man inotifywait
+	if [ -d "/home/leo/playground/" ] 
+	then
+		#cmd="while inotifywait -q -q -r $pwd -e modify; do { echo; echo $@; eval $@; }; done"
+		cmd="while inotifywait -q -q --exclude=tags* -e modify -r .; do { echo; echo $@; eval $@; }; done"
+	fi
 	#echo "$cmd"
 	eval "$cmd"
 }
