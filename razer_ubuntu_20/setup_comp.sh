@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #MAKE AND CHANGE TO SETUP DIR WHERE ANY REMNANTS OF THIS PROCESS WILL LIE
-mkdir -p setup
-cd setup
+mkdir -p /home/leo/dotfiles/razer_ubuntu_20/setup
+cd /home/leo/dotfiles/razer_ubuntu_20/setup
 
 #APT-GET PACKAGES
 sudo apt-get update
@@ -13,6 +13,7 @@ eval "$(fasd --init auto)"
 
 # NVM/NODE
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
+source /home/leo/.nvm/nvm.sh # so nvm command is recognized in this session
 nvm install node
 
 # YARN
@@ -92,9 +93,10 @@ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-9 "['<Super>8
 echo "FINISHED SETUP"
 
 #DONE MANUALLY
-#- nvm install node
-#- hide sidebar, arrange apps on it
+#- auto-hide dock
+#- vim plugins not installing correctly in this script
 #- AM/PM time
-#- have startup scripts run on startup
-#- create "static workspaces" with 9 static workspaces as described here https://askubuntu.com/a/1081253
-#- emacs input in gnome-tweaks
+#- have startup scripts run on startup - python3 /home/leo/dotfiles/razer_ubuntu_20/setup_workspaces.py
+#- gnome-tweaks:
+	#- create "static workspaces" with 9 static workspaces as described here https://askubuntu.com/a/1081253
+	#- emacs input

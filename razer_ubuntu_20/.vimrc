@@ -309,8 +309,8 @@ let g:ctrlp_switch_buffer = 0
 
 " NERDCOMMENTER
 let g:NERDCreateDefaultMappings = 0
-nnoremap <leader>c :call NERDComment(0,"toggle")<CR>
-vnoremap <leader>c :call NERDComment(0,"toggle")<CR>
+nnoremap <leader>c :call nerdcommenter#Comment(0,"toggle")<CR>
+vnoremap <leader>c :call nerdcommenter#Comment(0,"toggle")<CR>
 
 " TABLE MODE
 let g:table_mode_disable_mappings = 1
