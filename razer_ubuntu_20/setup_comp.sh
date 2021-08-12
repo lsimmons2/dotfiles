@@ -32,18 +32,18 @@ sudo add-apt-repository \
         stable"
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-sudo groupadd docker
 sudo usermod -aG docker $USER
-newgrp docker
 
 # VIM
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim +PlugInstall +qall
 
 #SYMLINK DOTFILES
 ln -s /home/leo/dotfiles/razer_ubuntu_20/.gitconfig /home/leo/.gitconfig
 ln -s /home/leo/dotfiles/razer_ubuntu_20/.Xmodmap /home/leo/.Xmodmap
 ln -s /home/leo/dotfiles/razer_ubuntu_20/.vimrc /home/leo/.vimrc
+rm -f /home/leo/.bashrc
 ln -s /home/leo/dotfiles/razer_ubuntu_20/.bashrc /home/leo/.bashrc
 ln -s /home/leo/dotfiles/razer_ubuntu_20/.bash_profile /home/leo/.bash_profile
 mkdir /home/leo/.config/terminator
@@ -89,10 +89,12 @@ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-7 "['<Super>6
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-8 "['<Super>7']"
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-9 "['<Super>8']"
 
+echo "FINISHED SETUP"
+
 #DONE MANUALLY
+#- nvm install node
 #- hide sidebar, arrange apps on it
 #- AM/PM time
-#- create workspaces
 #- have startup scripts run on startup
 #- create "static workspaces" with 9 static workspaces as described here https://askubuntu.com/a/1081253
 #- emacs input in gnome-tweaks
