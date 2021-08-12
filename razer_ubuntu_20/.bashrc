@@ -66,7 +66,7 @@ __find_docker_container() {
 		docker exec -it $containerId bash
 	fi
 }
-bind -x '"\ev": __find_docker_container'
+#bind -x '"\ev": __find_docker_container'
 
 
 _get_dir_fzf() {
@@ -98,7 +98,7 @@ foo(){
 	cd $dir
 }
 
-bind '"\em": "\C-ex\C-u __insert_dir_or_cd\C-m\C-y\C-b\C-d"'
+#bind '"\em": "\C-ex\C-u __insert_dir_or_cd\C-m\C-y\C-b\C-d"'
 
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 

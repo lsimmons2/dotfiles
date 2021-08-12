@@ -32,51 +32,53 @@ def move_window_to_desktop(window_id, desktop_number):
     # log("moving window %s to desktop %s" % (window_id, desktop_number))
     run_command_in_background(["wmctrl", "-i", "-r", str(window_id), "-t", str(desktop_number)])
 
-log_datetime = datetime.datetime.now().strftime("%m-%d-%y %H:%M:%S")
-log("Running startup script at %s" % log_datetime)
+def main():
+	log_datetime = datetime.datetime.now().strftime("%m-%d-%y %H:%M:%S")
+	log("Running startup script at %s" % log_datetime)
+	# run_command_in_background(["setxkbmap", "-option", "lv3:rwin_switch"])
+	run_command_in_background(["xmodmap", "/home/leo/.Xmodmap"])
+	log("Xmodmap command called")
 
-for i in range(1,9):
-    command = ["gsettings", "set", "org.gnome.shell.keybindings", "switch-to-application-%s" % i, "[]"]
-    #run_command_in_background(command)
-
-# run_command_in_background(["setxkbmap", "-option", "lv3:rwin_switch"])
-run_command_in_background(["xmodmap", "/home/leo/.Xmodmap"])
-
-apps = [
-        # app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted
-        # (["vivaldi"],2,"vivaldi",False,False,False),
-        (["google-chrome"],2,"chrome",False,False,False),
-        (["terminator"],3,"/bin/bash",True,False,False),
-        (["terminator"],4,"/bin/bash",True,False,False),
-        (["terminator"],5,"/bin/bash",True,False,False),
-        # (["snap","run","spotify"],6,"spotify",False,False,False),
-        (["terminator"],7,"/bin/bash",False,False,False),
-        (["google-chrome"],8,"chrome",False,False,False),
-        ]
+	apps = [
+			# app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted
+			# (["vivaldi"],2,"vivaldi",False,False,False),
+			(["google-chrome"],2,"chrome",False,False,False),
+			(["terminator"],3,"/bin/bash",True,False,False),
+			(["terminator"],4,"/bin/bash",True,False,False),
+			(["terminator"],5,"/bin/bash",True,False,False),
+			# (["snap","run","spotify"],6,"spotify",False,False,False),
+			(["terminator"],7,"/bin/bash",False,False,False),
+			(["google-chrome"],8,"chrome",False,False,False),
+			]
 
 
-# MOVE APPS
-while False in [a[-1] for a in apps]:
-    new_apps = []
-    for app in apps:
-        app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted = app
-        if not has_been_spawned:
-            # log("spawning app %s" % search_term)
-            run_command_in_background(app_command)
-            has_been_spawned = True
-        else:
-            app_window_id, current_desktop_nb = get_running_app_window_id_desktop_nb(search_term)
-            if app_window_id is not None:
-                # log("moving app %s in window %s to desktop %s" % (search_term, app_window_id, desktop_nb))
-                run_command_in_background(["wmctrl", "-i", "-r", app_window_id, "-t", str(desktop_nb)])
-                if should_be_full_screen:
-                    run_command_in_background(["wmctrl", "-i", "-r", app_window_id, "-b", "toggle,fullscreen"])
-                has_been_formatted = True
-                finito_ids.add(app_window_id)
-            else:
-                print("app %s still not running" % search_term)
-        new_apps.append((app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted))
-    apps = new_apps
-    time.sleep(1)
+	# MOVE APPS
+	while False in [a[-1] for a in apps]:
+		new_apps = []
+		for app in apps:
+			app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted = app
+			if not has_been_spawned:
+				# log("spawning app %s" % search_term)
+				run_command_in_background(app_command)
+				has_been_spawned = True
+			else:
+				app_window_id, current_desktop_nb = get_running_app_window_id_desktop_nb(search_term)
+				if app_window_id is not None:
+					# log("moving app %s in window %s to desktop %s" % (search_term, app_window_id, desktop_nb))
+					run_command_in_background(["wmctrl", "-i", "-r", app_window_id, "-t", str(desktop_nb)])
+					if should_be_full_screen:
+						run_command_in_background(["wmctrl", "-i", "-r", app_window_id, "-b", "toggle,fullscreen"])
+					has_been_formatted = True
+					finito_ids.add(app_window_id)
+				else:
+					print("app %s still not running" % search_term)
+			new_apps.append((app_command, desktop_nb, search_term, should_be_full_screen, has_been_spawned, has_been_formatted))
+		apps = new_apps
+		time.sleep(1)
+	log("Apps launched")
 
-run_command_in_background(["notify-send", "Hola we", "apps/workspaces are set up"])
+	run_command_in_background(["notify-send", "Hola we", "apps/workspaces are set up"])
+	log("Finished with setup")
+
+if __name__ == "__main__":
+	main()

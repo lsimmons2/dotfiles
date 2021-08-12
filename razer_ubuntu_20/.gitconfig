@@ -1,0 +1,17 @@
+[core]
+  editor = vim
+[user]
+  name = Leo Simmons
+  email = leooscar.simmons@gmail.com
+[push]
+  default = current
+[alias]
+  a = add
+  b = branch
+  c = commit
+  co = checkout
+  d = diff
+  s = status
+  ps = push
+  pl = pull
+  l = log

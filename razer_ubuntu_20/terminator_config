@@ -1,0 +1,70 @@
+[global_config]
+  title_transmit_fg_color = "#c6c6c6"
+  title_transmit_bg_color = "#4287f5"
+[keybindings]
+  zoom_normal = None
+  new_tab = <Alt>t
+  cycle_next = None
+  cycle_prev = None
+  go_next = None
+  go_prev = None
+  go_up = <Alt>k
+  go_down = <Alt>j
+  go_left = <Alt>h
+  go_right = <Alt>l
+  rotate_cw = None
+  rotate_ccw = None
+  split_horiz = <Alt>o
+  split_vert = <Alt>e
+  close_term = <Alt>w
+  paste = <Primary><Shift>v
+  toggle_scrollbar = None
+  page_down = None
+  page_up_half = <Shift><Alt>u
+  page_down_half = <Shift><Alt>d
+  line_up = <Shift><Alt>k
+  line_down = <Shift><Alt>j
+  close_window = None
+  resize_up = <Shift><Alt>Up
+  resize_down = <Shift><Alt>Down
+  resize_left = <Shift><Alt>Left
+  resize_right = <Shift><Alt>Right
+  move_tab_right = None
+  move_tab_left = None
+  toggle_zoom = <Primary>9
+  next_tab = <Alt>bracketright
+  prev_tab = <Alt>bracketleft
+  reset = None
+  reset_clear = None
+  hide_window = None
+  group_all = None
+  ungroup_all = None
+  group_tab = None
+  ungroup_tab = None
+  new_window = None
+  broadcast_off = None
+  broadcast_group = None
+  broadcast_all = None
+  insert_number = None
+  edit_window_title = None
+  layout_launcher = None
+[profiles]
+  [[default]]
+    background_color = "#fdf6e3"
+    cursor_blink = False
+    cursor_color = "#abb2bf"
+    font = Ubuntu Mono 15
+    foreground_color = "#657b83"
+    scrollback_infinite = True
+    palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#002b36:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
+    use_system_font = False
+    copy_on_selection = True
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
