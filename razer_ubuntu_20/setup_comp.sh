@@ -6,7 +6,7 @@ cd /home/leo/dotfiles/razer_ubuntu_20/setup
 
 #APT-GET PACKAGES
 sudo apt-get update
-sudo apt-get -y install wmctrl git fzf ripgrep make python3-pip fasd exuberant-ctags mpg123 curl terminator vim-gtk gnome-tweaks
+sudo apt-get -y install wmctrl git fzf ripgrep make python3-pip fasd exuberant-ctags mpg123 curl terminator vim-gtk gnome-tweaks cheese xdotool
 
 #FASD
 eval "$(fasd --init auto)"
@@ -49,6 +49,10 @@ ln -s /home/leo/dotfiles/razer_ubuntu_20/.bashrc /home/leo/.bashrc
 ln -s /home/leo/dotfiles/razer_ubuntu_20/.bash_profile /home/leo/.bash_profile
 mkdir /home/leo/.config/terminator
 ln -s /home/leo/dotfiles/razer_ubuntu_20/terminator_config /home/leo/.config/terminator/config
+#typescript ctags taken from https://github.com/jb55/typescript-ctags/blob/master/.ctags
+ln -s /home/leo/dotfiles/razer_ubuntu_20/.ctags /home/leo/.ctags
+rm -f /home/leo/.vim/coc-settings.json
+ln -s /home/leo/dotfiles/razer_ubuntu_20/coc-settings.json /home/leo/.vim/coc-settings.json
 
 #SNAP PACKAGES
 snap install spotify zoom-client

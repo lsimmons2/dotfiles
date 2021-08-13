@@ -66,8 +66,8 @@ __find_docker_container() {
 		docker exec -it $containerId bash
 	fi
 }
-bind -x '"\ev": __find_docker_container'
-
+#piping to /dev/null from https://superuser.com/a/1490101/762039
+bind -x '"\ev": __find_docker_container' 2>/dev/null
 
 
 __fzfcmd() {
@@ -104,7 +104,7 @@ foo(){
 	cd $dir
 }
 
-bind '"\em": "\C-ex\C-u __insert_dir_or_cd\C-m\C-y\C-b\C-d"'
+bind '"\em": "\C-ex\C-u __insert_dir_or_cd\C-m\C-y\C-b\C-d"' 2>/dev/null
 
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
@@ -121,7 +121,7 @@ mi () {
 	eval $@
 	sleep 0.5
 	# -q specified twice on purpose - see man inotifywait
-	if [ -d "/home/leo/playground/" ] 
+	if [ -d "/home/leo/playground/" ]
 	then
 		#cmd="while inotifywait -q -q -r $pwd -e modify; do { echo; echo $@; eval $@; }; done"
 		cmd="while inotifywait -q -q --exclude=tags* -e modify -r .; do { echo; echo $@; eval $@; }; done"
