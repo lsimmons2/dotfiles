@@ -6,7 +6,7 @@ cd /home/leo/dotfiles/razer_ubuntu_20/setup
 
 #APT-GET PACKAGES
 sudo apt-get update
-sudo apt-get -y install wmctrl git fzf ripgrep make python3-pip fasd exuberant-ctags mpg123 curl terminator vim-gtk gnome-tweaks cheese xdotool
+sudo apt-get -y install wmctrl git fzf ripgrep make python3-pip fasd exuberant-ctags mpg123 curl terminator vim-gtk gnome-tweaks cheese xdotool libheif-examples python3-autopep8 htop
 
 #FASD
 eval "$(fasd --init auto)"
@@ -39,6 +39,8 @@ sudo usermod -aG docker $USER
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 vim +PlugInstall +qall
+vim +CocInstall coc-json coc-prettier coc-pyright +qall
+
 
 #SYMLINK DOTFILES
 ln -s /home/leo/dotfiles/razer_ubuntu_20/.gitconfig /home/leo/.gitconfig
@@ -58,6 +60,7 @@ ln -s /home/leo/dotfiles/razer_ubuntu_20/coc-settings.json /home/leo/.vim/coc-se
 snap install spotify zoom-client
 
 #TO HAVE DESIRED BEHAVIOR WHEN SHUTTING LAPTOP
+#TODO:this!!!!!!!!
 echo GRUB_CMDLINE_LINUX_DEFAULT="quiet splash button.lid_init_state=open acpi=on" | sudo tee -a /etc/default/grub
 
 #CHROME

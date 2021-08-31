@@ -164,6 +164,14 @@ augroup filetype_javascript
 	autocmd FileType javascript inoremap <buffer>sop console.log();<ESC>hi
 augroup END
 
+augroup filetype_typescript
+	autocmd!
+	autocmd FileType typescript set noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType typescript set foldmethod=indent
+	autocmd FileType typescript inoremap <buffer>sop logger.Debug();<ESC>hi
+	autocmd FileType typescript inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
+augroup END
+
 augroup filetype_typescriptjavascript
 	autocmd!
 	autocmd FileType typescriptreact set noexpandtab tabstop=4 shiftwidth=4
@@ -209,6 +217,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'preservim/tagbar'
 Plug 'airblade/vim-gitgutter'
+Plug 'jparise/vim-graphql'
+"Plug 'tell-k/vim-autopep8'
 call plug#end()
 
 "COC.NVIM
@@ -327,3 +337,6 @@ nmap qs <Plug>(GitGutterStageHunk)
 nmap qu <Plug>(GitGutterUndoHunk)
 nmap qp <Plug>(GitGutterPreviewHunk)
 let g:gitgutter_preview_win_floating = 1
+
+
+let g:autopep8_on_save = 1
