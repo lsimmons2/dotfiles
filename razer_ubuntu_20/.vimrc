@@ -102,6 +102,7 @@ let g:netrw_banner = 0
 "HIGHLIGHTING
 hi Search cterm=NONE ctermfg=Black ctermbg=DarkGreen
 hi DiffChange cterm=NONE ctermfg=DarkBlue ctermbg=LightMagenta
+highlight Folded ctermbg=None ctermfg=grey
 set updatetime=5
 
 function! HighlightWordUnderCursor()
@@ -138,7 +139,7 @@ nnoremap <C-H> <C-W><C-H>
 "FILETYPES
 augroup filetype_python
 	autocmd!
-	autocmd FileType python set noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType python set tabstop=4 shiftwidth=4
 	autocmd FileType python set foldmethod=indent
 	autocmd FileType python inoremap <buffer>sop print()<ESC>i
 augroup END
@@ -149,12 +150,25 @@ augroup filetype_vim
 	autocmd FileType vim set foldmethod=indent
 augroup END
 
-augroup filetype_text
+augroup filetype_shell
 	autocmd!
 	autocmd FileType sh set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType sh set foldmethod=indent
 	autocmd FileType sh inoremap <buffer>sop echo 
 augroup END
+
+function FoldText()
+  return "a thing"
+endfunction
+
+augroup filetype_text
+	autocmd!
+	autocmd FileType text setlocal noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType text setlocal foldmethod=indent
+	autocmd FileType text setlocal foldtext=FoldText()
+	autocmd FileType text setlocal foldminlines=0
+augroup END
+
 
 augroup filetype_javascript
 	autocmd!
@@ -168,7 +182,8 @@ augroup filetype_typescript
 	autocmd!
 	autocmd FileType typescript set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType typescript set foldmethod=indent
-	autocmd FileType typescript inoremap <buffer>sop logger.Debug();<ESC>hi
+	"autocmd FileType typescript inoremap <buffer>sop logger.Debug();<ESC>hi
+	autocmd FileType typescript inoremap <buffer>sop console.log();<ESC>hi
 	autocmd FileType typescript inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
 augroup END
 
@@ -176,15 +191,9 @@ augroup filetype_typescriptjavascript
 	autocmd!
 	autocmd FileType typescriptreact set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType typescriptreact set foldmethod=indent
-	"autocmd FileType typescriptreact inoremap <buffer>sop console.log();<ESC>hi
-	autocmd FileType typescriptreact inoremap <buffer>sop logger.Debug();<ESC>hi
+	autocmd FileType typescriptreact inoremap <buffer>sop console.log();<ESC>hi
+	"autocmd FileType typescriptreact inoremap <buffer>sop logger.Debug();<ESC>hi
 	autocmd FileType typescriptreact inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
-augroup END
-
-augroup filetype_shell
-	autocmd!
-	autocmd FileType text set noexpandtab tabstop=4 shiftwidth=4
-	autocmd FileType text set foldmethod=indent
 augroup END
 
 augroup filetype_makefile
