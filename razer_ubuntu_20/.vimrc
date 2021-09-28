@@ -167,6 +167,7 @@ augroup filetype_text
 	autocmd FileType text setlocal foldmethod=indent
 	autocmd FileType text setlocal foldtext=FoldText()
 	autocmd FileType text setlocal foldminlines=0
+	autocmd FileType text nnoremap <leader>j VU<ESC>A><ESC>
 augroup END
 
 
@@ -233,9 +234,14 @@ call plug#end()
 "COC.NVIM
 nmap <silent> [e <Plug>(coc-diagnostic-prev)
 nmap <silent> ]e <Plug>(coc-diagnostic-next)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 "GUTENTAGS
-set statusline+=%{gutentags#statusline()}
+"set statusline+=%{gutentags#statusline()}
+let g:gutentags_project_root = [".ROOT_NOTES_MARKER"]
 let g:gutentags_ctags_exclude = [
 	  \ '*.git', '*.svg', '*.hg',
 	  \ '*/tests/*',
