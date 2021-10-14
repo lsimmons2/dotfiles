@@ -76,6 +76,8 @@ inoremap <Left>n ñ
 " "THINGS TO APPEND"
 nnoremap <leader>ac A <C-k>OK<ESC>
 nnoremap <leader>ax A <C-k>XX<ESC>
+"INSERT TIME
+nnoremap <leader>k A <C-r>=strftime('%m.%d.%Y')<CR><ESC>
 
 
 " "OPTIONS"
@@ -117,10 +119,10 @@ let blacklist = ['text', 'markdown']
 autocmd BufWritePre * if index(blacklist, &ft) < 0 | autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
 
 "SPLIT CURRENT WINDOW
-nmap <leader>sh   :leftabove  vnew <CR>
-nmap <leader>sl  :rightbelow vnew <CR>
-nmap <leader>sk     :leftabove  new <CR>
-nmap <leader>sj   :rightbelow new<CR>
+nmap <leader>sh   :leftabove  vsplit<CR>
+nmap <leader>sl  :rightbelow vsplit<CR>
+nmap <leader>sk     :leftabove  split<CR>
+nmap <leader>sj   :rightbelow split<CR>
 
 
 "RESIZE WINDOWS
