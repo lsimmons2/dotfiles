@@ -77,7 +77,7 @@ inoremap <Left>n ñ
 nnoremap <leader>ac A <C-k>OK<ESC>
 nnoremap <leader>ax A <C-k>XX<ESC>
 "INSERT TIME
-nnoremap <leader>k A <C-r>=strftime('%m.%d.%Y')<CR><ESC>
+nnoremap <leader>k A<C-r>=strftime('%m.%d.%Y')<CR><ESC>
 
 
 " "OPTIONS"
@@ -332,6 +332,7 @@ nnoremap / :BLines<CR>
 "CTRL-P
 nnoremap <C-b> :CtrlPMRU<CR>
 let g:ctrlp_switch_buffer = 0
+let g:ctrlp_regexp = 1
 
 
 " NERDCOMMENTER
