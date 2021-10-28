@@ -13,7 +13,7 @@
 
 --langdef=text
 --langmap=text:.txt
---regex-text=/^([A-Z0-9\/ \-\.\?]+>)$/\1/t,things/
+--regex-text=/^([A-Z0-9\/ \-\.\?\-]+>)$/\1/t,things/
 
 --langdef=graphql
 --langmap=graphql:.graphql

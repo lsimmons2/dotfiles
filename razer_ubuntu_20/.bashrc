@@ -68,6 +68,7 @@ __find_docker_container() {
 }
 #piping to /dev/null from https://superuser.com/a/1490101/762039
 bind -x '"\ev": __find_docker_container' 2>/dev/null
+bind -x '"\ec": __find_docker_container' 2>/dev/null
 
 
 __fzfcmd() {
@@ -129,3 +130,9 @@ mi () {
 	#echo "$cmd"
 	eval "$cmd"
 }
+
+source "/home/leo/.secret.sh"
+
+#for Makefile tab completion in bash:
+#https://stackoverflow.com/a/38415982/6058175
+complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sed 's/[^a-zA-Z0-9_.-]*$//'\`" make

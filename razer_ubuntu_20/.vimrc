@@ -160,7 +160,7 @@ augroup filetype_shell
 augroup END
 
 function FoldText()
-  return "a thing"
+  return "fold"
 endfunction
 
 augroup filetype_text
@@ -330,9 +330,10 @@ nnoremap / :BLines<CR>
 "let g:fzf_tags_command = 'ctags -R'
 
 "CTRL-P
-nnoremap <C-b> :CtrlPMRU<CR>
+nnoremap <C-b> :CtrlPMixed<CR>
 let g:ctrlp_switch_buffer = 0
-let g:ctrlp_regexp = 1
+let g:ctrlp_working_path_mode = 'c'
+let g:ctrlp_mruf_relative = 1
 
 
 " NERDCOMMENTER
