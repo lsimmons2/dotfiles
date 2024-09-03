@@ -14,6 +14,7 @@ alias ved="deactivate"
 alias pag="ps aux | grep -v \"grep\" | grep"
 alias xxx="xmodmap ~/.Xmodmap"
 alias d="docker"
+alias dc="docker-compose"
 alias kc="kubectl"
 alias w1="watch -n1"
 alias kubectl="microk8s.kubectl"
@@ -136,3 +137,7 @@ source "/home/leo/.secret.sh"
 #for Makefile tab completion in bash:
 #https://stackoverflow.com/a/38415982/6058175
 complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sed 's/[^a-zA-Z0-9_.-]*$//'\`" make
+
+
+export PATH=/usr/local/cuda-11.8/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}

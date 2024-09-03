@@ -1,0 +1,14 @@
+inoremap jk <ESC>
+inoremap kj <ESC>
+inoremap KJ <ESC>
+inoremap JK <ESC>
+inoremap kJ <ESC>
+inoremap Kj <ESC>
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
+nnoremap 0 g0
+nnoremap $ g$
+
+

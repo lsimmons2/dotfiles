@@ -42,6 +42,7 @@ vnoremap j gj
 vnoremap k gk
 nnoremap 0 g0
 nnoremap $ g$
+
 nnoremap <M-y> v$hy
 nnoremap <M-p> v$hp
 inoremap <C-b> <ESC>ha
@@ -52,6 +53,7 @@ inoremap <C-d> <ESC>lxi
 nnoremap S :w<CR>
 nnoremap <leader>S :wa<CR>
 nnoremap <leader>e :e .<CR>
+nnoremap <leader>w :e %:h<CR>
 nnoremap <leader>b :b#<CR>
 vnoremap // y/<C-R>"<CR>  " search visually selected text 
 nnoremap <leader>y "+y
@@ -61,12 +63,6 @@ vnoremap <leader>p "+p
 nnoremap <leader>Y "+Y
 nnoremap <leader>P "+P
 vnoremap $ $h
-nnoremap <leader>t :tabnew<CR>
-nnoremap <leader>] :tabnext<CR>
-nnoremap <leader>[ :tabprevious<CR>
-inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>")) "allow C-j and C-k to scroll in autocomplete windows
-inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
-nnoremap <leader>vs :source ~/.vimrc<CR>
 inoremap <Left>a á
 inoremap <Left>e é
 inoremap <Left>o ó
@@ -78,6 +74,13 @@ nnoremap <leader>ac A <C-k>OK<ESC>
 nnoremap <leader>ax A <C-k>XX<ESC>
 "INSERT TIME
 nnoremap <leader>k A<C-r>=strftime('%m.%d.%Y')<CR><ESC>
+
+nnoremap <leader>t :tabnew<CR>
+nnoremap <leader>] :tabnext<CR>
+nnoremap <leader>[ :tabprevious<CR>
+nnoremap <leader>vs :source ~/.vimrc<CR>
+inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>")) "allow C-j and C-k to scroll in autocomplete windows
+inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
 
 
 " "OPTIONS"
@@ -139,6 +142,7 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 "FILETYPES
+"NOTE: coc-pyright is what is currently being used for python formatting/linting
 augroup filetype_python
 	autocmd!
 	autocmd FileType python set tabstop=4 shiftwidth=4
@@ -165,7 +169,7 @@ endfunction
 
 augroup filetype_text
 	autocmd!
-	autocmd FileType text setlocal noexpandtab tabstop=4 shiftwidth=4
+	autocmd FileType text setlocal tabstop=2 shiftwidth=2
 	autocmd FileType text setlocal foldmethod=indent
 	autocmd FileType text setlocal foldtext=FoldText()
 	autocmd FileType text setlocal foldminlines=0
@@ -177,6 +181,7 @@ augroup filetype_javascript
 	autocmd!
 	autocmd FileType javascript set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType javascript set foldmethod=indent
+	autocmd FileType javascript setlocal foldminlines=0
 	"autocmd FileType javascript inoremap <buffer>sop logger.Debug();<ESC>hi
 	autocmd FileType javascript inoremap <buffer>sop console.log();<ESC>hi
 augroup END
@@ -185,6 +190,7 @@ augroup filetype_typescript
 	autocmd!
 	autocmd FileType typescript set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType typescript set foldmethod=indent
+	autocmd FileType typescript setlocal foldminlines=0
 	"autocmd FileType typescript inoremap <buffer>sop logger.Debug();<ESC>hi
 	autocmd FileType typescript inoremap <buffer>sop console.log();<ESC>hi
 	autocmd FileType typescript inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
@@ -194,6 +200,7 @@ augroup filetype_typescriptjavascript
 	autocmd!
 	autocmd FileType typescriptreact set noexpandtab tabstop=4 shiftwidth=4
 	autocmd FileType typescriptreact set foldmethod=indent
+	autocmd FileType typescriptreact setlocal foldminlines=0
 	autocmd FileType typescriptreact inoremap <buffer>sop console.log();<ESC>hi
 	"autocmd FileType typescriptreact inoremap <buffer>sop logger.Debug();<ESC>hi
 	autocmd FileType typescriptreact inoremap <buffer>ffor for (let i = 0; i < .length; i++) {}<ESC>i<CR><ESC>kwwwwwwwwwi
@@ -240,6 +247,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> <leader>r <Plug>(coc-rename)
 
 "GUTENTAGS
 "set statusline+=%{gutentags#statusline()}
@@ -330,10 +338,13 @@ nnoremap / :BLines<CR>
 "let g:fzf_tags_command = 'ctags -R'
 
 "CTRL-P
-nnoremap <C-b> :CtrlPMixed<CR>
+nnoremap <C-b> :CtrlPMRU<CR>
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 'c'
-let g:ctrlp_mruf_relative = 1
+"let g:ctrlp_mruf_relative = [".git/","git --git-dir=%s/.git ls-filess -oc --exclude-standard"]
+
+"Error detected while processing function ctrlp#init[31]..<SNR>50_setlines_post[6]..ctrlp#mrufiles#list[1]..<SNR>16_reformat:
+" E745: Using a List as a Number
 
 
 " NERDCOMMENTER
@@ -345,6 +356,19 @@ vnoremap <leader>c :call nerdcommenter#Comment(0,"toggle")<CR>
 let g:table_mode_disable_mappings = 1
 let g:table_mode_disable_tableize_mappings = 1
 let g:table_mode_map_prefix = "<Leader>xxxxxxxxxxxxxxxxxx"
+function! s:isAtStartOfLine(mapping)
+  let text_before_cursor = getline('.')[0 : col('.')-1]
+  let mapping_pattern = '\V' . escape(a:mapping, '\')
+  let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
+  return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
+endfunction
+
+inoreabbrev <expr> <bar><bar>
+          \ <SID>isAtStartOfLine('\|\|') ?
+          \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
+inoreabbrev <expr> __
+          \ <SID>isAtStartOfLine('__') ?
+          \ '<c-o>:silent! TableModeDisable<cr>' : '__'
 
 "VIM GUTTER
 nnoremap <leader>oq :GitGutterToggle<CR>

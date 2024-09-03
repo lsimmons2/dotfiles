@@ -14,3 +14,5 @@ add Control = Control_L
 
 clear Lock
 keycode 105 = Return
+!107 is PrtSc key on trackpoint keyboard
+keycode 107 = Return

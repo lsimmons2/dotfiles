@@ -1,0 +1,38 @@
+let mapleader=" "
+
+inoremap jk <ESC>
+inoremap kj <ESC>
+inoremap KJ <ESC>
+inoremap JK <ESC>
+inoremap kJ <ESC>
+inoremap Kj <ESC>
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
+nnoremap 0 g0
+nnoremap $ g$
+
+nnoremap $ g$
+
+
+nnoremap <leader>vs :source ~/.ideavimrc<CR>
+nnoremap <leader>k ibrooioooiooooiooioooooo<ESC>
+inoremap sop System.out.println();<ESC>hi
+
+"SPLIT CURRENT WINDOW
+nmap <leader>sh :vsplit<CR> | <C-W>h
+nmap <leader>sl :vsplit<CR>
+nmap <leader>sk :split<CR> <Bar> <C-W>k
+nmap <leader>sj :split<CR>
+
+nnoremap <C-W>q :q<CR>
+
+"https://superuser.com/a/677312/762039
+set visualbell
+set noerrorbells
+
+nnoremap <leader>ol :action EditorToggleShowLineNumbers<CR>
+
+
+nnoremap gd :action EditSource<CR>
