@@ -190,3 +190,12 @@ unset __conda_setup
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 
 [ -f "/Users/leo/.ghcup/env" ] && . "/Users/leo/.ghcup/env" # ghcup-env
+
+
+# BEGIN opam configuration
+# This is useful if you're using opam as it adds:
+#   - the correct directories to the PATH
+#   - auto-completion for the opam binary
+# This section can be safely removed at any time if needed.
+[[ ! -r '/Users/leo/.opam/opam-init/init.zsh' ]] || source '/Users/leo/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+# END opam configuration
