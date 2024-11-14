@@ -1,0 +1,10 @@
+NB: there is another file somewhere I have for what I did to install stuff on this macbook, (maybe it's a .sh script now that I think of it), having this one since I can't find it - to be merged somehow later
+atow what this file will have is commands/how I'm installing emacs, and maybe other stuff related to the haskell and ocaml etc learning I'm doing now, or things I'm installing on comp in general
+
+brew install emacs
+
+
+https://ocaml.org/install#linux_mac_bsd
+
+
+npm i -g prettier

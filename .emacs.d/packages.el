@@ -14,32 +14,60 @@
   (ns-auto-titlebar-mode))
 
 (use-package company
-  :ensure t
+  :disabled t
+  :hook (prog-mode . company-mode)
   :config
-  (global-company-mode))
+  (setq company-minimum-prefix-length 1
+        company-idle-delay 0.0))
+
+;;(require 'company)
+;;(add-hook 'after-init-hook 'global-company-mode)
+;;(setq company-backends '((company-capf company-dabbrev-code))) ;; CAPF is the backend lsp-mode uses
+
+
+(use-package lsp-mode
+  :ensure t
+  :hook ((typescript-ts-mode . lsp-deferred)
+         (tsx-ts-mode . lsp-deferred)
+         (js-mode . lsp-deferred)
+         (js-jsx-mode . lsp-deferred)
+         (lsp-mode . lsp-diagnostics-mode)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp
+  :config
+  (setq lsp-completion-provider :capf)
+  (setq lsp-diagnostics-provider :flycheck)
+  (setq lsp-log-io nil)
+  )
 
 (use-package flycheck
   :ensure t
   :config
   (global-flycheck-mode))
 
-(use-package lsp-mode
-  :ensure t
-  :hook ((haskell-mode . lsp))
-  :commands lsp)
-
 (use-package lsp-ui
   :ensure t
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-update-mode 'line)
+  (setq lsp-ui-doc-enable t) ;; Enable hover documentation
+  )
 
 (use-package lsp-haskell
   :ensure t
-  :after lsp-mode)
+  :after lsp-mode
+  :config
+  (setenv "PATH" (concat (getenv "PATH") ":/Users/leo/.ghcup/bin"))
+  (setq exec-path (append exec-path '("/Users/leo/.ghcup/bin"))))
 
 (use-package key-chord
   :ensure t
   :config
-  (key-chord-mode 1))
+  (key-chord-mode 1)
+  (setq key-chord-two-keys-delay 0.2))
 
 (use-package evil
   :ensure t
@@ -57,28 +85,13 @@
 
 (use-package helm
   :ensure t
-  :init
-  (require 'helm)
   :config
   (helm-mode 1)
-  ;; Bind TAB to expand without opening the action menu
-  (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
-  ;; Custom keybindings for navigating Helm lists
-  (define-key helm-map (kbd "C-j") 'helm-next-line)
-  (define-key helm-map (kbd "C-k") 'helm-previous-line)
-  :bind (("M-x" . helm-M-x)
-         ("C-x C-p" . project-find-file)
-         ("C-x C-b" . helm-buffers-list)))
-
-(with-eval-after-load 'helm-buffers
-  (define-key helm-buffer-map (kbd "DEL") 'helm-buffer-run-kill-buffers))
-
-
-(setq helm-boring-file-regexp-list
-      '("\\.git$"
-        "node_modules"
-        "target"
-        "dist"))
+  (setq helm-boring-file-regexp-list
+        '("\\.git$"
+          "node_modules"
+          "target"
+          "dist")))
 
 (use-package projectile
   :ensure t
@@ -86,8 +99,6 @@
   (projectile-mode +1)
   :custom
   (projectile-completion-system 'helm)
-  ;;:bind-keymap
-  ;;("C-c p" . projectile-command-map)
   )
 
 (use-package helm-projectile
@@ -96,20 +107,137 @@
   :config
   (helm-projectile-on))
 
-(defun helm-projectile-switch-project-dired ()
-  "Switch to a recent project and open it in Dired."
-  (interactive)
-  (let ((projectile-switch-project-action #'projectile-dired))
-    (helm-projectile-switch-project)))
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp))
 
-(global-set-key (kbd "C-x C-d") 'helm-projectile-switch-project-dired)
+;TODO: is typescript-ts-mode-hook really from typescript-mode package?
+(add-hook 'typescript-ts-mode-hook
+          (lambda ()
+            (setq tab-width 2) ;; Display tabs as 2 spaces
+            (setq typescript-ts-mode-indent-offset 2))) ;; Set indent level to 2 spaces
+
+
+;(use-package js2-mode
+  ;:mode "\\.js\\'"
+  ;:config
+  ;(setq js-indent-level 2))
+
+;(use-package web-mode
+  ;:mode ("\\.tsx\\'" "\\.jsx\\'")
+  ;:config
+  ;(setq web-mode-markup-indent-offset 2)
+  ;(setq web-mode-code-indent-offset 2)
+  ;(setq web-mode-css-indent-offset 2)
+  ;(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode)))
+
+
+(use-package treesit
+      :mode (("\\.tsx\\'" . tsx-ts-mode)
+             ("\\.js\\'"  . typescript-ts-mode)
+             ("\\.mjs\\'" . typescript-ts-mode)
+             ("\\.mts\\'" . typescript-ts-mode)
+             ("\\.cjs\\'" . typescript-ts-mode)
+             ("\\.ts\\'"  . typescript-ts-mode)
+             ("\\.jsx\\'" . tsx-ts-mode)
+             ("\\.json\\'" .  json-ts-mode)
+             ("\\.Dockerfile\\'" . dockerfile-ts-mode)
+             ("\\.prisma\\'" . prisma-ts-mode)
+             ;; More modes defined here...
+             )
+      :preface
+      (defun os/setup-install-grammars ()
+        "Install Tree-sitter grammars if they are absent."
+        (interactive)
+        (dolist (grammar
+                 '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
+                   (bash "https://github.com/tree-sitter/tree-sitter-bash")
+                   (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+                   (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.21.2" "src"))
+                   (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
+                   (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
+                   (go "https://github.com/tree-sitter/tree-sitter-go" "v0.20.0")
+                   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+                   (make "https://github.com/alemuller/tree-sitter-make")
+                   (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+                   (cmake "https://github.com/uyha/tree-sitter-cmake")
+                   (c "https://github.com/tree-sitter/tree-sitter-c")
+                   (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+                   (toml "https://github.com/tree-sitter/tree-sitter-toml")
+                   (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+                   (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+                   (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+                   (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
+          (add-to-list 'treesit-language-source-alist grammar)
+          ;; Only install `grammar' if we don't already have it
+          ;; installed. However, if you want to *update* a grammar then
+          ;; this obviously prevents that from happening.
+          (unless (treesit-language-available-p (car grammar))
+            (treesit-install-language-grammar (car grammar)))))
+
+      ;; Optional, but recommended. Tree-sitter enabled major modes are
+      ;; distinct from their ordinary counterparts.
+      ;;
+      ;; You can remap major modes with `major-mode-remap-alist'. Note
+      ;; that this does *not* extend to hooks! Make sure you migrate them
+      ;; also
+      (dolist (mapping
+               '((python-mode . python-ts-mode)
+                 (css-mode . css-ts-mode)
+                 (typescript-mode . typescript-ts-mode)
+                 (js-mode . typescript-ts-mode)
+                 (js2-mode . typescript-ts-mode)
+                 (c-mode . c-ts-mode)
+                 (c++-mode . c++-ts-mode)
+                 (c-or-c++-mode . c-or-c++-ts-mode)
+                 (bash-mode . bash-ts-mode)
+                 (css-mode . css-ts-mode)
+                 (json-mode . json-ts-mode)
+                 (js-json-mode . json-ts-mode)
+                 (sh-mode . bash-ts-mode)
+                 (sh-base-mode . bash-ts-mode)))
+        (add-to-list 'major-mode-remap-alist mapping))
+      :config
+      (os/setup-install-grammars))
+
+
+;(use-package lsp-eslint
+  ;:demand t
+  ;:after lsp-mode)
+
+  ;(setf (alist-get 'prettier-json apheleia-formatters)
+        ;'("prettier" "--stdin-filepath" filepath))
+
+;(use-package apheleia
+  ;:ensure t
+  ;:diminish ""
+  ;:defines
+  ;(apheleia-formatters
+   ;apheleia-mode-alist)
+  ;:functions
+  ;(apheleia-global-mode)
+  ;:config
+  ;(setq apheleia-formatters
+        ;'((prettier . ("prettier" "--stdin-filepath" filepath))
+          ;(prettier-typescript . ("prettier" "--parser" "typescript" "--stdin-filepath" filepath))))
+  ;(setq apheleia-mode-alist
+        ;'((typescript-ts-mode . prettier-typescript)
+          ;(tsx-ts-mode . prettier-typescript)
+          ;(js-mode . prettier)
+          ;(json-mode . prettier)
+          ;(html-mode . prettier)))
+  ;(setq apheleia-log-to-messages t)
+  ;(apheleia-global-mode +1))
+
+;(add-hook 'apheleia-post-format-hook
+          ;(lambda ()
+            ;(message "Apheleia successfully formatted the buffer!")))
 
 
 
+;; this config given by ocaml setup - let's not change this
 (add-to-list 'load-path "/Users/leo/.opam/default/share/emacs/site-lisp")
 (require 'ocp-indent)
-
-
 
 (let ((opam-share (ignore-errors (car (process-lines "opam" "var" "share")))))
  (when (and opam-share (file-directory-p opam-share))
@@ -125,3 +253,12 @@
   ;; install the minor mode https://github.com/ProofGeneral/opam-switch-mode
   ;; and use one of its "OPSW" menus.
   ))
+
+
+;;TODO: remove this if I can remove the title bar alltogether?
+;; title bar to change color depending on light/dark mode
+(use-package ns-auto-titlebar
+  :if (eq system-type 'darwin)  ;; Only load on macOS
+  :ensure t
+  :config
+  (ns-auto-titlebar-mode))  ;; Enable the auto titlebar adjustment

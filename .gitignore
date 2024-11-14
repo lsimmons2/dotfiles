@@ -11,3 +11,5 @@ setup/
 .emacs.d/projects
 .emacs.d/recentf
 *.elc
+.emacs.d/.cache/
+.emacs.d/tree-sitter/
