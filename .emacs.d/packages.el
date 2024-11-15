@@ -20,11 +20,6 @@
   (setq company-minimum-prefix-length 1
         company-idle-delay 0.0))
 
-;;(require 'company)
-;;(add-hook 'after-init-hook 'global-company-mode)
-;;(setq company-backends '((company-capf company-dabbrev-code))) ;; CAPF is the backend lsp-mode uses
-
-
 (use-package lsp-mode
   :ensure t
   :hook ((typescript-ts-mode . lsp-deferred)
@@ -72,7 +67,9 @@
 (use-package evil
   :ensure t
   :config
+  (setq evil-undo-system 'undo-redo) ;; Use the default Emacs undo system with redo support
   (evil-mode 1))
+
 
 (use-package evil-leader
   :ensure t
@@ -96,6 +93,8 @@
 (use-package projectile
   :ensure t
   :config
+  (setq projectile-enable-caching t)              ;; Enable caching for faster performance
+  (setq projectile-globally-ignored-directories '(".git" "node_modules" "dist"))
   (projectile-mode +1)
   :custom
   (projectile-completion-system 'helm)
@@ -116,20 +115,6 @@
           (lambda ()
             (setq tab-width 2) ;; Display tabs as 2 spaces
             (setq typescript-ts-mode-indent-offset 2))) ;; Set indent level to 2 spaces
-
-
-;(use-package js2-mode
-  ;:mode "\\.js\\'"
-  ;:config
-  ;(setq js-indent-level 2))
-
-;(use-package web-mode
-  ;:mode ("\\.tsx\\'" "\\.jsx\\'")
-  ;:config
-  ;(setq web-mode-markup-indent-offset 2)
-  ;(setq web-mode-code-indent-offset 2)
-  ;(setq web-mode-css-indent-offset 2)
-  ;(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode)))
 
 
 (use-package treesit
@@ -208,30 +193,20 @@
   ;(setf (alist-get 'prettier-json apheleia-formatters)
         ;'("prettier" "--stdin-filepath" filepath))
 
-;(use-package apheleia
-  ;:ensure t
-  ;:diminish ""
-  ;:defines
-  ;(apheleia-formatters
-   ;apheleia-mode-alist)
-  ;:functions
-  ;(apheleia-global-mode)
-  ;:config
-  ;(setq apheleia-formatters
-        ;'((prettier . ("prettier" "--stdin-filepath" filepath))
-          ;(prettier-typescript . ("prettier" "--parser" "typescript" "--stdin-filepath" filepath))))
-  ;(setq apheleia-mode-alist
-        ;'((typescript-ts-mode . prettier-typescript)
-          ;(tsx-ts-mode . prettier-typescript)
-          ;(js-mode . prettier)
-          ;(json-mode . prettier)
-          ;(html-mode . prettier)))
-  ;(setq apheleia-log-to-messages t)
-  ;(apheleia-global-mode +1))
 
-;(add-hook 'apheleia-post-format-hook
-          ;(lambda ()
-            ;(message "Apheleia successfully formatted the buffer!")))
+
+(use-package apheleia
+  :ensure t
+  :config
+  (setq apheleia-log-only-errors nil)
+  ;TODO: probs better if I don't have to set apheleia-formatters-respect-indent-level to nil
+  ;- see Apheleia docs
+  (setq apheleia-formatters-respect-indent-level nil)
+  (apheleia-global-mode +1))
+
+(add-hook 'apheleia-post-format-hook
+          (lambda ()
+            (message "Apheleia successfully formatted the buffer!")))
 
 
 
@@ -262,3 +237,8 @@
   :ensure t
   :config
   (ns-auto-titlebar-mode))  ;; Enable the auto titlebar adjustment
+
+(use-package evil-search-highlight-persist
+  :ensure t
+  :config
+  (global-evil-search-highlight-persist t)) ;; Enable persistent highlights globally

@@ -5,6 +5,63 @@
 ;;VANILLA/VANILLA EVIL MAPPINGS
 ;; *****************************
 
+
+;TODO: maybe I should be using snippets for this
+(defvar print-statement-mapping
+  '((python-mode . "print()")
+    (typescript-mode . "console.log();")
+    (typescript-ts-mode . "console.log();")
+    (tsx-ts-mode . "console.log();")
+    (js-mode . "console.log();"))
+  "Mapping of major modes to their respective print statements.")
+
+(defun insert-print-statement ()
+  "Insert a print statement depending on the current major mode."
+  (interactive)
+  (message "Current major mode: %s" major-mode) ;; Debugging message
+  (let ((print-statement (cdr (assoc major-mode print-statement-mapping))))
+    (if print-statement
+        (progn
+          (insert print-statement)
+          (backward-char (if (string-suffix-p "();" print-statement) 2 1))) ;; Adjust cursor position
+      (message "No print statement template for this mode."))))
+
+(with-eval-after-load 'evil
+  (define-key evil-insert-state-map (kbd "sop") 'insert-print-statement))
+
+;if runs * while hovering over FOO_BAR, will search FOO_BAR instead of just FOO or BAR
+(setq evil-symbol-word-search t)
+
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global
+    ;; Open the project root in dired
+    (kbd "SPC e") (lambda () (interactive)
+                    (let ((project-root (or (projectile-project-root) default-directory)))
+                      (find-file project-root)))
+    ;; Open the current buffer's directory in dired
+    (kbd "SPC w") (lambda () (interactive)
+                    (find-file (file-name-directory (or buffer-file-name default-directory))))))
+
+;get some vim stuff in dired
+(with-eval-after-load 'dired
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              ;; Use Evil's search module in dired
+              (setq evil-search-module 'evil-search)
+              ;; Define keybindings for search
+              (evil-define-key 'normal dired-mode-map
+                (kbd "/") 'evil-search-forward  ;; Search with /
+                (kbd "n") 'evil-search-next     ;; Navigate to next match
+                (kbd "N") 'evil-search-previous ;; Navigate to previous match
+                (kbd "%") 'dired-create-empty-file
+                (kbd "gg") 'evil-goto-first-line ;; Go to the top of the buffer
+                (kbd "G") 'evil-goto-line))))    ;; Go to the bottom of the buffer
+
+
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)) ;; Redo
+
 (tab-bar-mode 1)
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
@@ -12,10 +69,17 @@
     (kbd "M-[") 'tab-previous
     (kbd "M-]") 'tab-next
     (kbd "M-w") 'tab-close)
-
   )
 
-(evil-define-key 'normal 'global (kbd "S") 'save-buffer)
+
+(defun save-all-buffers ()
+  "Save all modified file-visiting buffers without prompting."
+  (interactive)
+  (save-some-buffers t (lambda () buffer-file-name))) ;; Only consider file-visiting buffers
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global (kbd "S") 'save-buffer)
+  (evil-define-key 'normal 'global (kbd "SPC S") 'save-all-buffers))
 
 (evil-define-key 'normal 'global (kbd "SPC s h") 
   (lambda () (interactive) (split-window-right) (other-window 1)))
@@ -30,6 +94,24 @@
   (lambda ()
     (interactive)
     (display-line-numbers-mode (if display-line-numbers-mode -1 1))))
+
+;TODO: this doesn't behave like I want it to/like native hls in vim
+(defun toggle-evil-search-highlight ()
+  "Toggle persistent search highlight for evil-mode, restoring highlights if re-enabled."
+  (interactive)
+  (if (bound-and-true-p global-evil-search-highlight-persist)
+      (progn
+        (evil-search-highlight-persist-remove-all)  ;; Clear all highlights
+        (global-evil-search-highlight-persist -1))  ;; Turn off persistent highlighting
+    (progn
+      (global-evil-search-highlight-persist t)     ;; Turn on persistent highlighting
+      ;; Re-apply the last search pattern
+      (when evil-ex-search-pattern
+        (evil-ex-search-activate-highlight evil-ex-search-pattern))
+      )))
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global (kbd "SPC o h") 'toggle-evil-search-highlight))
 
 (with-eval-after-load 'evil
   ;; Window resizing
@@ -174,5 +256,30 @@
   (define-key dired-mode-map (kbd "<") 'dired-up-directory))
 
 (global-auto-revert-mode 1)
-(setq auto-revert-verbose nil) ;; Suppress messages about reverting
+(setq auto-revert-verbose nil)                  ;; Suppress messages about reverting
+(setq global-auto-revert-non-file-buffers t)    ;; Enable auto-revert for dired buffers (and others?)
 
+
+(defun open-new-term ()
+  "Open a new terminal buffer with a unique name and process."
+  (interactive)
+  (let ((term-buffer (generate-new-buffer-name "*term*")))
+    (with-current-buffer (term "/bin/zsh")  ;; Replace "/bin/bash" with your preferred shell
+      (rename-buffer term-buffer))))
+
+
+;search all lines of project
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global (kbd "SPC /") 'helm-projectile-rg)
+  (evil-define-key 'normal 'global (kbd "SPC ?") 'helm-projectile-rg)
+  ;TODO: this isn't working 
+  ;(evil-define-key 'normal 'global (kbd "/") 'helm-occur)
+  )
+
+
+(defun my-helm-projectile-rg-clear-input (orig-fun &rest args)
+  "Clear default input for helm-projectile-rg."
+  (let ((helm-ag-insert-at-point 'symbol)) ;; Set to nil to prevent default
+    (apply orig-fun args)))
+
+(advice-add 'helm-projectile-rg :around #'my-helm-projectile-rg-clear-input)

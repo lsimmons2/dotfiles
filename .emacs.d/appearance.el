@@ -2,6 +2,7 @@
 (defvar my/dark-theme 'doom-one)
 (defvar my/light-theme 'doom-feather-light)
 
+(set-face-attribute 'default nil :weight 'light)
 
 (defun my/detect-macos-dark-mode ()
   "Check if macOS is in dark mode and return t if it is."
@@ -47,6 +48,13 @@ Only loads the theme if it's not already active, to prevent flickering."
 
 
 
+
+(setq-default mode-line-buffer-identification
+              '(:eval (if (and (featurep 'projectile)
+                               (projectile-project-root)
+                               buffer-file-name)
+                          (file-relative-name buffer-file-name (projectile-project-root))
+                        "%b")))
 ;(setq-default mode-line-buffer-identification
               ;'(:eval (if (and (featurep 'projectile) (projectile-project-root))
                           ;(file-relative-name buffer-file-name (projectile-project-root))
