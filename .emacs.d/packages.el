@@ -195,19 +195,27 @@
 
 
 
+
 (use-package apheleia
   :ensure t
   :config
   (setq apheleia-log-only-errors nil)
-  ;TODO: probs better if I don't have to set apheleia-formatters-respect-indent-level to nil
-  ;- see Apheleia docs
   (setq apheleia-formatters-respect-indent-level nil)
+  (setf (alist-get 'prettier apheleia-formatters)
+        '("npx" "prettier" "--stdin-filepath" filepath))
   (apheleia-global-mode +1))
+
 
 (add-hook 'apheleia-post-format-hook
           (lambda ()
             (message "Apheleia successfully formatted the buffer!")))
 
+;TODO: not sure I need/want exec-path-from-shell package, installing it atow
+;to try to get apheleia to have access to globally-installed prettier
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
 
 
 ;; this config given by ocaml setup - let's not change this

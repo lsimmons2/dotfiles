@@ -26,8 +26,8 @@
           (backward-char (if (string-suffix-p "();" print-statement) 2 1))) ;; Adjust cursor position
       (message "No print statement template for this mode."))))
 
-(with-eval-after-load 'evil
-  (define-key evil-insert-state-map (kbd "sop") 'insert-print-statement))
+;(with-eval-after-load 'evil
+  ;(define-key evil-insert-state-map (kbd "sop") 'insert-print-statement))
 
 ;if runs * while hovering over FOO_BAR, will search FOO_BAR instead of just FOO or BAR
 (setq evil-symbol-word-search t)

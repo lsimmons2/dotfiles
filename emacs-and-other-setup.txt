@@ -8,3 +8,12 @@ https://ocaml.org/install#linux_mac_bsd
 
 
 npm i -g prettier
+
+
+local tunneling stuff
+
+brew install cloudflared
+
+npm i beeceptor-cli -g
+
+
