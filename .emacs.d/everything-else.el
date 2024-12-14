@@ -133,25 +133,6 @@
     (kbd "M-h") 'windmove-left))
 
 
-(defun open-term-split-below ()
-  "Split window below, open a terminal, and focus it."
-  (interactive)
-  (split-window-below)
-  (other-window 1)
-  (term "/bin/zsh"))
-
-(defun open-term-split-right ()
-  "Split window to the right, open a terminal, and focus it."
-  (interactive)
-  (split-window-right)
-  (other-window 1)
-  (term "/bin/zsh"))
-
-(with-eval-after-load 'evil
-  (evil-define-key 'normal 'global
-    (kbd "M-o") 'open-term-split-below
-    (kbd "M-e") 'open-term-split-right))
-
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
     (kbd "n") 'evil-search-previous
