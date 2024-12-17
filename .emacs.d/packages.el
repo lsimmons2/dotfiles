@@ -195,14 +195,36 @@
 
 
 
+(use-package tuareg
+  :ensure t)
+(add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
+(add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))
+
+;; Use ocp-indent for indentation
+(use-package ocp-indent
+  :ensure t
+  :hook
+  ;; Set up ocp-indent to run before save in Tuareg mode
+  (tuareg-mode . (lambda ()
+                   (add-hook 'before-save-hook 'ocp-indent-buffer nil 'local))))
 
 (use-package apheleia
   :ensure t
   :config
+  ;; Keep your existing Prettier setup
   (setq apheleia-log-only-errors nil)
   (setq apheleia-formatters-respect-indent-level nil)
   (setf (alist-get 'prettier apheleia-formatters)
         '("npx" "prettier" "--stdin-filepath" filepath))
+  
+  ;; Add ocamlformat formatter
+  (setf (alist-get 'ocamlformat apheleia-formatters)
+        '("ocamlformat" "--name" buffer-file-name "-"))
+  ;; Associate ocamlformat with OCaml modes
+  (add-to-list 'apheleia-mode-alist '(tuareg-mode . ocamlformat))
+  (add-to-list 'apheleia-mode-alist '(caml-mode . ocamlformat))
+  
+  ;; Enable Apheleia globally
   (apheleia-global-mode +1))
 
 

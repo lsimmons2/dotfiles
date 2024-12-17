@@ -113,6 +113,18 @@
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global (kbd "SPC o h") 'toggle-evil-search-highlight))
 
+(defun my-toggle-comment ()
+  "Toggle comments on the current line or region in normal, visual, or visual-block mode."
+  (interactive)
+  (if (use-region-p)  ;; If a region is selected
+      (comment-or-uncomment-region (region-beginning) (region-end))
+    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+
+;; Bind SPC c for commenting
+(with-eval-after-load 'evil
+  (evil-define-key 'normal global-map (kbd "SPC c") 'my-toggle-comment)
+  (evil-define-key 'visual global-map (kbd "SPC c") 'my-toggle-comment))
+
 (with-eval-after-load 'evil
   ;; Window resizing
   (evil-define-key 'normal 'global

@@ -33,6 +33,7 @@
 
 
 (load-theme 'doom-feather-light t)
+;(load-theme 'doom-one t)
 
 (setq ring-bell-function 'ignore)
 (tool-bar-mode -1)
