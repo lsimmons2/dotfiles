@@ -26,14 +26,28 @@
          (tsx-ts-mode . lsp-deferred)
          (js-mode . lsp-deferred)
          (js-jsx-mode . lsp-deferred)
+		 (python-mode . lsp-deferred)
+         (tuareg-mode . lsp-deferred)
          (lsp-mode . lsp-diagnostics-mode)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :config
+
+  (setq lsp-enable-on-type-formatting nil) ;; Disable formatting triggered by typing
+  (setq lsp-before-save-edits nil)         ;; Disable LSP formatting on save
   (setq lsp-completion-provider :capf)
   (setq lsp-diagnostics-provider :flycheck)
   (setq lsp-log-io nil)
   )
+
+(add-hook 'apheleia-mode-hook
+          (lambda ()
+            (remove-hook 'before-save-hook 'lsp--before-save t)))
+
+
+;(with-eval-after-load 'lsp-mode
+  ;(setq lsp-disabled-clients '(pylsp pyls mspyls ruff-lsp semgrep-lsp)) ;; Disable other clients
+  ;(add-to-list 'lsp-enabled-clients 'pyright)) ;; Enable pyright
 
 (use-package flycheck
   :ensure t
@@ -195,37 +209,49 @@
 
 
 
-(use-package tuareg
-  :ensure t)
-(add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
-(add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))
 
-;; Use ocp-indent for indentation
-(use-package ocp-indent
-  :ensure t
-  :hook
-  ;; Set up ocp-indent to run before save in Tuareg mode
-  (tuareg-mode . (lambda ()
-                   (add-hook 'before-save-hook 'ocp-indent-buffer nil 'local))))
+;(use-package apheleia
+  ;:ensure t
+  ;:config
+  ;;; Keep your existing Prettier setup
+  ;(setq apheleia-log-only-errors nil)
+  ;(setq apheleia-formatters-respect-indent-level nil)
+
+ ;(setf (alist-get 'prettier apheleia-formatters)
+        ;'("prettier" "--stdin-filepath" filepath))
+ ;;(setf (alist-get 'prettier apheleia-formatters)
+        ;;'("/Users/leo/.nvm/versions/node/v18.20.3/bin/prettier" "--stdin-filepath" filepath)) ;; Replace "/path/to/prettier" with the actual path
+  
+  ;;; Add ocamlformat formatter
+  ;;; Associate ocamlformat with OCaml modes
+  ;(add-to-list 'apheleia-mode-alist '(tuareg-mode . ocamlformat))
+  ;(add-to-list 'apheleia-mode-alist '(caml-mode . ocamlformat))
+  
+  ;;; Enable Apheleia globally
+  ;(apheleia-global-mode +1))
+
 
 (use-package apheleia
   :ensure t
   :config
-  ;; Keep your existing Prettier setup
   (setq apheleia-log-only-errors nil)
   (setq apheleia-formatters-respect-indent-level nil)
+  (setq apheleia-use-diff nil)
+
+  ;; Use the built-in `run-prettier` formatter
   (setf (alist-get 'prettier apheleia-formatters)
-        '("npx" "prettier" "--stdin-filepath" filepath))
-  
-  ;; Add ocamlformat formatter
+        '("prettier" "--stdin-filepath" filepath))
+  (add-to-list 'apheleia-mode-alist '(typescript-ts-mode . prettier))
+  (add-to-list 'apheleia-mode-alist '(tsx-ts-mode . prettier))
+
   (setf (alist-get 'ocamlformat apheleia-formatters)
         '("ocamlformat" "--name" buffer-file-name "-"))
-  ;; Associate ocamlformat with OCaml modes
   (add-to-list 'apheleia-mode-alist '(tuareg-mode . ocamlformat))
   (add-to-list 'apheleia-mode-alist '(caml-mode . ocamlformat))
-  
+
   ;; Enable Apheleia globally
   (apheleia-global-mode +1))
+
 
 
 (add-hook 'apheleia-post-format-hook
@@ -260,6 +286,27 @@
   ))
 
 
+(use-package opam-switch-mode
+  :ensure t
+  :hook
+  ((coq-mode tuareg-mode) . opam-switch-mode))
+
+(add-hook 'tuareg-mode-hook #'lsp)
+(add-hook 'caml-mode-hook #'lsp)
+
+(use-package tuareg
+  :ensure t)
+(add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
+(add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))
+
+;; Use ocp-indent for indentation
+(use-package ocp-indent
+  :ensure t
+  :hook
+  ;; Set up ocp-indent to run before save in Tuareg mode
+  (tuareg-mode . (lambda ()
+                   (add-hook 'before-save-hook 'ocp-indent-buffer nil 'local))))
+
 ;;TODO: remove this if I can remove the title bar alltogether?
 ;; title bar to change color depending on light/dark mode
 (use-package ns-auto-titlebar
@@ -272,3 +319,15 @@
   :ensure t
   :config
   (global-evil-search-highlight-persist t)) ;; Enable persistent highlights globally
+
+
+(use-package adaptive-wrap
+  :ensure t)
+
+
+(use-package highlight-symbol
+  :ensure t
+  :hook (prog-mode . highlight-symbol-mode) ;; Enable in programming modes
+  :config
+  (setq highlight-symbol-idle-delay 0.3) ;; Highlight after 0.3 seconds
+  (define-key highlight-symbol-mode-map (kbd "C-c h") 'highlight-symbol-at-point)) ;; Manual highlight

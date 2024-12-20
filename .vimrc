@@ -125,8 +125,8 @@ function! HighlightWordUnderCursor()
 	endif
 endfunction
 
-let blacklist = ['text', 'markdown', 'lisp']
-autocmd BufWritePre * if index(blacklist, &ft) < 0 | autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
+"let blacklist = ['text', 'markdown', 'lisp']
+"autocmd BufWritePre * if index(blacklist, &ft) < 0 | autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
 
 "SPLIT CURRENT WINDOW
 nmap <leader>sh   :leftabove  vsplit<CR>
@@ -458,3 +458,8 @@ for tool in s:opam_packages
   endif
 endfor
 " ## end of OPAM user-setup addition for vim / base ## keep this line
+" ## added by OPAM user-setup for vim / ocp-indent ## b66982e68cd87de093aa6b46e456c54a ## you can edit, but keep this line
+if count(s:opam_available_tools,"ocp-indent") == 0
+  source "/Users/leo/.opam/default/share/ocp-indent/vim/indent/ocaml.vim"
+endif
+" ## end of OPAM user-setup addition for vim / ocp-indent ## keep this line
