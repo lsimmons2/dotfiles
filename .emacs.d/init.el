@@ -1,12 +1,15 @@
-;; Set up package archives
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 
 (load "~/.emacs.d/startup.el")
-(load "~/.emacs.d/packages.el")
 (load "~/.emacs.d/appearance.el")
-(load "~/.emacs.d/scroll.el")
-(load "~/.emacs.d/backups.el")
-(load "~/.emacs.d/convenience-commands.el")
-(load "~/.emacs.d/everything-else.el")
+(load "~/.emacs.d/general.el")
+(load "~/.emacs.d/general-programming.el")
+(load "~/.emacs.d/ocaml-stuff.el")
+(load "~/.emacs.d/haskell-stuff.el")
+(load "~/.emacs.d/js-ts-react-stuff.el")
+(load "~/.emacs.d/txt-file-stuff.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

@@ -1,35 +1,129 @@
-(message "hola here in everything-else.el")
+
+(use-package company
+  :disabled t
+  :hook (prog-mode . company-mode)
+  :config
+  (setq company-minimum-prefix-length 1
+        company-idle-delay 0.0))
+
+(use-package evil
+  :ensure t
+  :config
+  (setq evil-undo-system 'undo-redo) ;; Use the default Emacs undo system with redo support
+  (evil-mode 1))
 
 
-;; *****************************
-;;VANILLA/VANILLA EVIL MAPPINGS
-;; *****************************
+(use-package evil-leader
+  :ensure t
+  :after evil
+  :config
+  (global-evil-leader-mode))
 
 
-					;TODO: maybe I should be using snippets for this
-(defvar print-statement-mapping
-  '((python-mode . "print()")
-    (typescript-mode . "console.log();")
-    (typescript-ts-mode . "console.log();")
-    (tsx-ts-mode . "console.log();")
-    (js-mode . "console.log();"))
-  "Mapping of major modes to their respective print statements.")
+(use-package key-chord
+  :ensure t
+  :config
+  (key-chord-mode 1)
+  (setq key-chord-two-keys-delay 0.2))
 
-(defun insert-print-statement ()
-  "Insert a print statement depending on the current major mode."
+(use-package helm
+  :ensure t
+  :config
+  (helm-mode 1)
+  (setq helm-boring-file-regexp-list
+        '("\\.git$"
+          "node_modules"
+          "target"
+          "dist")))
+
+(use-package projectile
+  :ensure t
+  :config
+  (setq projectile-enable-caching t)              ;; Enable caching for faster performance
+  (setq projectile-globally-ignored-directories '(".git" "node_modules" "dist"))
+  (projectile-mode +1)
+  :custom
+  (projectile-completion-system 'helm)
+  )
+
+(use-package helm-projectile
+  :ensure t
+  :after (helm projectile)
+  :config
+  (helm-projectile-on))
+
+(use-package evil-search-highlight-persist
+  :ensure t
+  :config
+  (global-evil-search-highlight-persist t)) ;; Enable persistent highlights globally
+
+
+(use-package adaptive-wrap
+  :ensure t)
+
+
+(use-package highlight-symbol
+  :ensure t
+  :hook (prog-mode . highlight-symbol-mode) ;; Enable in programming modes
+  :config
+  (setq highlight-symbol-idle-delay 0.3)) ;; Highlight after 0.3 seconds
+
+
+(setq scroll-margin 1)                   ;; Keeps a margin of 1 line at the top/bottom
+(setq scroll-conservatively 101)         ;; Scroll only by one line to avoid jumping
+(setq scroll-step 1)                     ;; Scrolls one line at a time
+(setq auto-window-vscroll nil)           ;; Disables auto vertical scroll jump
+(setq redisplay-dont-pause t)            ;; Prevents pauses in redisplay, smoothing scrolling
+
+
+(setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
+(setq auto-save-file-name-transforms `((".*" "~/.emacs.d/autosaves/" t)))
+
+
+
+
+
+(defun reload-emacs-config ()
+  "Reload Emacs configuration."
   (interactive)
-  (message "Current major mode: %s" major-mode) ;; Debugging message
-  (let ((print-statement (cdr (assoc major-mode print-statement-mapping))))
-    (if print-statement
-        (progn
-          (insert print-statement)
-          (backward-char (if (string-suffix-p "();" print-statement) 2 1))) ;; Adjust cursor position
-      (message "No print statement template for this mode."))))
+  (load-file (expand-file-name "init.el" user-emacs-directory))
+  (message "Emacs configuration reloaded!"))
 
-					;(with-eval-after-load 'evil
-					;(define-key evil-insert-state-map (kbd "sop") 'insert-print-statement))
+(defvar counter 0)
+(defun my/open-terminal ()
+  "Open a new terminal and rename the buffer, focusing the new terminal window."
+  (interactive)
+  (setq counter (+ counter 1))
+  (let* ((title (concat "Terminal-" (number-to-string counter)))
+         (buf-title (concat "*" title "*")))
+    (message buf-title)
+    (switch-to-buffer-other-window buf-title)
+    (set-buffer (make-term title "/bin/zsh"))
+    (term-mode)
+    (term-char-mode)
+    (switch-to-buffer buf-title)))
 
-					;if runs * while hovering over FOO_BAR, will search FOO_BAR instead of just FOO or BAR
+
+
+(defun open-term-split-below ()
+  "Split window below, open a terminal, and focus it."
+  (interactive)
+  (split-window-below)
+  (other-window 1)
+  (term "/bin/zsh"))
+
+(defun open-term-split-right ()
+  "Split window to the right, open a terminal, and focus it."
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (term "/bin/zsh"))
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global
+    (kbd "M-o") 'open-term-split-below
+    (kbd "M-e") 'open-term-split-right))
+
 (setq evil-symbol-word-search t)
 
 
@@ -43,7 +137,8 @@
     (kbd "SPC w") (lambda () (interactive)
                     (find-file (file-name-directory (or buffer-file-name default-directory))))))
 
-					;get some vim stuff in dired
+
+
 (with-eval-after-load 'dired
   (add-hook 'dired-mode-hook
             (lambda ()
@@ -109,20 +204,6 @@
         (evil-ex-search-activate-highlight evil-ex-search-pattern))
       )))
 
-(with-eval-after-load 'evil
-  (evil-define-key 'normal 'global (kbd "SPC o h") 'toggle-evil-search-highlight))
-
-(defun my-toggle-comment ()
-  "Toggle comments on the current line or region in normal, visual, or visual-block mode."
-  (interactive)
-  (if (use-region-p)  ;; If a region is selected
-      (comment-or-uncomment-region (region-beginning) (region-end))
-    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
-
-;; Bind SPC c for commenting
-(with-eval-after-load 'evil
-  (evil-define-key 'normal global-map (kbd "SPC c") 'my-toggle-comment)
-  (evil-define-key 'visual global-map (kbd "SPC c") 'my-toggle-comment))
 
 (with-eval-after-load 'evil
   ;; Window resizing
@@ -144,8 +225,7 @@
     (kbd "M-h") 'windmove-left))
 
 
-					;NB: still probably some redundancy and room for improvement with all this
-					;exit and enter insert/term-char mode stuff
+
 (defun my-term-enter-char-mode ()
   "Switch to term char mode and enter Evil insert mode if in term line mode."
   (interactive)
@@ -188,9 +268,6 @@
             ))
 
 
-;; *****************************
-;;MAPPINGS RE HELM, LSP, COMPANY, FLYCHECK
-;; *****************************
 
 (with-eval-after-load 'helm
   ;; Bind TAB to expand without opening the action menu
@@ -242,37 +319,12 @@
 
 
 
-(with-eval-after-load 'evil
-  ;; General LSP mappings
-  (key-chord-define evil-normal-state-map "gd" 'lsp-find-definition)
-  (key-chord-define evil-normal-state-map "gt" 'lsp-find-type-definition)
-  (key-chord-define evil-normal-state-map "gr" 'lsp-find-references)
-  (key-chord-define evil-normal-state-map " r" 'lsp-rename)
-  (key-chord-define evil-normal-state-map "]e" 'flycheck-next-error)
-  (key-chord-define evil-normal-state-map "[e" 'flycheck-previous-error)
-
-  ;; OCaml-specific overrides using Merlin
-  (add-hook 'tuareg-mode-hook
-            (lambda ()
-              ;; Use Merlin instead of LSP for definition and type navigation
-              (key-chord-define evil-normal-state-local-map "gd" 'merlin-locate)
-              (key-chord-define evil-normal-state-local-map "gt" 'merlin-type-enclosing)
-              (key-chord-define evil-normal-state-local-map "gr" 'merlin-project-occurrences))))
-
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
   (define-key company-active-map (kbd "C-j") 'company-select-next)
   (define-key company-active-map (kbd "C-k") 'company-select-previous))
 
-;;for going to references in list provided by lsp/helm
-(defun my-xref-jump-to-location ()
-  "Jump to the location under the cursor in the *xref* buffer."
-  (interactive)
-  (let ((xref-window (selected-window)))
-    (xref-quit-and-goto-xref)
-    (select-window xref-window)))
-(with-eval-after-load 'evil
-  (evil-define-key 'normal xref--xref-buffer-mode-map (kbd "RET") 'my-xref-jump-to-location))
+
 
 ;;jump back (../) in dired with <
 (with-eval-after-load 'dired
@@ -281,6 +333,8 @@
 (global-auto-revert-mode 1)
 (setq auto-revert-verbose nil)                  ;; Suppress messages about reverting
 (setq global-auto-revert-non-file-buffers t)    ;; Enable auto-revert for dired buffers (and others?)
+
+
 
 
 (defun open-new-term ()
@@ -309,39 +363,6 @@
 
 
 
-(defun my-text-mode-setup ()
-  "Custom settings for text-mode."
-  ;; Set tabs instead of spaces, and configure tab width
-  (setq-local indent-tabs-mode t)   ;; Use tabs instead of spaces
-  (setq-local tab-width 4)          ;; Set tab width to 4
-  (setq-local evil-shift-width 4)   ;; Set shift width to 4 (for Evil mode indentation)
-
-  ;; Folding
-  (setq-local outline-regexp "^[ \t]*") ;; Use indentation for folding
-  (outline-minor-mode 1)                ;; Enable folding for text-mode
-
-  ;; Wrapping and indentation
-  (setq-local word-wrap t)               ;; Enable word wrapping
-  (setq-local truncate-lines nil)        ;; Prevent horizontal scrolling
-  (setq-local visual-line-mode t)        ;; Enable visual line wrapping
-
-  ;; Enable adaptive-wrap-prefix-mode for wrapped lines
-  (adaptive-wrap-prefix-mode 1)
-					;(setq-local adaptive-wrap-extra-indent 4) ;; Match the indentation of wrapped lines with the original line
-
-  ;; Keybinding equivalent for `<leader>j` in Vim
-  (evil-define-key 'normal text-mode-map
-    (kbd "SPC j") (lambda () (interactive)
-                    (evil-visual-line)
-                    (evil-upcase)
-                    (evil-insert-line)
-                    (insert ">")
-                    (evil-normal-state)))
-  )
-
-(add-hook 'text-mode-hook #'my-text-mode-setup)
-
-
 
 ;; Enable visual-line-mode globally
 (global-visual-line-mode 1)
@@ -365,6 +386,7 @@
 					;(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
 					;(define-key evil-visual-state-map (kbd "C-d") 'evil-scroll-down)
   )
+
 
 (defun my-enable-superword-mode ()
   "Enable superword-mode for treating underscores as part of words."
@@ -409,8 +431,6 @@
 
 ;; Enable this behavior for modes with `superword-mode`
 (add-hook 'superword-mode-hook #'my-evil-superword-setup)
-
-
 
 
 (defvar my-fullscreen-window nil

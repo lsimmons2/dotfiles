@@ -1,24 +1,3 @@
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-
-;; Install and configure packages using `use-package`
-(use-package doom-themes
-  :ensure t
-  :config
-  (load-theme 'doom-one t))
-
-(use-package ns-auto-titlebar
-  :ensure t
-  :config
-  (ns-auto-titlebar-mode))
-
-(use-package company
-  :disabled t
-  :hook (prog-mode . company-mode)
-  :config
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0.0))
 
 (use-package lsp-mode
   :ensure t
@@ -65,71 +44,8 @@
   (setq lsp-ui-doc-enable t) ;; Enable hover documentation
   )
 
-(use-package lsp-haskell
-  :ensure t
-  :after lsp-mode
-  :config
-  (setenv "PATH" (concat (getenv "PATH") ":/Users/leo/.ghcup/bin"))
-  (setq exec-path (append exec-path '("/Users/leo/.ghcup/bin"))))
-
-(use-package key-chord
-  :ensure t
-  :config
-  (key-chord-mode 1)
-  (setq key-chord-two-keys-delay 0.2))
-
-(use-package evil
-  :ensure t
-  :config
-  (setq evil-undo-system 'undo-redo) ;; Use the default Emacs undo system with redo support
-  (evil-mode 1))
-
-
-(use-package evil-leader
-  :ensure t
-  :after evil
-  :config
-  (global-evil-leader-mode))
-
-(use-package haskell-mode
-  :ensure t)
-
-(use-package helm
-  :ensure t
-  :config
-  (helm-mode 1)
-  (setq helm-boring-file-regexp-list
-        '("\\.git$"
-          "node_modules"
-          "target"
-          "dist")))
-
-(use-package projectile
-  :ensure t
-  :config
-  (setq projectile-enable-caching t)              ;; Enable caching for faster performance
-  (setq projectile-globally-ignored-directories '(".git" "node_modules" "dist"))
-  (projectile-mode +1)
-  :custom
-  (projectile-completion-system 'helm)
-  )
-
-(use-package helm-projectile
-  :ensure t
-  :after (helm projectile)
-  :config
-  (helm-projectile-on))
-
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp))
 
 					;TODO: is typescript-ts-mode-hook really from typescript-mode package?
-(add-hook 'typescript-ts-mode-hook
-          (lambda ()
-            (setq tab-width 2) ;; Display tabs as 2 spaces
-            (setq typescript-ts-mode-indent-offset 2))) ;; Set indent level to 2 spaces
-
 
 (use-package treesit
   :mode (("\\.tsx\\'" . tsx-ts-mode)
@@ -200,37 +116,6 @@
   (os/setup-install-grammars))
 
 
-					;(use-package lsp-eslint
-					;:demand t
-					;:after lsp-mode)
-
-					;(setf (alist-get 'prettier-json apheleia-formatters)
-					;'("prettier" "--stdin-filepath" filepath))
-
-
-
-
-					;(use-package apheleia
-					;:ensure t
-					;:config
-  ;;; Keep your existing Prettier setup
-					;(setq apheleia-log-only-errors nil)
-					;(setq apheleia-formatters-respect-indent-level nil)
-
-					;(setf (alist-get 'prettier apheleia-formatters)
-					;'("prettier" "--stdin-filepath" filepath))
-;;(setf (alist-get 'prettier apheleia-formatters)
-;;'("/Users/leo/.nvm/versions/node/v18.20.3/bin/prettier" "--stdin-filepath" filepath)) ;; Replace "/path/to/prettier" with the actual path
-
-  ;;; Add ocamlformat formatter
-  ;;; Associate ocamlformat with OCaml modes
-					;(add-to-list 'apheleia-mode-alist '(tuareg-mode . ocamlformat))
-					;(add-to-list 'apheleia-mode-alist '(caml-mode . ocamlformat))
-
-  ;;; Enable Apheleia globally
-					;(apheleia-global-mode +1))
-
-
 (use-package apheleia
   :ensure t
   :config
@@ -252,11 +137,10 @@
   ;; Enable Apheleia globally
   (apheleia-global-mode +1))
 
-
-
 (add-hook 'apheleia-post-format-hook
           (lambda ()
             (message "Apheleia successfully formatted the buffer!")))
+
 
 					;TODO: not sure I need/want exec-path-from-shell package, installing it atow
 					;to try to get apheleia to have access to globally-installed prettier
@@ -266,67 +150,49 @@
   (exec-path-from-shell-initialize))
 
 
-;; this config given by ocaml setup - let's not change this
-(add-to-list 'load-path "/Users/leo/.opam/default/share/emacs/site-lisp")
-(require 'ocp-indent)
-
-(let ((opam-share (ignore-errors (car (process-lines "opam" "var" "share")))))
-  (when (and opam-share (file-directory-p opam-share))
-    ;; Register Merlin
-    (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
-    (autoload 'merlin-mode "merlin" nil t nil)
-    ;; Automatically start it in OCaml buffers
-    (add-hook 'tuareg-mode-hook 'merlin-mode t)
-    (add-hook 'caml-mode-hook 'merlin-mode t)
-    ;; Use opam switch to lookup ocamlmerlin binary
-    (setq merlin-command 'opam)
-    ;; To easily change opam switches within a given Emacs session, you can
-    ;; install the minor mode https://github.com/ProofGeneral/opam-switch-mode
-    ;; and use one of its "OPSW" menus.
-    ))
 
 
-(use-package opam-switch-mode
-  :ensure t
-  :hook
-  ((coq-mode tuareg-mode) . opam-switch-mode))
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global (kbd "SPC o h") 'toggle-evil-search-highlight))
 
-(add-hook 'tuareg-mode-hook #'lsp)
-(add-hook 'caml-mode-hook #'lsp)
+(defun my-toggle-comment ()
+  "Toggle comments on the current line or region in normal, visual, or visual-block mode."
+  (interactive)
+  (if (use-region-p)  ;; If a region is selected
+      (comment-or-uncomment-region (region-beginning) (region-end))
+    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
 
-(use-package tuareg
-  :ensure t)
-(add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
-(add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))
-
-;; Use ocp-indent for indentation
-(use-package ocp-indent
-  :ensure t
-  :hook
-  ;; Set up ocp-indent to run before save in Tuareg mode
-  (tuareg-mode . (lambda ()
-                   (add-hook 'before-save-hook 'ocp-indent-buffer nil 'local))))
-
-;;TODO: remove this if I can remove the title bar alltogether?
-;; title bar to change color depending on light/dark mode
-(use-package ns-auto-titlebar
-  :if (eq system-type 'darwin)  ;; Only load on macOS
-  :ensure t
-  :config
-  (ns-auto-titlebar-mode))  ;; Enable the auto titlebar adjustment
-
-(use-package evil-search-highlight-persist
-  :ensure t
-  :config
-  (global-evil-search-highlight-persist t)) ;; Enable persistent highlights globally
+;; Bind SPC c for commenting
+(with-eval-after-load 'evil
+  (evil-define-key 'normal global-map (kbd "SPC c") 'my-toggle-comment)
+  (evil-define-key 'visual global-map (kbd "SPC c") 'my-toggle-comment))
 
 
-(use-package adaptive-wrap
-  :ensure t)
+(with-eval-after-load 'evil
+  ;; General LSP mappings
+  (key-chord-define evil-normal-state-map "gd" 'lsp-find-definition)
+  (key-chord-define evil-normal-state-map "gt" 'lsp-find-type-definition)
+  (key-chord-define evil-normal-state-map "gr" 'lsp-find-references)
+  (key-chord-define evil-normal-state-map " r" 'lsp-rename)
+  (key-chord-define evil-normal-state-map "]e" 'flycheck-next-error)
+  (key-chord-define evil-normal-state-map "[e" 'flycheck-previous-error)
+
+  ;; OCaml-specific overrides using Merlin
+  (add-hook 'tuareg-mode-hook
+            (lambda ()
+              ;; Use Merlin instead of LSP for definition and type navigation
+              (key-chord-define evil-normal-state-local-map "gd" 'merlin-locate)
+              (key-chord-define evil-normal-state-local-map "gt" 'merlin-type-enclosing)
+              (key-chord-define evil-normal-state-local-map "gr" 'merlin-project-occurrences))))
 
 
-(use-package highlight-symbol
-  :ensure t
-  :hook (prog-mode . highlight-symbol-mode) ;; Enable in programming modes
-  :config
-  (setq highlight-symbol-idle-delay 0.3)) ;; Highlight after 0.3 seconds
+
+;;for going to references in list provided by lsp/helm
+(defun my-xref-jump-to-location ()
+  "Jump to the location under the cursor in the *xref* buffer."
+  (interactive)
+  (let ((xref-window (selected-window)))
+    (xref-quit-and-goto-xref)
+    (select-window xref-window)))
+(with-eval-after-load 'evil
+  (evil-define-key 'normal xref--xref-buffer-mode-map (kbd "RET") 'my-xref-jump-to-location))

@@ -1,3 +1,14 @@
+;;TODO: remove this if I can remove the title bar alltogether?
+;; title bar to change color depending on light/dark mode
+(use-package ns-auto-titlebar
+  :ensure t
+  :config
+  (ns-auto-titlebar-mode))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-one t))
 
 (defvar my/dark-theme 'doom-one)
 (defvar my/light-theme 'doom-feather-light)
@@ -25,24 +36,6 @@
       (if (not (member my/light-theme custom-enabled-themes))
           (my/apply-theme my/light-theme)))))
 
-;(defun my/toggle-theme-based-on-system ()
-  ;"Toggle between `my/dark-theme` and `my/light-theme` based on macOS appearance."
-  ;(message "[DEBUG] Starting theme toggle based on system appearance...")
-  ;(if (my/detect-macos-dark-mode)
-      ;(progn
-        ;(message "[DEBUG] macOS is in dark mode.")
-        ;(if (member my/dark-theme custom-enabled-themes)
-            ;(message "[DEBUG] Dark theme `%s` is already active. No changes needed." my/dark-theme)
-          ;(message "[DEBUG] Switching to dark theme `%s`." my/dark-theme)
-          ;(my/apply-theme my/dark-theme)))
-    ;(progn
-      ;(message "[DEBUG] macOS is in light mode.")
-      ;(if (member my/light-theme custom-enabled-themes)
-          ;(message "[DEBUG] Light theme `%s` is already active. No changes needed." my/light-theme)
-        ;(message "[DEBUG] Switching to light theme `%s`." my/light-theme)
-        ;(my/apply-theme my/light-theme))))
-  ;(message "[DEBUG] Theme toggle complete.")
-  ;)
 
 ;; Run once on startup to set the correct theme
 (my/toggle-theme-based-on-system)
@@ -51,8 +44,8 @@
 (run-at-time nil (* 3 1) 'my/toggle-theme-based-on-system)
 
 
-;(load-theme 'doom-feather-light t)
-;(load-theme 'doom-one t)
+					;(load-theme 'doom-feather-light t)
+					;(load-theme 'doom-one t)
 
 (setq ring-bell-function 'ignore)
 (tool-bar-mode -1)
@@ -77,10 +70,10 @@
                                buffer-file-name)
                           (file-relative-name buffer-file-name (projectile-project-root))
                         "%b")))
-;(setq-default mode-line-buffer-identification
-              ;'(:eval (if (and (featurep 'projectile) (projectile-project-root))
-                          ;(file-relative-name buffer-file-name (projectile-project-root))
-                        ;"%b")))
+					;(setq-default mode-line-buffer-identification
+					;'(:eval (if (and (featurep 'projectile) (projectile-project-root))
+					;(file-relative-name buffer-file-name (projectile-project-root))
+					;"%b")))
 
 
 
