@@ -13,3 +13,8 @@ setup/
 *.elc
 .emacs.d/.cache/
 .emacs.d/tree-sitter/
+
+.emacs.d/.emacs.desktop
+.emacs.d/.emacs.desktop.lock
+.emacs.d/frame-size
+.emacs.d/frame-size.el

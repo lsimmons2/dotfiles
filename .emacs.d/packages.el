@@ -26,7 +26,7 @@
          (tsx-ts-mode . lsp-deferred)
          (js-mode . lsp-deferred)
          (js-jsx-mode . lsp-deferred)
-		 (python-mode . lsp-deferred)
+	 (python-mode . lsp-deferred)
          (tuareg-mode . lsp-deferred)
          (lsp-mode . lsp-diagnostics-mode)
          (lsp-mode . lsp-enable-which-key-integration))
@@ -45,9 +45,9 @@
             (remove-hook 'before-save-hook 'lsp--before-save t)))
 
 
-;(with-eval-after-load 'lsp-mode
-  ;(setq lsp-disabled-clients '(pylsp pyls mspyls ruff-lsp semgrep-lsp)) ;; Disable other clients
-  ;(add-to-list 'lsp-enabled-clients 'pyright)) ;; Enable pyright
+					;(with-eval-after-load 'lsp-mode
+					;(setq lsp-disabled-clients '(pylsp pyls mspyls ruff-lsp semgrep-lsp)) ;; Disable other clients
+					;(add-to-list 'lsp-enabled-clients 'pyright)) ;; Enable pyright
 
 (use-package flycheck
   :ensure t
@@ -124,7 +124,7 @@
   :mode "\\.ts\\'"
   :hook (typescript-mode . lsp))
 
-;TODO: is typescript-ts-mode-hook really from typescript-mode package?
+					;TODO: is typescript-ts-mode-hook really from typescript-mode package?
 (add-hook 'typescript-ts-mode-hook
           (lambda ()
             (setq tab-width 2) ;; Display tabs as 2 spaces
@@ -132,103 +132,103 @@
 
 
 (use-package treesit
-      :mode (("\\.tsx\\'" . tsx-ts-mode)
-             ("\\.js\\'"  . typescript-ts-mode)
-             ("\\.mjs\\'" . typescript-ts-mode)
-             ("\\.mts\\'" . typescript-ts-mode)
-             ("\\.cjs\\'" . typescript-ts-mode)
-             ("\\.ts\\'"  . typescript-ts-mode)
-             ("\\.jsx\\'" . tsx-ts-mode)
-             ("\\.json\\'" .  json-ts-mode)
-             ("\\.Dockerfile\\'" . dockerfile-ts-mode)
-             ("\\.prisma\\'" . prisma-ts-mode)
-             ;; More modes defined here...
-             )
-      :preface
-      (defun os/setup-install-grammars ()
-        "Install Tree-sitter grammars if they are absent."
-        (interactive)
-        (dolist (grammar
-                 '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
-                   (bash "https://github.com/tree-sitter/tree-sitter-bash")
-                   (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
-                   (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.21.2" "src"))
-                   (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
-                   (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
-                   (go "https://github.com/tree-sitter/tree-sitter-go" "v0.20.0")
-                   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-                   (make "https://github.com/alemuller/tree-sitter-make")
-                   (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-                   (cmake "https://github.com/uyha/tree-sitter-cmake")
-                   (c "https://github.com/tree-sitter/tree-sitter-c")
-                   (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-                   (toml "https://github.com/tree-sitter/tree-sitter-toml")
-                   (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
-                   (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
-                   (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
-                   (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
-          (add-to-list 'treesit-language-source-alist grammar)
-          ;; Only install `grammar' if we don't already have it
-          ;; installed. However, if you want to *update* a grammar then
-          ;; this obviously prevents that from happening.
-          (unless (treesit-language-available-p (car grammar))
-            (treesit-install-language-grammar (car grammar)))))
+  :mode (("\\.tsx\\'" . tsx-ts-mode)
+         ("\\.js\\'"  . typescript-ts-mode)
+         ("\\.mjs\\'" . typescript-ts-mode)
+         ("\\.mts\\'" . typescript-ts-mode)
+         ("\\.cjs\\'" . typescript-ts-mode)
+         ("\\.ts\\'"  . typescript-ts-mode)
+         ("\\.jsx\\'" . tsx-ts-mode)
+         ("\\.json\\'" .  json-ts-mode)
+         ("\\.Dockerfile\\'" . dockerfile-ts-mode)
+         ("\\.prisma\\'" . prisma-ts-mode)
+         ;; More modes defined here...
+         )
+  :preface
+  (defun os/setup-install-grammars ()
+    "Install Tree-sitter grammars if they are absent."
+    (interactive)
+    (dolist (grammar
+             '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
+               (bash "https://github.com/tree-sitter/tree-sitter-bash")
+               (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+               (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.21.2" "src"))
+               (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
+               (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
+               (go "https://github.com/tree-sitter/tree-sitter-go" "v0.20.0")
+               (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+               (make "https://github.com/alemuller/tree-sitter-make")
+               (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+               (cmake "https://github.com/uyha/tree-sitter-cmake")
+               (c "https://github.com/tree-sitter/tree-sitter-c")
+               (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+               (toml "https://github.com/tree-sitter/tree-sitter-toml")
+               (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+               (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+               (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+               (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
+      (add-to-list 'treesit-language-source-alist grammar)
+      ;; Only install `grammar' if we don't already have it
+      ;; installed. However, if you want to *update* a grammar then
+      ;; this obviously prevents that from happening.
+      (unless (treesit-language-available-p (car grammar))
+        (treesit-install-language-grammar (car grammar)))))
 
-      ;; Optional, but recommended. Tree-sitter enabled major modes are
-      ;; distinct from their ordinary counterparts.
-      ;;
-      ;; You can remap major modes with `major-mode-remap-alist'. Note
-      ;; that this does *not* extend to hooks! Make sure you migrate them
-      ;; also
-      (dolist (mapping
-               '((python-mode . python-ts-mode)
-                 (css-mode . css-ts-mode)
-                 (typescript-mode . typescript-ts-mode)
-                 (js-mode . typescript-ts-mode)
-                 (js2-mode . typescript-ts-mode)
-                 (c-mode . c-ts-mode)
-                 (c++-mode . c++-ts-mode)
-                 (c-or-c++-mode . c-or-c++-ts-mode)
-                 (bash-mode . bash-ts-mode)
-                 (css-mode . css-ts-mode)
-                 (json-mode . json-ts-mode)
-                 (js-json-mode . json-ts-mode)
-                 (sh-mode . bash-ts-mode)
-                 (sh-base-mode . bash-ts-mode)))
-        (add-to-list 'major-mode-remap-alist mapping))
-      :config
-      (os/setup-install-grammars))
-
-
-;(use-package lsp-eslint
-  ;:demand t
-  ;:after lsp-mode)
-
-  ;(setf (alist-get 'prettier-json apheleia-formatters)
-        ;'("prettier" "--stdin-filepath" filepath))
+  ;; Optional, but recommended. Tree-sitter enabled major modes are
+  ;; distinct from their ordinary counterparts.
+  ;;
+  ;; You can remap major modes with `major-mode-remap-alist'. Note
+  ;; that this does *not* extend to hooks! Make sure you migrate them
+  ;; also
+  (dolist (mapping
+           '((python-mode . python-ts-mode)
+             (css-mode . css-ts-mode)
+             (typescript-mode . typescript-ts-mode)
+             (js-mode . typescript-ts-mode)
+             (js2-mode . typescript-ts-mode)
+             (c-mode . c-ts-mode)
+             (c++-mode . c++-ts-mode)
+             (c-or-c++-mode . c-or-c++-ts-mode)
+             (bash-mode . bash-ts-mode)
+             (css-mode . css-ts-mode)
+             (json-mode . json-ts-mode)
+             (js-json-mode . json-ts-mode)
+             (sh-mode . bash-ts-mode)
+             (sh-base-mode . bash-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping))
+  :config
+  (os/setup-install-grammars))
 
 
+					;(use-package lsp-eslint
+					;:demand t
+					;:after lsp-mode)
+
+					;(setf (alist-get 'prettier-json apheleia-formatters)
+					;'("prettier" "--stdin-filepath" filepath))
 
 
-;(use-package apheleia
-  ;:ensure t
-  ;:config
+
+
+					;(use-package apheleia
+					;:ensure t
+					;:config
   ;;; Keep your existing Prettier setup
-  ;(setq apheleia-log-only-errors nil)
-  ;(setq apheleia-formatters-respect-indent-level nil)
+					;(setq apheleia-log-only-errors nil)
+					;(setq apheleia-formatters-respect-indent-level nil)
 
- ;(setf (alist-get 'prettier apheleia-formatters)
-        ;'("prettier" "--stdin-filepath" filepath))
- ;;(setf (alist-get 'prettier apheleia-formatters)
-        ;;'("/Users/leo/.nvm/versions/node/v18.20.3/bin/prettier" "--stdin-filepath" filepath)) ;; Replace "/path/to/prettier" with the actual path
-  
+					;(setf (alist-get 'prettier apheleia-formatters)
+					;'("prettier" "--stdin-filepath" filepath))
+;;(setf (alist-get 'prettier apheleia-formatters)
+;;'("/Users/leo/.nvm/versions/node/v18.20.3/bin/prettier" "--stdin-filepath" filepath)) ;; Replace "/path/to/prettier" with the actual path
+
   ;;; Add ocamlformat formatter
   ;;; Associate ocamlformat with OCaml modes
-  ;(add-to-list 'apheleia-mode-alist '(tuareg-mode . ocamlformat))
-  ;(add-to-list 'apheleia-mode-alist '(caml-mode . ocamlformat))
-  
+					;(add-to-list 'apheleia-mode-alist '(tuareg-mode . ocamlformat))
+					;(add-to-list 'apheleia-mode-alist '(caml-mode . ocamlformat))
+
   ;;; Enable Apheleia globally
-  ;(apheleia-global-mode +1))
+					;(apheleia-global-mode +1))
 
 
 (use-package apheleia
@@ -258,8 +258,8 @@
           (lambda ()
             (message "Apheleia successfully formatted the buffer!")))
 
-;TODO: not sure I need/want exec-path-from-shell package, installing it atow
-;to try to get apheleia to have access to globally-installed prettier
+					;TODO: not sure I need/want exec-path-from-shell package, installing it atow
+					;to try to get apheleia to have access to globally-installed prettier
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -271,19 +271,19 @@
 (require 'ocp-indent)
 
 (let ((opam-share (ignore-errors (car (process-lines "opam" "var" "share")))))
- (when (and opam-share (file-directory-p opam-share))
-  ;; Register Merlin
-  (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
-  (autoload 'merlin-mode "merlin" nil t nil)
-  ;; Automatically start it in OCaml buffers
-  (add-hook 'tuareg-mode-hook 'merlin-mode t)
-  (add-hook 'caml-mode-hook 'merlin-mode t)
-  ;; Use opam switch to lookup ocamlmerlin binary
-  (setq merlin-command 'opam)
-  ;; To easily change opam switches within a given Emacs session, you can
-  ;; install the minor mode https://github.com/ProofGeneral/opam-switch-mode
-  ;; and use one of its "OPSW" menus.
-  ))
+  (when (and opam-share (file-directory-p opam-share))
+    ;; Register Merlin
+    (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
+    (autoload 'merlin-mode "merlin" nil t nil)
+    ;; Automatically start it in OCaml buffers
+    (add-hook 'tuareg-mode-hook 'merlin-mode t)
+    (add-hook 'caml-mode-hook 'merlin-mode t)
+    ;; Use opam switch to lookup ocamlmerlin binary
+    (setq merlin-command 'opam)
+    ;; To easily change opam switches within a given Emacs session, you can
+    ;; install the minor mode https://github.com/ProofGeneral/opam-switch-mode
+    ;; and use one of its "OPSW" menus.
+    ))
 
 
 (use-package opam-switch-mode
@@ -329,5 +329,4 @@
   :ensure t
   :hook (prog-mode . highlight-symbol-mode) ;; Enable in programming modes
   :config
-  (setq highlight-symbol-idle-delay 0.3) ;; Highlight after 0.3 seconds
-  (define-key highlight-symbol-mode-map (kbd "C-c h") 'highlight-symbol-at-point)) ;; Manual highlight
+  (setq highlight-symbol-idle-delay 0.3)) ;; Highlight after 0.3 seconds

@@ -58,7 +58,6 @@
                 (kbd "gg") 'evil-goto-first-line ;; Go to the top of the buffer
                 (kbd "G") 'evil-goto-line))))    ;; Go to the bottom of the buffer
 
-
 (with-eval-after-load 'evil
   (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)) ;; Redo
 
@@ -145,12 +144,6 @@
     (kbd "M-h") 'windmove-left))
 
 
-(with-eval-after-load 'evil
-  (evil-define-key 'normal 'global
-    (kbd "n") 'evil-search-previous
-    (kbd "N") 'evil-search-next))
-
-
 					;NB: still probably some redundancy and room for improvement with all this
 					;exit and enter insert/term-char mode stuff
 (defun my-term-enter-char-mode ()
@@ -214,12 +207,40 @@
 (global-set-key (kbd "C-x C-p") 'project-find-file)
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 
-(defun helm-projectile-switch-project-dired ()
-  "Switch to a recent project and open it in Dired."
+(defun my/helm-projectile-dired ()
+  "Open a Helm list of projects and open Dired in the selected project's root."
   (interactive)
-  (let ((projectile-switch-project-action #'projectile-dired))
-    (helm-projectile-switch-project)))
-(global-set-key (kbd "C-x C-d") 'helm-projectile-switch-project-dired)
+  (require 'helm-projectile)
+  (helm :sources (helm-build-sync-source "Projectile Projects"
+                   :candidates (projectile-relevant-known-projects)
+                   :action (lambda (project)
+                             (dired (expand-file-name project))))
+        :buffer "*helm projectile dired*"))
+
+(defun my/helm-projectile-dired-new-tab ()
+  "Open a Helm list of projects and open Dired in the selected project's root in a new tab."
+  (interactive)
+  (require 'helm-projectile)
+  (helm :sources (helm-build-sync-source "Projectile Projects"
+                   :candidates (projectile-relevant-known-projects)
+                   :action (lambda (project)
+                             (let ((default-directory (expand-file-name project)))
+                               (tab-bar-new-tab)
+                               (dired default-directory))))
+        :buffer "*helm projectile dired*"))
+
+
+(with-eval-after-load 'evil
+  ;; Global mappings
+  (evil-define-key 'normal 'global (kbd "SPC l") 'my/helm-projectile-dired)
+  (evil-define-key 'normal 'global (kbd "SPC L") 'my/helm-projectile-dired-new-tab)
+
+  ;; Dired-specific mappings
+  (with-eval-after-load 'dired
+    (evil-define-key 'normal dired-mode-map (kbd "SPC l") 'my/helm-projectile-dired)
+    (evil-define-key 'normal dired-mode-map (kbd "SPC L") 'my/helm-projectile-dired-new-tab)))
+
+
 
 (with-eval-after-load 'evil
   ;; General LSP mappings
@@ -306,7 +327,7 @@
 
   ;; Enable adaptive-wrap-prefix-mode for wrapped lines
   (adaptive-wrap-prefix-mode 1)
-  ;(setq-local adaptive-wrap-extra-indent 4) ;; Match the indentation of wrapped lines with the original line
+					;(setq-local adaptive-wrap-extra-indent 4) ;; Match the indentation of wrapped lines with the original line
 
   ;; Keybinding equivalent for `<leader>j` in Vim
   (evil-define-key 'normal text-mode-map
@@ -316,7 +337,7 @@
                     (evil-insert-line)
                     (insert ">")
                     (evil-normal-state)))
-)
+  )
 
 (add-hook 'text-mode-hook #'my-text-mode-setup)
 
@@ -341,8 +362,8 @@
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   ;; Bind `C-d` to scroll down (default in Evil, but ensure it's consistent)
-  ;(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
-  ;(define-key evil-visual-state-map (kbd "C-d") 'evil-scroll-down)
+					;(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
+					;(define-key evil-visual-state-map (kbd "C-d") 'evil-scroll-down)
   )
 
 (defun my-enable-superword-mode ()
