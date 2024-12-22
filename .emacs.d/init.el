@@ -8,7 +8,6 @@
 (load "~/.emacs.d/general-programming.el")
 (load "~/.emacs.d/ocaml-stuff.el")
 (load "~/.emacs.d/haskell-stuff.el")
-(load "~/.emacs.d/js-ts-react-stuff.el")
 (load "~/.emacs.d/txt-file-stuff.el")
 
 (custom-set-variables

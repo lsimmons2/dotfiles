@@ -28,11 +28,6 @@
 					;(setq lsp-disabled-clients '(pylsp pyls mspyls ruff-lsp semgrep-lsp)) ;; Disable other clients
 					;(add-to-list 'lsp-enabled-clients 'pyright)) ;; Enable pyright
 
-(use-package flycheck
-  :ensure t
-  :config
-  (global-flycheck-mode))
-
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode
@@ -41,7 +36,8 @@
   (setq lsp-ui-sideline-show-diagnostics t)
   (setq lsp-ui-sideline-show-hover t)
   (setq lsp-ui-sideline-update-mode 'line)
-  (setq lsp-ui-doc-enable t) ;; Enable hover documentation
+  (setq lsp-ui-sideline-show-code-actions nil)
+  (setq lsp-ui-doc-enable nil) ;; Enable hover documentation
   )
 
 

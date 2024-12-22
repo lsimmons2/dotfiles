@@ -81,3 +81,38 @@
 (set-face-attribute 'default nil
                     :family "Monaco"   ;; Replace "Menlo" with your preferred font family
                     :height 140)      ;; Replace 140 with the desired font size (e.g., 140 for 14pt)
+
+
+(defun my/customize-lsp-ui-sideline ()
+  "Customize `lsp-ui-sideline` faces based on the current theme."
+  (let ((bg (face-attribute 'default :background))   ;; Background from default face
+        (fg (face-attribute 'shadow :foreground))   ;; Foreground from shadow face
+        (info-fg (face-attribute 'success :foreground)) ;; Info from success face
+        (warning-fg (face-attribute 'warning :foreground)) ;; Warning from warning face
+        (error-fg (face-attribute 'error :foreground))) ;; Error from error face
+
+    ;; Customize the base sideline face
+    (set-face-attribute 'lsp-ui-sideline-global nil
+                        :background bg
+                        :foreground fg)
+
+    ;; Customize the diagnostic face for errors
+    (set-face-attribute 'lsp-ui-sideline-symbol nil
+                        :background bg
+                        :foreground fg)
+
+    ;; Customize the current symbol face
+    (set-face-attribute 'lsp-ui-sideline-current-symbol nil
+                        :background bg
+                        :foreground info-fg
+                        :weight 'bold)
+
+    ;; Customize code actions (like rename suggestions)
+    (set-face-attribute 'lsp-ui-sideline-code-action nil
+                        :background bg
+                        :foreground info-fg
+                        :weight 'bold)))
+
+;; Apply the customizations when loading lsp-ui
+(with-eval-after-load 'lsp-ui
+  (my/customize-lsp-ui-sideline))
