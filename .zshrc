@@ -199,3 +199,4 @@ export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 # This section can be safely removed at any time if needed.
 [[ ! -r '/Users/leo/.opam/opam-init/init.zsh' ]] || source '/Users/leo/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
 # END opam configuration
+export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"

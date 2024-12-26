@@ -114,5 +114,5 @@
                         :weight 'bold)))
 
 ;; Apply the customizations when loading lsp-ui
-(with-eval-after-load 'lsp-ui
-  (my/customize-lsp-ui-sideline))
+;; (with-eval-after-load 'lsp-ui
+;;   (my/customize-lsp-ui-sideline))

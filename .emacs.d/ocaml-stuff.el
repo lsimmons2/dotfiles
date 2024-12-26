@@ -31,9 +31,24 @@
 (add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))
 
 ;; Use ocp-indent for indentation
+;(use-package ocp-indent
+  ;:ensure t
+  ;:hook
+  ;;; Set up ocp-indent to run before save in Tuareg mode
+  ;(tuareg-mode . (lambda ()
+                   ;(add-hook 'before-save-hook 'ocp-indent-buffer nil 'local))))
+
+
 (use-package ocp-indent
   :ensure t
   :hook
-  ;; Set up ocp-indent to run before save in Tuareg mode
   (tuareg-mode . (lambda ()
-                   (add-hook 'before-save-hook 'ocp-indent-buffer nil 'local))))
+                   (add-hook 'before-save-hook
+                             (lambda ()
+                               (save-restriction
+                                 ;; Ensure entire buffer is accessible
+                                 (widen)
+                                 ;; Indent the accessible region
+                                 (ocp-indent-region (point-min) (point-max))))
+                             nil
+                             'local))))

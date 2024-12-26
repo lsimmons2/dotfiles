@@ -18,3 +18,8 @@ setup/
 .emacs.d/.emacs.desktop.lock
 .emacs.d/frame-size
 .emacs.d/frame-size.el
+
+.emacs.d/eclipse.jdt.ls/
+.emacs.d/request/
+.emacs.d/snippets/
+.emacs.d/workspace/

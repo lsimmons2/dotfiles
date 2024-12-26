@@ -1,4 +1,6 @@
 
+
+
 (use-package lsp-mode
   :ensure t
   :hook ((typescript-ts-mode . lsp-deferred)
@@ -6,7 +8,7 @@
          (js-mode . lsp-deferred)
          (js-jsx-mode . lsp-deferred)
          (java-mode . lsp-deferred)
-	 (python-mode . lsp-deferred)
+         (python-mode . lsp-deferred)
          (tuareg-mode . lsp-deferred)
          (lsp-mode . lsp-diagnostics-mode)
          (lsp-mode . lsp-enable-which-key-integration))
@@ -194,3 +196,64 @@
     (select-window xref-window)))
 (with-eval-after-load 'evil
   (evil-define-key 'normal xref--xref-buffer-mode-map (kbd "RET") 'my-xref-jump-to-location))
+
+
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+  ;; Define Yasnippet keybindings with your leader key
+  (evil-define-key 'normal global-map (kbd "SPC k a") 'yas-insert-snippet) ;; Insert snippet
+  (evil-define-key 'normal global-map (kbd "SPC k n") 'yas-new-snippet)    ;; Create a new snippet
+  (evil-define-key 'visual global-map (kbd "SPC k n") 'yas-new-snippet)    ;; Create a new snippet
+  (evil-define-key 'normal global-map (kbd "SPC k f") 'yas-visit-snippet-file) ;; Visit/edit snippet
+  (evil-define-key 'normal global-map (kbd "SPC k r") 'yas-reload-all)     ;; Reload snippets
+  (evil-define-key 'normal global-map (kbd "SPC k d") 'yas-describe-tables) ;; Describe active snippets
+  )
+
+(use-package yasnippet-snippets
+  :ensure t)
+
+
+					;(use-package posframe
+					;:ensure t
+					;:config
+					;(defun my/eldoc-posframe-display (info _context)
+					;"Display Eldoc INFO in a posframe below the cursor.
+                                        ;INFO may be a string or a list. _CONTEXT is ignored."
+					;(if info
+					;(let* ((clean-info (if (stringp info)
+					;info
+					;(mapconcat #'identity (flatten-list info) "\n"))))
+          ;;; Wrap text to a maximum width of 80 characters while preserving properties
+					;(setq clean-info (with-temp-buffer
+					;(insert clean-info)
+                             ;;; Fill region without stripping text properties
+					;(let ((fill-column 80))
+					;(fill-region (point-min) (point-max)))
+					;(buffer-substring (point-min) (point-max))))
+          ;;; Display in posframe
+					;(posframe-show " *eldoc-posframe*"
+					;:string clean-info
+					;:poshandler 'posframe-poshandler-point-bottom-left-corner
+					;:background-color (face-attribute 'tooltip :background)
+					;:foreground-color (face-attribute 'tooltip :foreground)
+					;:width 80
+					;:height 10
+					;:hidehandler #'posframe-hidehandler-quick-setup))
+      ;;; Hide posframe if there is no INFO
+					;(posframe-hide " *eldoc-posframe*")))
+
+  ;;; Hide the posframe when switching buffers
+					;(add-hook 'buffer-list-update-hook
+					;(lambda () (posframe-hide " *eldoc-posframe*")))
+
+  ;;; Hide the posframe when navigating to a different part of the buffer
+					;(add-hook 'post-command-hook
+					;(lambda ()
+					;(unless (eldoc--documentation-function) ;; Check if eldoc info is available
+					;(posframe-hide " *eldoc-posframe*"))))
+
+  ;;; Set `my/eldoc-posframe-display` as the display function for eldoc
+					;(setq eldoc-display-functions '(my/eldoc-posframe-display)))
