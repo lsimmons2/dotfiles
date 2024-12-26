@@ -129,6 +129,12 @@
     (kbd "SPC w") (lambda () (interactive)
                     (find-file (file-name-directory (or buffer-file-name default-directory))))))
 
+(defun my-dired-create-and-open-file (filename)
+  "Create an empty file and open it in the current buffer."
+  ;; F in FCreate for getting emacs to prompt for file name correctly
+  (interactive "FCreate empty file: ")
+  (dired-create-empty-file filename)
+  (find-file filename)) ;; Open the file in the current buffer
 
 
 (with-eval-after-load 'dired
@@ -141,7 +147,7 @@
                 (kbd "/") 'evil-search-forward  ;; Search with /
                 (kbd "n") 'evil-search-next     ;; Navigate to next match
                 (kbd "N") 'evil-search-previous ;; Navigate to previous match
-                (kbd "%") 'dired-create-empty-file
+                (kbd "%") 'my-dired-create-and-open-file
                 (kbd "gg") 'evil-goto-first-line ;; Go to the top of the buffer
                 (kbd "G") 'evil-goto-line))))    ;; Go to the bottom of the buffer
 

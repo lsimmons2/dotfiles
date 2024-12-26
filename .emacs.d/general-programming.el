@@ -36,6 +36,10 @@
   :ensure t
   :commands lsp-ui-mode
   :config
+  ;; defining this function to try to keep lsp-ui from wrapping and pushing lines of code down
+  ;; per https://github.com/emacs-lsp/lsp-ui/issues/597
+  ;; not sure it's actually working though - hard to reproduce 
+  (defun lsp-ui-sideline--compute-height nil '(height unspecified))
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-show-diagnostics t)
   (setq lsp-ui-sideline-show-hover t)
