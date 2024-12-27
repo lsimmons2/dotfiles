@@ -173,14 +173,43 @@
   (evil-define-key 'normal 'global (kbd "S") 'save-buffer)
   (evil-define-key 'normal 'global (kbd "SPC S") 'save-all-buffers))
 
-(evil-define-key 'normal 'global (kbd "SPC s h") 
-  (lambda () (interactive) (split-window-right) (other-window 1)))
+(defun split-window-left ()
+  "Split the current window and create a new one on the left."
+  (interactive)
+  (split-window-right)       ;; Create a new window to the right
+  (let ((new-window (next-window))) ;; Get the newly created window
+    (other-window 1)         ;; Switch to the new window
+    (set-window-buffer new-window (current-buffer)) ;; Swap buffers
+    (other-window 1)         ;; Move focus to the left window
+    (balance-windows)))      ;; Balance all windows
+
+(evil-define-key 'normal 'global (kbd "SPC s h") 'split-window-left)
+
 (evil-define-key 'normal 'global (kbd "SPC s l") 
-  (lambda () (interactive) (split-window-right) (other-window 1)))
-(evil-define-key 'normal 'global (kbd "SPC s k") 
-  (lambda () (interactive) (split-window-below) (other-window 1)))
+  (lambda ()
+    (interactive)
+    (split-window-right)
+    (other-window 1)
+    (balance-windows)))
+
+(defun split-window-above ()
+  "Split the current window and create a new one above."
+  (interactive)
+  (split-window-below)       ;; Create a new window below
+  (let ((new-window (next-window))) ;; Get the newly created window
+    (other-window 1)         ;; Switch to the new window
+    (set-window-buffer new-window (current-buffer)) ;; Swap buffers
+    (other-window 1)         ;; Move focus to the above window
+    (balance-windows)))      ;; Balance all windows
+
+(evil-define-key 'normal 'global (kbd "SPC s k")  'split-window-above)
+
 (evil-define-key 'normal 'global (kbd "SPC s j") 
-  (lambda () (interactive) (split-window-below) (other-window 1)))
+  (lambda ()
+    (interactive)
+    (split-window-below)
+    (other-window 1)
+    (balance-windows)))
 
 (evil-define-key 'normal 'global (kbd "SPC o l")
   (lambda ()
@@ -384,51 +413,6 @@
 					;(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
 					;(define-key evil-visual-state-map (kbd "C-d") 'evil-scroll-down)
   )
-
-
-(defun my-enable-superword-mode ()
-  "Enable superword-mode for treating underscores as part of words."
-  (superword-mode 1))
-
-;; Enable superword-mode for all programming modes (or specific ones)
-(add-hook 'prog-mode-hook #'my-enable-superword-mode)
-
-;; Optional: Enable it for text-mode too if needed
-(add-hook 'text-mode-hook #'my-enable-superword-mode)
-
-
-(defun my-evil-superword-setup ()
-  "Customize Evil to work with `superword-mode`."
-  (when (bound-and-true-p superword-mode)
-    ;; Use symbol motions to treat underscores as part of words
-    (define-key evil-motion-state-map (kbd "w") 'evil-forward-symbol-begin)
-    (define-key evil-motion-state-map (kbd "e") 'evil-forward-symbol-end)
-    (define-key evil-motion-state-map (kbd "b") 'evil-backward-symbol-begin)))
-
-(defun evil-forward-symbol-begin ()
-  "Move forward to the beginning of the next symbol."
-  (interactive)
-  (forward-symbol 1))
-
-(defun evil-backward-symbol-begin ()
-  "Move backward to the beginning of the previous symbol."
-  (interactive)
-  (forward-symbol -1))
-
-(defun evil-forward-symbol-end ()
-  "Move forward to the end of the current symbol."
-  (interactive)
-  (let ((start (point)))
-    (forward-symbol 1)
-    (if (= start (point)) ; If no movement happened, we're at the end of the buffer
-        (message "Already at the end of the buffer")
-      (backward-char)
-      ;; Ensure we're at the last character of the symbol
-      (while (looking-at "[a-zA-Z0-9_]") 
-        (forward-char)))))
-
-;; Enable this behavior for modes with `superword-mode`
-(add-hook 'superword-mode-hook #'my-evil-superword-setup)
 
 
 (defvar my-fullscreen-window nil

@@ -1,4 +1,7 @@
 
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (modify-syntax-entry ?_ "w")))
 
 
 (use-package lsp-mode
@@ -174,20 +177,21 @@
 
 (with-eval-after-load 'evil
   ;; General LSP mappings
-  (key-chord-define evil-normal-state-map "gd" 'lsp-find-definition)
-  (key-chord-define evil-normal-state-map "gt" 'lsp-find-type-definition)
-  (key-chord-define evil-normal-state-map "gr" 'lsp-find-references)
-  (key-chord-define evil-normal-state-map " r" 'lsp-rename)
-  (key-chord-define evil-normal-state-map "]e" 'flycheck-next-error)
-  (key-chord-define evil-normal-state-map "[e" 'flycheck-previous-error)
+  (evil-define-key 'normal 'global
+    (kbd "gd") 'lsp-find-definition        ;; Go to definition
+    (kbd "gt") 'lsp-find-type-definition   ;; Go to type definition
+    (kbd "gr") 'lsp-find-references        ;; Find references
+    (kbd "SPC r") 'lsp-rename                 ;; Rename symbol
+    (kbd "]e") 'flycheck-next-error        ;; Next Flycheck error
+    (kbd "[e") 'flycheck-previous-error)   ;; Previous Flycheck error
 
   ;; OCaml-specific overrides using Merlin
   (add-hook 'tuareg-mode-hook
             (lambda ()
-              ;; Use Merlin instead of LSP for definition and type navigation
-              (key-chord-define evil-normal-state-local-map "gd" 'merlin-locate)
-              (key-chord-define evil-normal-state-local-map "gt" 'merlin-type-enclosing)
-              (key-chord-define evil-normal-state-local-map "gr" 'merlin-project-occurrences))))
+              (evil-define-key 'normal evil-normal-state-local-map
+                (kbd "gd") 'merlin-locate             ;; Merlin locate definition
+                (kbd "gt") 'merlin-type-enclosing     ;; Merlin show type
+                (kbd "gr") 'merlin-project-occurrences)))) ;; Merlin find references
 
 
 
