@@ -3,6 +3,9 @@
           (lambda ()
             (modify-syntax-entry ?_ "w")))
 
+(use-package origami
+  :ensure t
+  :hook (prog-mode . origami-mode))
 
 (use-package lsp-mode
   :ensure t
@@ -15,6 +18,7 @@
          (tuareg-mode . lsp-deferred)
          (lsp-mode . lsp-diagnostics-mode)
          (lsp-mode . lsp-enable-which-key-integration))
+         ;(lsp-mode . lsp-enable-imenu)
   :commands lsp
   :config
 
@@ -24,7 +28,16 @@
   (setq lsp-diagnostics-provider :flycheck)
   (setq lsp-log-io nil)
   (setq lsp-java-java-path "/Users/leo/Library/Java/JavaVirtualMachines/corretto-18.0.2/Contents/Home/bin/java")
+  ;(setq lsp-enable-folding t)
   )
+
+
+;(use-package evil-vimish-fold
+  ;:ensure t
+  ;:hook (prog-mode . evil-vimish-fold-mode) ;; Enable in all programming modes
+  ;:config
+  ;(evil-vimish-fold-mode 1))
+
 
 (add-hook 'apheleia-mode-hook
           (lambda ()
