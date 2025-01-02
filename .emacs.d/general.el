@@ -211,6 +211,25 @@
     (other-window 1)
     (balance-windows)))
 
+
+;; window splitting mappings for dired buffers
+(with-eval-after-load 'dired
+  (evil-define-key 'normal dired-mode-map
+    (kbd "SPC s h") 'split-window-left
+    (kbd "SPC s l") (lambda ()
+                      (interactive)
+                      (split-window-right)
+                      (other-window 1)
+                      (balance-windows))
+    (kbd "SPC s k") 'split-window-above
+    (kbd "SPC s j") (lambda ()
+                      (interactive)
+                      (split-window-below)
+                      (other-window 1)
+                      (balance-windows))))
+
+
+
 (evil-define-key 'normal 'global (kbd "SPC o l")
   (lambda ()
     (interactive)
@@ -455,5 +474,6 @@
 
 (evil-define-key 'normal global-map
   (kbd "SPC a k") 'my-insert-current-date
+  (kbd "SPC a d") 'my-insert-current-date
   (kbd "SPC a c") 'my-append-checkmark
   (kbd "SPC a x") 'my-append-crossmark)
