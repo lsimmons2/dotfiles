@@ -10,6 +10,7 @@
 (load "~/.emacs.d/haskell-stuff.el")
 (load "~/.emacs.d/java-stuff.el")
 (load "~/.emacs.d/txt-file-stuff.el")
+(load "~/.emacs.d/org-client.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
