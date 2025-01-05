@@ -83,8 +83,6 @@
 
 
 
-
-
 (defun reload-emacs-config ()
   "Reload Emacs configuration."
   (interactive)
@@ -111,10 +109,12 @@
     (term "/bin/zsh")
     (rename-buffer new-term-name)))
 
+
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
     (kbd "M-o") 'open-term-split-below
     (kbd "M-e") 'open-term-split-right))
+
 
 (setq evil-symbol-word-search t)
 
@@ -271,6 +271,13 @@
     (kbd "M-h") 'windmove-left))
 
 
+(with-eval-after-load 'term
+  (add-hook 'term-mode-hook
+            (lambda ()
+              ;; Prevent Evil from interfering in term-char-mode
+              (evil-define-key 'insert term-raw-map (kbd "C-r") 'term-send-raw)
+              (evil-define-key 'insert term-raw-map (kbd "C-p") 'term-send-up)
+              (evil-define-key 'insert term-raw-map (kbd "C-n") 'term-send-down))))
 
 (defun my-term-enter-char-mode ()
   "Switch to term char mode and enter Evil insert mode if in term line mode."
@@ -278,6 +285,7 @@
   (when (and (derived-mode-p 'term-mode) (not (term-in-char-mode)))
     (term-char-mode)
     (evil-insert-state)
+    (setq-local dabbrev-expand nil)
     (message "Entering term char mode - switching to Evil insert mode")))
 
 (defun my-term-enter-line-mode ()
@@ -310,6 +318,7 @@
             (evil-define-key 'insert term-raw-map (kbd "C-d") 'term-send-eof)
             (evil-define-key 'normal term-mode-map (kbd "i") 'my-term-enter-char-mode)
             (evil-define-key 'normal term-mode-map (kbd "a") 'my-term-enter-char-mode)
+            (evil-define-key 'normal term-mode-map (kbd "A") 'my-term-enter-char-mode)
             (evil-define-key 'insert term-raw-map (kbd "<escape>") 'my-term-enter-line-mode)
             ))
 
