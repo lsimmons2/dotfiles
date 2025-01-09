@@ -116,3 +116,8 @@
 ;; Apply the customizations when loading lsp-ui
 ;; (with-eval-after-load 'lsp-ui
 ;;   (my/customize-lsp-ui-sideline))
+
+
+
+;; in the section of the modeline that normall shows the major and all the minor modes, just show the major mode
+(setq minor-mode-alist nil)

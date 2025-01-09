@@ -23,3 +23,5 @@ setup/
 .emacs.d/request/
 .emacs.d/snippets/
 .emacs.d/workspace/
+
+.emacs.d/.dap-breakpoints

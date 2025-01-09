@@ -36,7 +36,7 @@
               (dolist (ov (overlays-in (point-min) (point-max)))
                 (when (eq (overlay-get ov 'invisible) 'outline)
                   (overlay-put ov 'display
-                               (propertize "  <folded>"
+                               (propertize " <folded>"
                                            'face 'font-lock-string-face)))))
             nil t)) ;; Use buffer-local hook
 
