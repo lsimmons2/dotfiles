@@ -278,3 +278,17 @@
 
   ;;; Set `my/eldoc-posframe-display` as the display function for eldoc
 					;(setq eldoc-display-functions '(my/eldoc-posframe-display)))
+
+
+
+(defun my-debugger-setup (buffer alist)
+  "Custom display function for the debugger."
+  (let ((window (display-buffer-in-side-window buffer alist)))
+    (with-selected-window window
+      ;; Resize the window to 30% of the frame height
+      (window-resize window (- (floor (* 0.5 (frame-height))) (window-total-height))))
+    window))
+
+(setq display-buffer-alist
+      '(("\\*Backtrace\\*"
+         (my-debugger-setup))))
