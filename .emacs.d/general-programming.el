@@ -9,44 +9,36 @@
 
 (use-package lsp-mode
   :ensure t
-  :hook ((typescript-ts-mode . lsp-deferred)
-         (tsx-ts-mode . lsp-deferred)
-         (js-mode . lsp-deferred)
-         (js-jsx-mode . lsp-deferred)
-         (java-mode . lsp-deferred)
-         (python-mode . lsp-deferred)
-         (tuareg-mode . lsp-deferred)
-         (lsp-mode . lsp-diagnostics-mode)
-         (lsp-mode . lsp-enable-which-key-integration))
-         ;(lsp-mode . lsp-enable-imenu)
+  :hook
+  ((typescript-ts-mode . lsp-deferred)
+   (tsx-ts-mode . lsp-deferred)
+   (js-mode . lsp-deferred)
+   (js-jsx-mode . lsp-deferred)
+   (java-mode . lsp-deferred)
+   (python-mode . lsp-deferred)
+   (tuareg-mode . lsp-deferred)
+   (lsp-mode . lsp-diagnostics-mode)
+   ;; TODO: lsp-enable-which-key-integration is not being set correctly - causing syntax error
+   ;; (lsp-mode . lsp-enable-which-key-integration)
+   )
   :commands lsp
   :config
-
   (setq lsp-enable-on-type-formatting nil) ;; Disable formatting triggered by typing
   (setq lsp-before-save-edits nil)         ;; Disable LSP formatting on save
   (setq lsp-completion-provider :capf)
   (setq lsp-diagnostics-provider :flycheck)
   (setq lsp-log-io nil)
   (setq lsp-java-java-path "/Users/leo/Library/Java/JavaVirtualMachines/corretto-18.0.2/Contents/Home/bin/java")
-  ;(setq lsp-enable-folding t)
   )
-
-
-;(use-package evil-vimish-fold
-  ;:ensure t
-  ;:hook (prog-mode . evil-vimish-fold-mode) ;; Enable in all programming modes
-  ;:config
-  ;(evil-vimish-fold-mode 1))
-
 
 (add-hook 'apheleia-mode-hook
           (lambda ()
             (remove-hook 'before-save-hook 'lsp--before-save t)))
 
 
-					;(with-eval-after-load 'lsp-mode
-					;(setq lsp-disabled-clients '(pylsp pyls mspyls ruff-lsp semgrep-lsp)) ;; Disable other clients
-					;(add-to-list 'lsp-enabled-clients 'pyright)) ;; Enable pyright
+;;(with-eval-after-load 'lsp-mode
+;;(setq lsp-disabled-clients '(pylsp pyls mspyls ruff-lsp semgrep-lsp)) ;; Disable other clients
+;;(add-to-list 'lsp-enabled-clients 'pyright)) ;; Enable pyright
 
 (use-package lsp-ui
   :ensure t
