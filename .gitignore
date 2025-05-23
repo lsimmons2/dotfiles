@@ -25,3 +25,4 @@ setup/
 .emacs.d/workspace/
 
 .emacs.d/.dap-breakpoints
+.emacs.d/.extension/

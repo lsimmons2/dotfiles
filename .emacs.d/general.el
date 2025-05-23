@@ -1,4 +1,3 @@
-
 (use-package company
   :disabled t
   :hook (prog-mode . company-mode)
@@ -34,13 +33,19 @@
         '("\\.git$"
           "node_modules"
           "target"
-          "dist")))
+          "dist"))
+  (setq helm-split-window-inside-p t)
+  (setq helm-buffer-max-length nil)
+  )
 
 (use-package projectile
   :ensure t
   :config
   (setq projectile-enable-caching t)              ;; Enable caching for faster performance
-  (setq projectile-globally-ignored-directories '(".git" "node_modules" "dist"))
+  (setq projectile-globally-ignored-directories
+	(append projectile-globally-ignored-directories '(".git" "node_modules" "dist" "__pycache__" "*.pyc" ".pytest_cache" ".mypy_cache")))
+  (setq projectile-globally-ignored-files
+	(append projectile-globally-ignored-files '("*.pyc")))
   (projectile-mode +1)
   (add-to-list 'projectile-ignored-projects "~/")
   :custom
@@ -69,6 +74,8 @@
   :hook (prog-mode . highlight-symbol-mode) ;; Enable in programming modes
   :config
   (setq highlight-symbol-idle-delay 0.3)) ;; Highlight after 0.3 seconds
+
+
 
 
 (setq scroll-margin 1)                   ;; Keeps a margin of 1 line at the top/bottom

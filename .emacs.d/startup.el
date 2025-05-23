@@ -1,9 +1,12 @@
 ;;(setq initial-buffer-choice "~/.emacs.d/init.el")
-					;(setq initial-buffer-choice "~/dev/")
-					;(setq initial-buffer-choice "~/dev/platz/frontend/src/components/GoogledLyricsSource.tsx")
-					;(setq initial-buffer-choice "~/dev/platz/extension/platz-browser-extension/src/ScrapeGoogledLyricsContentScript.tsx")
-					;(setq initial-buffer-choice "~/dev/crossword-project/cws/lib/http_client.ml")
-(setq initial-buffer-choice "~/.emacs.d/startup.el")
+;;(setq initial-buffer-choice "~/dev/")
+;;(setq initial-buffer-choice "~/dev/platz/frontend/src/components/GoogledLyricsSource.tsx")
+;;(setq initial-buffer-choice "~/dev/platz/extension/platz-browser-extension/src/ScrapeGoogledLyricsContentScript.tsx")
+;;(setq initial-buffer-choice "~/dev/crossword-project/cws/lib/http_client.ml")
+;; (setq initial-buffer-choice "~/.emacs.d/startup.el")
+;; (setq initial-buffer-choice "~/dev/org/org_server/lib/controller.ml")
+;; (setq initial-buffer-choice "/Users/leo/dev/ocaml-playground/debugging_test/fib.ml")
+(setq initial-buffer-choice "/Users/leo/dev/research-buddy/monolith/app.py")
 
 
 
@@ -93,36 +96,36 @@
 
 
 ;; Enable desktop-save-mode to save/restore session
-(desktop-save-mode 1)
+;; (desktop-save-mode 1)
 
-;; Save the desktop session in your `.emacs.d/` directory
-(setq desktop-path (list user-emacs-directory)) ;; Store in ~/.emacs.d/
-(setq desktop-dirname user-emacs-directory)
+;; ;; Save the desktop session in your `.emacs.d/` directory
+;; (setq desktop-path (list user-emacs-directory)) ;; Store in ~/.emacs.d/
+;; (setq desktop-dirname user-emacs-directory)
 
-;; Ensure window layouts (including associated buffers) are restored
-(setq desktop-restore-frames t)
+;; ;; Ensure window layouts (including associated buffers) are restored
+;; (setq desktop-restore-frames t)
 
-;; Save the desktop automatically on exit
-(setq desktop-save t)
+;; ;; Save the desktop automatically on exit
+;; (setq desktop-save t)
 
-;; Eagerly restore 10 buffers (adjust based on preference)
-(setq desktop-restore-eager 10)
+;; ;; Eagerly restore 10 buffers (adjust based on preference)
+;; (setq desktop-restore-eager 10)
 
-;; Load the desktop even if it is locked (e.g., Emacs was previously killed)
-(setq desktop-load-locked-desktop t)
+;; ;; Load the desktop even if it is locked (e.g., Emacs was previously killed)
+;; (setq desktop-load-locked-desktop t)
 
-;; Save all file buffers
-(setq desktop-files-not-to-save "^$")
+;; ;; Save all file buffers
+;; (setq desktop-files-not-to-save "^$")
 
-;; Increase minibuffer history length
-(setq history-length 250)
+;; ;; Increase minibuffer history length
+;; (setq history-length 250)
 
-;; Save global state, including modes and variables
-(setq desktop-globals-to-save
-      '(desktop-missing-file-warning
-        tags-table-list
-        register-alist
-        file-name-history
-        kill-ring
-        search-ring
-        regexp-search-ring))
+;; ;; Save global state, including modes and variables
+;; (setq desktop-globals-to-save
+;;       '(desktop-missing-file-warning
+;;         tags-table-list
+;;         register-alist
+;;         file-name-history
+;;         kill-ring
+;;         search-ring
+;;         regexp-search-ring))

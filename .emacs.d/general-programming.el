@@ -7,6 +7,31 @@
   :ensure t
   :hook (prog-mode . origami-mode))
 
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :hook
+;;   ((typescript-ts-mode . lsp-deferred)
+;;    (tsx-ts-mode . lsp-deferred)
+;;    (js-mode . lsp-deferred)
+;;    (js-jsx-mode . lsp-deferred)
+;;    (java-mode . lsp-deferred)
+;;    (python-mode . lsp-deferred)
+;;    ;; (tuareg-mode . lsp-deferred)
+;;    (lsp-mode . lsp-diagnostics-mode)
+;;    ;; TODO: lsp-enable-which-key-integration is not being set correctly - causing syntax error
+;;    ;; (lsp-mode . lsp-enable-which-key-integration)
+;;    )
+;;   :commands lsp
+;;   :config
+;;   (setq lsp-enable-on-type-formatting nil) ;; Disable formatting triggered by typing
+;;   (setq lsp-before-save-edits nil)         ;; Disable LSP formatting on save
+;;   (setq lsp-completion-provider :capf)
+;;   (setq lsp-diagnostics-provider :flycheck)
+;;   (setq lsp-log-io nil)
+;;   (setq lsp-java-java-path "/Users/leo/Library/Java/JavaVirtualMachines/corretto-18.0.2/Contents/Home/bin/java")
+;;   )
+
+
 (use-package lsp-mode
   :ensure t
   :hook
@@ -16,20 +41,57 @@
    (js-jsx-mode . lsp-deferred)
    (java-mode . lsp-deferred)
    (python-mode . lsp-deferred)
-   (tuareg-mode . lsp-deferred)
-   (lsp-mode . lsp-diagnostics-mode)
-   ;; TODO: lsp-enable-which-key-integration is not being set correctly - causing syntax error
-   ;; (lsp-mode . lsp-enable-which-key-integration)
-   )
-  :commands lsp
-  :config
-  (setq lsp-enable-on-type-formatting nil) ;; Disable formatting triggered by typing
-  (setq lsp-before-save-edits nil)         ;; Disable LSP formatting on save
-  (setq lsp-completion-provider :capf)
-  (setq lsp-diagnostics-provider :flycheck)
-  (setq lsp-log-io nil)
-  (setq lsp-java-java-path "/Users/leo/Library/Java/JavaVirtualMachines/corretto-18.0.2/Contents/Home/bin/java")
+   (python-ts-mode . lsp-deferred)  ;; Add this line
+   (lsp-mode . lsp-diagnostics-mode))
+  ;; Rest of your config remains the same
+  :init
+  (setq lsp-auto-guess-root t)
   )
+
+
+(use-package dap-mode
+  :after lsp-mode
+  :config
+  (require 'dap-python)
+  ;; (require 'dap-hydra)
+  (setq dap-python-debugger 'debugpy)
+  
+  (evil-define-key 'normal dap-mode-map
+    
+    (kbd "SPC d d") 'dap-debug
+    (kbd "SPC d e") 'dap-eval
+    (kbd "SPC d c") 'dap-continue
+    (kbd "SPC d n") 'dap-next
+    (kbd "SPC d i") 'dap-step-in
+    (kbd "SPC d o") 'dap-step-out
+    (kbd "SPC d h") 'dap-hydra
+    (kbd "SPC d b") 'dap-breakpoint-toggle
+    (kbd "SPC d r") 'dap-debug-restart
+    (kbd "SPC d l") 'dap-ui-locals
+    (kbd "SPC d s") 'dap-ui-sessions
+    (kbd "SPC d p") 'dap-ui-expressions
+    (kbd "SPC d w") 'dap-ui-watch
+    (kbd "SPC d q") 'dap-disconnect)
+  
+  ;; Enable dap-mode and its helper modes
+  (dap-mode 1)
+  (dap-ui-mode 1)
+  (dap-tooltip-mode 1)
+  (tooltip-mode 1)
+  ;; (dap-ui-controls-mode 1)
+  
+  ;; Displaying debug windows on session startup
+  ;; (add-hook 'dap-session-created-hook
+  ;; (lambda (&_rest) (dap-hydra)))
+  
+  ;;; Display debug buffer after stepping
+  ;; (add-hook 'dap-stopped-hook
+  ;; (lambda (&_rest) (dap-hydra)))
+  
+  )
+
+
+
 
 (add-hook 'apheleia-mode-hook
           (lambda ()
@@ -47,12 +109,13 @@
   ;; defining this function to try to keep lsp-ui from wrapping and pushing lines of code down
   ;; per https://github.com/emacs-lsp/lsp-ui/issues/597
   ;; not sure it's actually working though - hard to reproduce 
-  (defun lsp-ui-sideline--compute-height nil '(height unspecified))
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-sideline-show-diagnostics t)
-  (setq lsp-ui-sideline-show-hover t)
-  (setq lsp-ui-sideline-update-mode 'line)
-  (setq lsp-ui-sideline-show-code-actions nil)
+  ;; (defun lsp-ui-sideline--compute-height nil '(height unspecified))
+  (setq lsp-ui-sideline-enable nil)
+  (setq lsp-ui-sideline-show-hover nil)
+  ;; (setq lsp-ui-sideline-show-diagnostics t)
+  ;; (setq lsp-ui-sideline-show-hover t)
+  ;; (setq lsp-ui-sideline-update-mode 'line)
+  ;; (setq lsp-ui-sideline-show-code-actions nil)
   (setq lsp-ui-doc-enable nil) ;; Enable hover documentation
   )
 
@@ -154,14 +217,48 @@
             (message "Apheleia successfully formatted the buffer!")))
 
 
-					;TODO: not sure I need/want exec-path-from-shell package, installing it atow
-					;to try to get apheleia to have access to globally-installed prettier
+;;TODO: not sure I need/want exec-path-from-shell package, installing it atow
+;;to try to get apheleia to have access to globally-installed prettier
 (use-package exec-path-from-shell
   :ensure t
   :config
   (exec-path-from-shell-initialize))
 
+;; NB: atow 04.28.2025 flycheck is already installed somewhere, but can't find it so
+;; adding the block here mainly to be able to put the python-mode hook in the use-package block
+;; for flycheck
+(use-package flycheck
+  :ensure t
+  :hook (python-mode . flycheck-mode)
+  )
 
+
+(defun copy-flycheck-error-at-point ()
+  "Copy the flycheck error message at point to the kill ring."
+  (interactive)
+  (let ((errors (flycheck-overlay-errors-at (point))))
+    (if (not errors)
+        (message "No flycheck error at point")
+      (let* ((error (car errors))
+             (error-message (flycheck-error-message error))
+             (error-id (flycheck-error-id error))
+             (error-line (line-number-at-pos (flycheck-error-pos error)))
+             (error-column (flycheck-error-column error))
+             (error-level (flycheck-error-level error))
+             (formatted-error 
+              (format "%s:%d:%d: %s: %s%s"
+                      (buffer-name)
+                      error-line
+                      (or error-column 0)
+                      error-level
+                      error-message
+                      (if error-id (format " [%s]" error-id) ""))))
+        (kill-new formatted-error)
+        (message "Copied to clipboard: %s" formatted-error)))))
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal global-map (kbd "SPC y") 'copy-flycheck-error-at-point)
+  )
 
 
 (with-eval-after-load 'evil
@@ -181,7 +278,8 @@
 
 
 (with-eval-after-load 'evil
-  ;; General LSP mappings
+  ;; (add-hook 'lsp-mode-hook
+  (message "setting general lsp bindings!")
   (evil-define-key 'normal 'global
     (kbd "gd") 'lsp-find-definition        ;; Go to definition
     (kbd "gt") 'lsp-find-type-definition   ;; Go to type definition
@@ -189,14 +287,8 @@
     (kbd "SPC r") 'lsp-rename                 ;; Rename symbol
     (kbd "]e") 'flycheck-next-error        ;; Next Flycheck error
     (kbd "[e") 'flycheck-previous-error)   ;; Previous Flycheck error
-
-  ;; OCaml-specific overrides using Merlin
-  (add-hook 'tuareg-mode-hook
-            (lambda ()
-              (evil-define-key 'normal evil-normal-state-local-map
-                (kbd "gd") 'merlin-locate             ;; Merlin locate definition
-                (kbd "gt") 'merlin-type-enclosing     ;; Merlin show type
-                (kbd "gr") 'merlin-project-occurrences)))) ;; Merlin find references
+  ;; )
+  )
 
 
 
@@ -217,16 +309,18 @@
   :config
   (yas-global-mode 1)
   ;; Define Yasnippet keybindings with your leader key
-  (evil-define-key 'normal global-map (kbd "SPC k a") 'yas-insert-snippet) ;; Insert snippet
+  (evil-define-key 'normal global-map (kbd "SPC k i") 'yas-insert-snippet) ;; Insert snippet
   (evil-define-key 'normal global-map (kbd "SPC k n") 'yas-new-snippet)    ;; Create a new snippet
   (evil-define-key 'visual global-map (kbd "SPC k n") 'yas-new-snippet)    ;; Create a new snippet
+  (evil-define-key 'normal global-map (kbd "SPC k a") 'yas-new-snippet)    ;; Create a new snippet
+  (evil-define-key 'visual global-map (kbd "SPC k a") 'yas-new-snippet)    ;; Create a new snippet
   (evil-define-key 'normal global-map (kbd "SPC k f") 'yas-visit-snippet-file) ;; Visit/edit snippet
   (evil-define-key 'normal global-map (kbd "SPC k r") 'yas-reload-all)     ;; Reload snippets
   (evil-define-key 'normal global-map (kbd "SPC k d") 'yas-describe-tables) ;; Describe active snippets
   )
 
-(use-package yasnippet-snippets
-  :ensure t)
+;; (use-package yasnippet-snippets
+;;   :ensure t)
 
 
 					;(use-package posframe
@@ -278,9 +372,68 @@
   (let ((window (display-buffer-in-side-window buffer alist)))
     (with-selected-window window
       ;; Resize the window to 30% of the frame height
-      (window-resize window (- (floor (* 0.5 (frame-height))) (window-total-height))))
+      (window-resize window (- (floor (* 0.2 (frame-height))) (window-total-height))))
     window))
 
 (setq display-buffer-alist
       '(("\\*Backtrace\\*"
          (my-debugger-setup))))
+
+(defun rz-dired ()
+  (interactive)
+  (find-file (concat "/ssh:rz:" "/home/leo/dev/research-buddy"))
+  )
+
+
+(use-package helm-lsp
+  :ensure t
+  :commands helm-lsp-workspace-symbol
+  :config
+  (evil-define-key 'normal global-map (kbd "C-m") 'helm-lsp-workspace-symbol)
+  )
+
+
+(defun my/show-lsp-symbols-with-colored-types ()
+  "Display all LSP symbols in current buffer with color-coded types."
+  (interactive)
+  (let* ((text-document (lsp--text-document-identifier))
+         (params (lsp-make-document-symbol-params :text-document text-document))
+         (symbols (lsp-request "textDocument/documentSymbol" params))
+         (candidates (mapcar (lambda (sym)
+                               (let* ((name (gethash "name" sym))
+                                      (kind (gethash "kind" sym))
+                                      (kind-str (alist-get kind lsp-symbol-kinds "Unknown"))
+                                      ;; Choose face based on symbol kind
+                                      (face (cond
+                                             ((= kind 5) 'font-lock-type-face)          ;; Class
+                                             ((= kind 6) 'font-lock-function-name-face)  ;; Method
+                                             ((= kind 12) 'font-lock-function-name-face) ;; Function
+                                             ((= kind 13) 'font-lock-variable-name-face) ;; Variable
+                                             ((= kind 14) 'font-lock-constant-face)      ;; Constant
+                                             (t 'font-lock-keyword-face))))              ;; Others
+                                 ;; Format with properties
+                                 (cons (format "%s: %s" 
+                                               (propertize kind-str 'face face)
+                                               name)
+                                       sym)))
+                             symbols)))
+    
+    ;; Now use the candidates list
+    (helm :sources
+          (helm-build-sync-source "LSP Symbols"
+            :candidates candidates
+            :fuzzy-match t
+            :filtered-candidate-transformer
+            (lambda (candidates _source)
+              ;; This transformer ensures what we're matching against
+              (mapcar (lambda (candidate)
+                        ;; Create a new cons with same car but preserve cdr
+                        (cons (car candidate) (cdr candidate)))
+                      candidates))
+            :action (lambda (candidate)
+                      (let* ((range (gethash "range" candidate))
+                             (start (gethash "start" range)))
+                        (goto-char (lsp--position-to-point start)))))
+          :buffer "*helm lsp symbols*")))
+
+(evil-define-key 'normal 'global (kbd "C-m") 'my/show-lsp-symbols-with-colored-types)

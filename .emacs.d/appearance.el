@@ -82,6 +82,21 @@
                     :family "Monaco"   ;; Replace "Menlo" with your preferred font family
                     :height 140)      ;; Replace 140 with the desired font size (e.g., 140 for 14pt)
 
+(defun switch-to-laptop-size ()
+  "Switch font to a smaller size suitable for laptop screens."
+  (interactive)
+  (set-face-attribute 'default nil
+                      :family "Monaco"
+                      :height 120)
+  (message "Switched to laptop font size (120)"))
+
+(defun switch-to-monitor-size ()
+  "Switch font to a larger size suitable for external monitors."
+  (interactive)
+  (set-face-attribute 'default nil
+                      :family "Monaco"
+                      :height 140)
+  (message "Switched to monitor font size (140)"))
 
 (defun my/customize-lsp-ui-sideline ()
   "Customize `lsp-ui-sideline` faces based on the current theme."
@@ -121,3 +136,6 @@
 
 ;; in the section of the modeline that normall shows the major and all the minor modes, just show the major mode
 (setq minor-mode-alist nil)
+
+(custom-set-faces
+ '(company-tooltip-selection ((t (:background "#b3ccf5" :foreground "black")))))
