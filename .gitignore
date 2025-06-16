@@ -26,3 +26,4 @@ setup/
 
 .emacs.d/.dap-breakpoints
 .emacs.d/.extension/
+.emacs.d/transient/

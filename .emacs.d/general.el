@@ -493,3 +493,43 @@
   (kbd "SPC a d") 'my-insert-current-date
   (kbd "SPC a c") 'my-append-checkmark
   (kbd "SPC a x") 'my-append-crossmark)
+
+;; Magit configuration
+(use-package magit
+  :ensure t
+  :config
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal 'global
+      (kbd "SPC g g") 'magit-status)
+    ;; Basic Evil-friendly keybindings for Magit buffers
+    (evil-define-key 'normal magit-mode-map
+      (kbd "j") 'magit-next-line
+      (kbd "k") 'magit-previous-line
+      (kbd "gg") 'evil-goto-first-line
+      (kbd "G") 'evil-goto-line
+      (kbd "q") 'magit-mode-bury-buffer)))
+
+;; diff-hl for showing git changes in the fringe with Evil keybindings
+(use-package diff-hl
+  :ensure t
+  :config
+  (global-diff-hl-mode)
+  ;; Disable diff-hl for .txt files
+  (add-hook 'text-mode-hook (lambda () (diff-hl-mode -1)))
+  ;; Integrate with magit
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (with-eval-after-load 'evil
+    ;; First undefine q from Evil's default binding (record macro)
+    (evil-define-key 'normal 'global (kbd "q") nil)
+    ;; Set up q as a prefix key for git operations
+    (evil-define-key 'normal 'global
+      (kbd "]q") 'diff-hl-next-hunk
+      (kbd "[q") 'diff-hl-previous-hunk  
+      (kbd "qp") 'diff-hl-show-hunk
+      (kbd "qs") 'diff-hl-stage-current-hunk
+      (kbd "qr") 'diff-hl-revert-hunk
+      (kbd "qa") (lambda () (interactive) (magit-diff-buffer-file))  ; Show all diffs for current file
+      (kbd "qc") 'quit-window                                       ; Close diff window
+      (kbd "SPC o q") (lambda () (interactive) (diff-hl-mode 'toggle)))  ; Toggle diff-hl for current buffer
+    ))
