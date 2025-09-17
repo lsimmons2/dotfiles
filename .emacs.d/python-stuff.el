@@ -16,8 +16,7 @@
                              (require 'lsp-pyright)
                              (lsp))))
   :custom
-  (lsp-pyright-multi-root nil)  ;; Disable multi-root
-  (lsp-pyright-root-dir "/absolute/path/to/your/monolith/dir")
+  (lsp-pyright-multi-root t)  ;; Enable multi-root for better project detection
   )
 
 (dap-register-debug-template

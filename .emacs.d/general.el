@@ -36,6 +36,17 @@
           "dist"))
   (setq helm-split-window-inside-p t)
   (setq helm-buffer-max-length nil)
+  ;; Performance optimizations for helm-M-x
+  (setq helm-M-x-fuzzy-match t)                   ;; Enable fuzzy matching
+  (setq helm-buffers-fuzzy-matching t)            ;; Fuzzy matching for buffers too
+  (setq helm-completion-in-region-fuzzy-match t)  ;; Fuzzy matching in completion
+  (setq helm-candidate-number-limit 100)          ;; Limit number of displayed candidates
+  (setq helm-idle-delay 0.01)                     ;; Reduce idle delay
+  (setq helm-input-idle-delay 0.01)               ;; Reduce input idle delay
+  (setq helm-quick-update t)                      ;; Enable quick updates
+  (setq helm-M-x-requires-pattern 2)              ;; Start matching after 2 characters
+  (setq helm-ff-skip-boring-files t)              ;; Skip boring files in file listing
+  (setq helm-display-line-numbers-prefix t)       ;; Show line numbers in helm buffers
   )
 
 (use-package projectile
@@ -135,6 +146,11 @@
     ;; Open the current buffer's directory in dired
     (kbd "SPC w") (lambda () (interactive)
                     (find-file (file-name-directory (or buffer-file-name default-directory))))))
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global (kbd "SPC u") 'universal-argument)
+  (evil-define-key 'visual 'global (kbd "SPC u") 'universal-argument)
+  )
 
 (defun my-dired-create-and-open-file (filename)
   "Create an empty file and open it in the current buffer."

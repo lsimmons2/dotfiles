@@ -46,6 +46,17 @@
   ;; Rest of your config remains the same
   :init
   (setq lsp-auto-guess-root t)
+  :custom
+  (lsp-file-watch-ignored
+   '(
+     '("[/\\\\]\\.git$"
+       "[/\\\\]\\.github$"
+       "[/\\\\]node_modules$"
+       "[/\\\\]dist$"
+       "[/\\\\]build$"
+       "[/\\\\]vendor$"
+       "/Users/leo" ;; TODO: don't know why I (maybe) need to add this here explicitly
+       )))
   )
 
 
@@ -73,11 +84,12 @@
     (kbd "SPC d w") 'dap-ui-watch
     (kbd "SPC d q") 'dap-disconnect)
   
-  ;; Enable dap-mode and its helper modes
-  (dap-mode 1)
-  (dap-ui-mode 1)
-  (dap-tooltip-mode 1)
-  (tooltip-mode 1)
+  ;; Enable dap-mode and its helper modes only for python for now
+  (add-hook 'python-mode-hook 'dap-mode)
+  (add-hook 'python-mode-hook 'dap-ui-mode)
+  (add-hook 'python-mode-hook 'dap-tooltip-mode)
+
+  (tooltip-mode 1) ;; NB keeping this always on per https://claude.ai/chat/720e6166-e7f2-4e2d-b8ac-f14e55293ed1 on 06.23.2025
   ;; (dap-ui-controls-mode 1)
   
   ;; Displaying debug windows on session startup
@@ -91,6 +103,37 @@
   )
 
 
+
+;; Clear Edebug's default keybindings to restore Evil functionality
+(setq edebug-mode-map (make-sparse-keymap))
+;; Add Evil integration hook
+(add-hook 'edebug-mode-hook 'evil-normalize-keymaps)
+
+;; Bindings for editing Emacs Lisp files
+(evil-define-key 'normal emacs-lisp-mode-map
+  (kbd "SPC d d") 'edebug-defun                    ; instrument function
+  )
+
+;; Bindings for when you're actively debugging
+(evil-define-key 'normal edebug-mode-map
+  (kbd "SPC d e") 'edebug-eval-expression    ; evaluate expression
+  (kbd "SPC d c") 'edebug-go-mode           ; continue
+  (kbd "SPC d n") 'edebug-step-mode          ; next/step
+  (kbd "SPC d i") 'edebug-step-in            ; step into
+  (kbd "SPC d o") 'edebug-step-out           ; step out
+  (kbd "SPC d b") 'edebug-set-breakpoint     ; toggle breakpoint
+  (kbd "SPC d r") 'edebug-stop               ; stop/restart
+  (kbd "SPC d l") 'edebug-bounce-point       ; show current location
+  (kbd "SPC d s") 'edebug-where              ; show status
+  (kbd "SPC d p") 'edebug-view-outside       ; view outside windows
+  (kbd "SPC d w") 'edebug-where              ; where am I
+  (kbd "SPC d q") 'edebug-top-level-nonstop  ; quit debugging
+  )
+
+;; Optional: Configure Edebug behavior
+(setq edebug-all-defs nil)           ; Don't instrument everything by default
+(setq edebug-all-forms nil)          ; Don't instrument all forms
+(setq edebug-save-windows t)         ; Save window configuration
 
 
 (add-hook 'apheleia-mode-hook

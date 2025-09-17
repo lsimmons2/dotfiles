@@ -27,3 +27,8 @@ setup/
 .emacs.d/.dap-breakpoints
 .emacs.d/.extension/
 .emacs.d/transient/
+
+.emacs.d/rb-client.el
+.emacs.d/rb-token
+.emacs.d/url/
+.emacs.d/network-security.data
