@@ -7,30 +7,6 @@
   :ensure t
   :hook (prog-mode . origami-mode))
 
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :hook
-;;   ((typescript-ts-mode . lsp-deferred)
-;;    (tsx-ts-mode . lsp-deferred)
-;;    (js-mode . lsp-deferred)
-;;    (js-jsx-mode . lsp-deferred)
-;;    (java-mode . lsp-deferred)
-;;    (python-mode . lsp-deferred)
-;;    ;; (tuareg-mode . lsp-deferred)
-;;    (lsp-mode . lsp-diagnostics-mode)
-;;    ;; TODO: lsp-enable-which-key-integration is not being set correctly - causing syntax error
-;;    ;; (lsp-mode . lsp-enable-which-key-integration)
-;;    )
-;;   :commands lsp
-;;   :config
-;;   (setq lsp-enable-on-type-formatting nil) ;; Disable formatting triggered by typing
-;;   (setq lsp-before-save-edits nil)         ;; Disable LSP formatting on save
-;;   (setq lsp-completion-provider :capf)
-;;   (setq lsp-diagnostics-provider :flycheck)
-;;   (setq lsp-log-io nil)
-;;   (setq lsp-java-java-path "/Users/leo/Library/Java/JavaVirtualMachines/corretto-18.0.2/Contents/Home/bin/java")
-;;   )
-
 
 (use-package lsp-mode
   :ensure t

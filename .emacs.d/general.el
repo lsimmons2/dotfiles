@@ -466,27 +466,6 @@
   )
 
 
-(defvar my-fullscreen-window nil
-  "Stores the window configuration before toggling fullscreen.")
-
-(defun my-toggle-window-fullscreen ()
-  "Toggle the selected window to take up the entire frame."
-  (interactive)
-  (if my-fullscreen-window
-      ;; Restore previous window configuration
-      (progn
-        (set-window-configuration my-fullscreen-window)
-        (setq my-fullscreen-window nil))
-    ;; Save current window configuration and maximize the selected window
-    (progn
-      (setq my-fullscreen-window (current-window-configuration))
-      (delete-other-windows))))
-
-;; Bind the toggle functionality to C-9
-(global-set-key (kbd "C-9") 'my-toggle-window-fullscreen)
-
-
-
 ;; Define a function to append "✓"
 (defun my-append-checkmark ()
   (interactive)
@@ -510,20 +489,6 @@
   (kbd "SPC a c") 'my-append-checkmark
   (kbd "SPC a x") 'my-append-crossmark)
 
-;; Magit configuration
-(use-package magit
-  :ensure t
-  :config
-  (with-eval-after-load 'evil
-    (evil-define-key 'normal 'global
-      (kbd "SPC g g") 'magit-status)
-    ;; Basic Evil-friendly keybindings for Magit buffers
-    (evil-define-key 'normal magit-mode-map
-      (kbd "j") 'magit-next-line
-      (kbd "k") 'magit-previous-line
-      (kbd "gg") 'evil-goto-first-line
-      (kbd "G") 'evil-goto-line
-      (kbd "q") 'magit-mode-bury-buffer)))
 
 ;; diff-hl for showing git changes in the fringe with Evil keybindings
 (use-package diff-hl
