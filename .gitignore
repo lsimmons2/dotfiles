@@ -32,3 +32,4 @@ setup/
 .emacs.d/rb-token
 .emacs.d/url/
 .emacs.d/network-security.data
+.emacs.d/tramp

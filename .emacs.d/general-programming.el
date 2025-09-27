@@ -8,20 +8,30 @@
   :hook (prog-mode . origami-mode))
 
 
+;; Function to conditionally enable LSP (skip for TRAMP connections)
+(defun my/lsp-deferred-unless-tramp ()
+  "Enable LSP unless we're in a TRAMP buffer."
+  (lsp-deferred))
+;; (unless (file-remote-p default-directory)
+;;   (lsp-deferred)))
+
 (use-package lsp-mode
   :ensure t
   :hook
-  ((typescript-ts-mode . lsp-deferred)
-   (tsx-ts-mode . lsp-deferred)
-   (js-mode . lsp-deferred)
-   (js-jsx-mode . lsp-deferred)
-   (java-mode . lsp-deferred)
-   (python-mode . lsp-deferred)
-   (python-ts-mode . lsp-deferred)  ;; Add this line
+  ((typescript-ts-mode . my/lsp-deferred-unless-tramp)
+   (tsx-ts-mode . my/lsp-deferred-unless-tramp)
+   (js-mode . my/lsp-deferred-unless-tramp)
+   (js-jsx-mode . my/lsp-deferred-unless-tramp)
+   (java-mode . my/lsp-deferred-unless-tramp)
+   (python-mode . my/lsp-deferred-unless-tramp)
+   (python-ts-mode . my/lsp-deferred-unless-tramp)  ;; Add this line
    (lsp-mode . lsp-diagnostics-mode))
   ;; Rest of your config remains the same
   :init
   (setq lsp-auto-guess-root t)
+  ;; atow: putting this here so that lsp doesn't complain about no servers being available
+  ;; when accessing a file via TRAMP
+  (setq lsp-warn-no-matched-clients nil)
   :custom
   (lsp-file-watch-ignored
    '(
