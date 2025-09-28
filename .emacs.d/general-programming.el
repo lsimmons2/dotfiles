@@ -414,6 +414,9 @@
   )
 
 
+(use-package dockerfile-mode
+  :ensure t)
+
 (use-package helm-lsp
   :ensure t
   :commands helm-lsp-workspace-symbol

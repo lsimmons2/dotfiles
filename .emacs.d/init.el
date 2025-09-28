@@ -25,7 +25,7 @@
  '(lsp-file-watch-ignored-directories
    '('("[/\\\\]\\.git$" "[/\\\\]\\.github$" "[/\\\\]node_modules$" "[/\\\\]dist$" "[/\\\\]build$" "[/\\\\]vendor$" "/Users/leo")) nil nil "Customized with use-package lsp-mode")
  '(package-selected-packages
-   '(aidermacs evil-magit magit diff-hl lsp-sourcekit swift-mode helm-xref helm-lsp lsp-pyright dap-ocaml dap-codelldb gptel yasnippet-snippets yasnippet evil-commentary tuareg helm-rg apheleia evil-leader key-chord lsp-haskell lsp-ui flycheck company ns-auto-titlebar doom-themes)))
+   '(dockerfile-mode aidermacs evil-magit magit diff-hl lsp-sourcekit swift-mode helm-xref helm-lsp lsp-pyright dap-ocaml dap-codelldb gptel yasnippet-snippets yasnippet evil-commentary tuareg helm-rg apheleia evil-leader key-chord lsp-haskell lsp-ui flycheck company ns-auto-titlebar doom-themes)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
