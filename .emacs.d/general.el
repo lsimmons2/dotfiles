@@ -79,6 +79,13 @@
 (use-package adaptive-wrap
   :ensure t)
 
+(use-package vterm
+  :ensure t
+  :config
+  (setq vterm-shell "/bin/zsh")
+  (setq vterm-term-environment-variable "xterm-256color")
+  (setq vterm-max-scrollback 100000)
+  (setq vterm-enable-manipulate-selection-data-by-osc52 t))
 
 (use-package highlight-symbol
   :ensure t
@@ -111,20 +118,19 @@
 (defun open-term-split-below ()
   "Split window below, open a new terminal session, and focus it."
   (interactive)
-  (let ((new-term-name (generate-new-buffer-name "term")))
-    (message "new term name be %s" new-term-name)
+  (let ((new-term-name (generate-new-buffer-name "vterm")))
     (split-window-below)
     (other-window 1)
-    (term "/bin/zsh")
+    (vterm)
     (rename-buffer new-term-name)))
 
 (defun open-term-split-right ()
   "Split window to the right, open a new terminal session, and focus it."
   (interactive)
-  (let ((new-term-name (generate-new-buffer-name "term")))
+  (let ((new-term-name (generate-new-buffer-name "vterm")))
     (split-window-right)
     (other-window 1)
-    (term "/bin/zsh")
+    (vterm)
     (rename-buffer new-term-name)))
 
 
@@ -294,37 +300,26 @@
     (kbd "M-h") 'windmove-left))
 
 
-(with-eval-after-load 'term
-  (add-hook 'term-mode-hook
+(with-eval-after-load 'vterm
+  (add-hook 'vterm-mode-hook
             (lambda ()
-              ;; Prevent Evil from interfering in term-char-mode
-              (evil-define-key 'insert term-raw-map (kbd "C-r") 'term-send-raw)
-              (evil-define-key 'insert term-raw-map (kbd "C-p") 'term-send-up)
-              (evil-define-key 'insert term-raw-map (kbd "C-n") 'term-send-down))))
+              (evil-insert-state))))
 
-(defun my-term-enter-char-mode ()
-  "Switch to term char mode and enter Evil insert mode if in term line mode."
+(defun my-vterm-enter-normal-mode ()
+  "Switch to Evil normal mode in vterm."
   (interactive)
-  (when (and (derived-mode-p 'term-mode) (not (term-in-char-mode)))
-    (term-char-mode)
-    (evil-insert-state)
-    (setq-local dabbrev-expand nil)
-    (message "Entering term char mode - switching to Evil insert mode")))
+  (evil-normal-state))
 
-(defun my-term-enter-line-mode ()
-  "Switch from term char mode to term line mode and enter Evil normal state."
+(defun my-vterm-enter-insert-mode ()
+  "Switch to Evil insert mode in vterm."
   (interactive)
-  (term-line-mode)
-  (evil-normal-state)
-  (message "Switched to term line mode and Evil normal state."))
+  (evil-insert-state))
 
 (defun my-universal-exit-insert-mode ()
   "Handle 'jk' sequence differently depending on the current mode."
   (interactive)
-  ;; if in term mode and char mode
-  (if (and (derived-mode-p 'term-mode) (term-in-char-mode))
-      (my-term-enter-line-mode)
-    ;; In other modes, just exit Evil insert mode
+  (if (derived-mode-p 'vterm-mode)
+      (my-vterm-enter-normal-mode)
     (evil-normal-state)))
 
 (key-chord-define evil-insert-state-map "jk" 'my-universal-exit-insert-mode)
@@ -332,18 +327,14 @@
 (key-chord-define evil-insert-state-map "JK" 'my-universal-exit-insert-mode)
 (key-chord-define evil-insert-state-map "KJ" 'my-universal-exit-insert-mode)
 
-(add-hook 'term-char-mode-hook 'evil-insert-state)
-(add-hook 'term-line-mode-hook 'evil-normal-state)
-
-(add-hook 'term-mode-hook
-          (lambda ()
-            (evil-define-key 'insert term-raw-map (kbd "C-c") 'term-interrupt-subjob)
-            (evil-define-key 'insert term-raw-map (kbd "C-d") 'term-send-eof)
-            (evil-define-key 'normal term-mode-map (kbd "i") 'my-term-enter-char-mode)
-            (evil-define-key 'normal term-mode-map (kbd "a") 'my-term-enter-char-mode)
-            (evil-define-key 'normal term-mode-map (kbd "A") 'my-term-enter-char-mode)
-            (evil-define-key 'insert term-raw-map (kbd "<escape>") 'my-term-enter-line-mode)
-            ))
+(with-eval-after-load 'vterm
+  (evil-define-key 'insert vterm-mode-map (kbd "<escape>") 'my-vterm-enter-normal-mode)
+  (evil-define-key 'normal vterm-mode-map (kbd "i") 'my-vterm-enter-insert-mode)
+  (evil-define-key 'normal vterm-mode-map (kbd "a") 'my-vterm-enter-insert-mode)
+  (evil-define-key 'normal vterm-mode-map (kbd "A") 'my-vterm-enter-insert-mode)
+  (evil-define-key 'normal vterm-mode-map (kbd "p") 'vterm-yank)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-c") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-d") 'vterm--self-insert))
 
 
 
@@ -418,9 +409,9 @@
 (defun open-new-term ()
   "Open a new terminal buffer with a unique name and process."
   (interactive)
-  (let ((term-buffer (generate-new-buffer-name "*term*")))
-    (with-current-buffer (term "/bin/zsh")  ;; Replace "/bin/bash" with your preferred shell
-      (rename-buffer term-buffer))))
+  (let ((term-buffer (generate-new-buffer-name "*vterm*")))
+    (vterm)
+    (rename-buffer term-buffer)))
 
 
 					;search all lines of project

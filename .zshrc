@@ -27,7 +27,7 @@ PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_}%# '
 #PS1='%~ %F{purple}xxx%{$reset_color%} \$ '
 #PS1='%n@%m:%~ %{$fg[magenta]%}[%D{%H:%M:%S}]%{$reset_color%} %F{purple}xxx%{$reset_color%}\$ '
 
-alias ls="ls --color=auto"
+alias ls="ls --color=always"
 alias ll="ls -lha"
 alias grep="grep --color=auto -i"
 alias h="history"
