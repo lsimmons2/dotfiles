@@ -8,16 +8,9 @@
 
 (use-package lsp-pyright
   :ensure t
-  :custom (lsp-pyright-langserver-command "pyright") 
-  :hook ((python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp)))
-         (python-ts-mode . (lambda ()
-                             (require 'lsp-pyright)
-                             (lsp))))
   :custom
-  (lsp-pyright-multi-root t)  ;; Enable multi-root for better project detection
-  )
+  (lsp-pyright-langserver-command "pyright")
+  (lsp-pyright-multi-root t))  ;; Enable multi-root for better project detection
 
 (dap-register-debug-template
  "Python: Run Script (Interactive)"

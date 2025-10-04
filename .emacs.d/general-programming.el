@@ -32,18 +32,8 @@
   ;; atow: putting this here so that lsp doesn't complain about no servers being available
   ;; when accessing a file via TRAMP
   (setq lsp-warn-no-matched-clients nil)
-  :custom
-  (lsp-file-watch-ignored
-   '(
-     '("[/\\\\]\\.git$"
-       "[/\\\\]\\.github$"
-       "[/\\\\]node_modules$"
-       "[/\\\\]dist$"
-       "[/\\\\]build$"
-       "[/\\\\]vendor$"
-       "/Users/leo" ;; TODO: don't know why I (maybe) need to add this here explicitly
-       )))
-  )
+  ;; Kill workspace when closing last buffer to prevent accumulation
+  (setq lsp-keep-workspace-alive nil))
 
 
 (use-package dap-mode

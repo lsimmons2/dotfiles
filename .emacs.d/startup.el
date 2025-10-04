@@ -6,4 +6,5 @@
 ;; (setq initial-buffer-choice "~/.emacs.d/startup.el")
 ;; (setq initial-buffer-choice "~/dev/org/org_server/lib/controller.ml")
 ;; (setq initial-buffer-choice "/Users/leo/dev/ocaml-playground/debugging_test/fib.ml")
-(setq initial-buffer-choice "/Users/leo/dev/research-buddy/monolith/app.py")
+;; (setq initial-buffer-choice "/Users/leo/dev/research-buddy/monolith/app.py")
+(setq initial-buffer-choice (lambda () (get-buffer "*Messages*")))
