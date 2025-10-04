@@ -137,5 +137,28 @@
 ;; in the section of the modeline that normall shows the major and all the minor modes, just show the major mode
 (setq minor-mode-alist nil)
 
+(defun my/customize-mode-line ()
+  "Customize mode-line to have distinct colors for active/inactive windows."
+  (let ((active-bg (face-attribute 'company-tooltip-search :background nil t))
+        (active-fg (face-attribute 'company-tooltip-search :foreground nil t))
+        (inactive-bg (face-attribute 'mode-line-inactive :background))
+        (default-bg (face-attribute 'default :background)))
+    (set-face-attribute 'mode-line nil
+                        :background active-bg
+                        :foreground active-fg
+                        :box nil)
+    (set-face-attribute 'mode-line-inactive nil
+                        :background inactive-bg
+                        :box nil)
+    ;; seems that header line inherits from company-tooltip-search/something upstream from it? or something like that?
+    ;; adding this part so it doesn't change to the new active modeline colors
+    (set-face-attribute 'header-line nil
+			:inherit 'unspecified
+			:box nil)
+    ))
+
+(add-hook 'after-init-hook 'my/customize-mode-line)
+(advice-add 'load-theme :after (lambda (&rest _) (my/customize-mode-line)))
+
 (custom-set-faces
  '(company-tooltip-selection ((t (:background "#b3ccf5" :foreground "black")))))
