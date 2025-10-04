@@ -79,13 +79,29 @@
 (use-package adaptive-wrap
   :ensure t)
 
+;; vterm - faster, more stable terminal emulator than built-in term
+;; Handles fast output (like docker build) without crashing or slowing down
 (use-package vterm
   :ensure t
   :config
-  (setq vterm-shell "/bin/zsh")
-  (setq vterm-term-environment-variable "xterm-256color")
-  (setq vterm-max-scrollback 100000)
-  (setq vterm-enable-manipulate-selection-data-by-osc52 t))
+  (setq vterm-shell "/bin/zsh")  ;; Use zsh as the shell
+  (setq vterm-term-environment-variable "xterm-256color")  ;; Enable 256 color support
+  (setq vterm-max-scrollback 100000)  ;; Large scrollback buffer
+  (setq vterm-enable-manipulate-selection-data-by-osc52 t)  ;; Enable clipboard integration
+  )
+
+;; Force vterm buffers to update colors when theme changes
+;; Sends C-l (clear screen) to each vterm buffer to trigger a redraw with new theme colors
+(defun my/refresh-vterm-buffers ()
+  "Force all vterm buffers to redraw after theme change."
+  (run-at-time 0.1 nil  ;; Wait 0.1s for theme to fully apply
+               (lambda ()
+                 (dolist (buffer (buffer-list))
+                   (with-current-buffer buffer
+                     (when (eq major-mode 'vterm-mode)
+                       (vterm-send-string "\C-l")))))))
+
+(advice-add 'load-theme :after (lambda (&rest _) (my/refresh-vterm-buffers)))
 
 (use-package highlight-symbol
   :ensure t
@@ -132,6 +148,13 @@
     (other-window 1)
     (vterm)
     (rename-buffer new-term-name)))
+
+(defun my-vterm-new ()
+  "Open a new terminal buffer with a unique name and process."
+  (interactive)
+  (let ((term-buffer (generate-new-buffer-name "vterm")))
+    (vterm)
+    (rename-buffer term-buffer)))
 
 
 (with-eval-after-load 'evil
@@ -328,13 +351,24 @@
 (key-chord-define evil-insert-state-map "KJ" 'my-universal-exit-insert-mode)
 
 (with-eval-after-load 'vterm
-  (evil-define-key 'insert vterm-mode-map (kbd "<escape>") 'my-vterm-enter-normal-mode)
+  ;; Use jk/kj to exit insert mode (defined via key-chord above), not Escape
+  ;; This allows Escape to pass through to terminal applications (vim, fzf, etc.)
   (evil-define-key 'normal vterm-mode-map (kbd "i") 'my-vterm-enter-insert-mode)
   (evil-define-key 'normal vterm-mode-map (kbd "a") 'my-vterm-enter-insert-mode)
   (evil-define-key 'normal vterm-mode-map (kbd "A") 'my-vterm-enter-insert-mode)
   (evil-define-key 'normal vterm-mode-map (kbd "p") 'vterm-yank)
+  ;; Override vterm's default M-: binding to access Emacs eval
+  (evil-define-key 'normal vterm-mode-map (kbd "M-:") 'eval-expression)
   (evil-define-key 'insert vterm-mode-map (kbd "C-c") 'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-d") 'vterm--self-insert))
+  (evil-define-key 'insert vterm-mode-map (kbd "C-d") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-r") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-p") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-n") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-e") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-a") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-k") 'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-u") 'vterm--self-insert)
+  )
 
 
 
@@ -404,14 +438,6 @@
 (setq global-auto-revert-non-file-buffers t)    ;; Enable auto-revert for dired buffers (and others?)
 
 
-
-
-(defun open-new-term ()
-  "Open a new terminal buffer with a unique name and process."
-  (interactive)
-  (let ((term-buffer (generate-new-buffer-name "*vterm*")))
-    (vterm)
-    (rename-buffer term-buffer)))
 
 
 					;search all lines of project
