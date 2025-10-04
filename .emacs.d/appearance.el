@@ -52,6 +52,9 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
+;; Start Emacs taking up full screen (not its own deskptop/workspace), at least on mac
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 
 (setq display-buffer-base-action '(display-buffer-same-window))
 
