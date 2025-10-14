@@ -458,4 +458,18 @@
                         (goto-char (lsp--position-to-point start)))))
           :buffer "*helm lsp symbols*")))
 
-(evil-define-key 'normal 'global (kbd "C-m") 'my/show-lsp-symbols-with-colored-types)
+(defun my/show-symbols ()
+  "Show symbols in current buffer - use Elisp symbols for elisp files, LSP for others."
+  (interactive)
+  (cond
+   ;; For Emacs Lisp files, use helm-imenu
+   ((derived-mode-p 'emacs-lisp-mode)
+    (helm-imenu))
+   ;; For LSP-enabled buffers, use LSP symbols
+   ((bound-and-true-p lsp-mode)
+    (my/show-lsp-symbols-with-colored-types))
+   ;; Fallback to imenu for other modes
+   (t
+    (helm-imenu))))
+
+(evil-define-key 'normal 'global (kbd "C-m") 'my/show-symbols)

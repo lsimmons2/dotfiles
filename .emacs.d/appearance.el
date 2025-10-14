@@ -59,10 +59,8 @@
 (setq display-buffer-base-action '(display-buffer-same-window))
 
 
-(defun my-dired-highlight-line ()
-  "Highlight the entire line under the cursor in Dired mode."
-  (hl-line-mode 1))  ;; Enable hl-line-mode for line highlighting
-(add-hook 'dired-mode-hook 'my-dired-highlight-line)
+;; Enable hl-line-mode globally
+(global-hl-line-mode 1)
 
 
 
@@ -153,11 +151,9 @@
     (set-face-attribute 'mode-line-inactive nil
                         :background inactive-bg
                         :box nil)
-    ;; seems that header line inherits from company-tooltip-search/something upstream from it? or something like that?
-    ;; adding this part so it doesn't change to the new active modeline colors
     (set-face-attribute 'header-line nil
-			:inherit 'unspecified
-			:box nil)
+                        :inherit 'mode-line-inactive
+                        :box nil)
     ))
 
 (add-hook 'after-init-hook 'my/customize-mode-line)
