@@ -10,6 +10,7 @@
 ;; (load "~/.emacs.d/haskell-stuff.el")
 ;; (load "~/.emacs.d/java-stuff.el")
 (load "~/.emacs.d/python-stuff.el")
+(load "~/.emacs.d/elisp-stuff.el")
 ;; (load "~/.emacs.d/txt-file-stuff.el")
 (load "~/.emacs.d/rb-client.el")
 ;; (load "~/.emacs.d/notes-stuff.el")

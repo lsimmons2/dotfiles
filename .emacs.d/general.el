@@ -475,8 +475,8 @@
 
 (with-eval-after-load 'evil
   ;; Bind `C-u` to scroll up
-  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-  (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+  ;; (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+  ;; (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   ;; Bind `C-d` to scroll down (default in Evil, but ensure it's consistent)
 					;(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
 					;(define-key evil-visual-state-map (kbd "C-d") 'evil-scroll-down)
