@@ -33,12 +33,17 @@
   ;; when accessing a file via TRAMP
   (setq lsp-warn-no-matched-clients nil)
   ;; Kill workspace when closing last buffer to prevent accumulation
-  (setq lsp-keep-workspace-alive nil))
+  (setq lsp-keep-workspace-alive nil)
+  ;; Prevent lsp-mode from auto-configuring dap-mode
+  (setq lsp-enable-dap-auto-configure nil))
 
 
 (use-package dap-mode
   :after lsp-mode
   :config
+  ;; Disable auto-configure mode which enables dap-mode globally
+  (dap-auto-configure-mode -1)
+
   (require 'dap-python)
   ;; (require 'dap-hydra)
   (setq dap-python-debugger 'debugpy)

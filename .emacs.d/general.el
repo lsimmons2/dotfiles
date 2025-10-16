@@ -130,25 +130,6 @@
   (load-file (expand-file-name "init.el" user-emacs-directory))
   (message "Emacs configuration reloaded!"))
 
-
-(defun open-term-split-below ()
-  "Split window below, open a new terminal session, and focus it."
-  (interactive)
-  (let ((new-term-name (generate-new-buffer-name "vterm")))
-    (split-window-below)
-    (other-window 1)
-    (vterm)
-    (rename-buffer new-term-name)))
-
-(defun open-term-split-right ()
-  "Split window to the right, open a new terminal session, and focus it."
-  (interactive)
-  (let ((new-term-name (generate-new-buffer-name "vterm")))
-    (split-window-right)
-    (other-window 1)
-    (vterm)
-    (rename-buffer new-term-name)))
-
 (defun my-vterm-new ()
   "Open a new terminal buffer with a unique name and process."
   (interactive)
@@ -156,11 +137,9 @@
     (vterm)
     (rename-buffer term-buffer)))
 
-
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
-    (kbd "M-o") 'open-term-split-below
-    (kbd "M-e") 'open-term-split-right))
+    (kbd "M-o") 'my-vterm-new))
 
 
 (setq evil-symbol-word-search t)
