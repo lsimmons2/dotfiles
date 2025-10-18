@@ -200,8 +200,18 @@
   (interactive)
   (save-some-buffers t (lambda () buffer-file-name))) ;; Only consider file-visiting buffers
 
+(defun save-buffer-or-eval-scratch ()
+  "Save buffer normally, but if in lisp-interaction-mode, evaluate the entire buffer."
+  (interactive)
+  (message "wtf")
+  (if (equal (buffer-name) "*scratch*")
+      (progn
+	(eval-buffer)
+	(message "Evaluated *scratch* buffer"))
+    (save-buffer)))
+
 (with-eval-after-load 'evil
-  (evil-define-key 'normal 'global (kbd "S") 'save-buffer)
+  (evil-define-key 'normal 'global (kbd "S") 'save-buffer-or-eval-scratch)
   (evil-define-key 'normal 'global (kbd "SPC S") 'save-all-buffers))
 
 (defun split-window-left ()

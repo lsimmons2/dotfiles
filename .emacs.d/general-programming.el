@@ -35,7 +35,9 @@
   ;; Kill workspace when closing last buffer to prevent accumulation
   (setq lsp-keep-workspace-alive nil)
   ;; Prevent lsp-mode from auto-configuring dap-mode
-  (setq lsp-enable-dap-auto-configure nil))
+  (setq lsp-enable-dap-auto-configure nil)
+  ;; Disable flycheck - lsp-mode should not enable it
+  (setq lsp-diagnostics-provider :none))
 
 
 (use-package dap-mode
@@ -219,10 +221,11 @@
 ;; NB: atow 04.28.2025 flycheck is already installed somewhere, but can't find it so
 ;; adding the block here mainly to be able to put the python-mode hook in the use-package block
 ;; for flycheck
-(use-package flycheck
-  :ensure t
-  :hook (python-mode . flycheck-mode)
-  )
+;; then turning it off again on 10.18.2025 since I'm not really using it
+;; (use-package flycheck
+;;   :ensure t
+;;   :hook (python-mode . flycheck-mode)
+;;   )
 
 
 (defun copy-flycheck-error-at-point ()
@@ -446,3 +449,19 @@
     (helm-imenu))))
 
 (evil-define-key 'normal 'global (kbd "C-m") 'my/show-symbols)
+
+(defun my/search-project-symbols ()
+  "Search for symbols project-wide - use helm-imenu-in-all-buffers for elisp files, LSP workspace symbols for others."
+  (interactive)
+  (cond
+   ;; For Emacs Lisp files, use helm-imenu across all buffers
+   ((derived-mode-p 'emacs-lisp-mode)
+    (helm-imenu-in-all-buffers))
+   ;; For LSP-enabled buffers, use helm-lsp-workspace-symbol
+   ((bound-and-true-p lsp-mode)
+    (call-interactively 'helm-lsp-workspace-symbol))
+   ;; Fallback to helm-imenu-in-all-buffers for other modes
+   (t
+    (helm-imenu-in-all-buffers))))
+
+(evil-define-key 'normal 'global (kbd "SPC m") 'my/search-project-symbols)
