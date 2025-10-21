@@ -211,6 +211,11 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
         printf '\e]51;Evterm-buffer-name "%s"\e\\' "$cwd | $current_cmd"
     }
 
+    # Directory tracking - update Emacs' default-directory
+    function vterm_set_directory() {
+        printf '\e]51;Evterm-set-directory "%s"\e\\' "$PWD"
+    }
+
     # Track the current running command
     function vterm_preexec() {
         local cmd="$1"
@@ -222,6 +227,7 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
     # When waiting for next command at prompt
     function vterm_precmd() {
         vterm_set_buffer_name "zsh"
+        vterm_set_directory  # Update directory tracking
     }
 
     # Hook into zsh's command execution
@@ -229,8 +235,9 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
     add-zsh-hook preexec vterm_preexec
     add-zsh-hook precmd vterm_precmd
 
-    # Set initial buffer name
+    # Set initial buffer name and directory
     vterm_set_buffer_name "zsh"
+    vterm_set_directory
 fi
 
 source ~/.sensitive.sh

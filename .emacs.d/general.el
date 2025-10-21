@@ -95,7 +95,16 @@
 The second argument 't' to rename-buffer ensures unique names by appending <2>, <3>, etc."
     (rename-buffer (format "%s" title) t))
 
+  ;; Handle directory tracking - update default-directory when shell changes directories
+  (defun vterm--set-directory (path)
+    "Update the buffer's default-directory to track shell's current directory."
+    ;; NB: doing this not for any particular reason/usecase atow (10.21.2025) but just
+    ;; b/c it felt wrong for default-directory not to be the directory that shell/zsh
+    ;; is currently in
+    (setq default-directory (file-name-as-directory path)))
+
   (add-to-list 'vterm-eval-cmds '("vterm-buffer-name" vterm--rename-buffer-as-title))
+  (add-to-list 'vterm-eval-cmds '("vterm-set-directory" vterm--set-directory))
   )
 
 ;; Force vterm buffers to update colors when theme changes
