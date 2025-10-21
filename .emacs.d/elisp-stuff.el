@@ -9,20 +9,49 @@
   )
 
 ;; Bindings for when you're actively debugging
+;; All standard Edebug keys mapped to SPC d <key>
 (evil-define-key 'normal edebug-mode-map
-  (kbd "SPC d e") 'edebug-eval-expression    ; evaluate expression
-  (kbd "SPC d c") 'edebug-go-mode           ; continue
-  (kbd "SPC d n") 'edebug-step-mode          ; next/step
-  (kbd "SPC d i") 'edebug-step-in            ; step into
-  (kbd "SPC d o") 'edebug-step-out           ; step out
-  (kbd "SPC d b") 'edebug-set-breakpoint     ; toggle breakpoint
-  (kbd "SPC d r") 'edebug-stop               ; stop/restart
-  (kbd "SPC d l") 'edebug-bounce-point       ; show current location
-  (kbd "SPC d s") 'edebug-where              ; show status
-  (kbd "SPC d p") 'edebug-view-outside       ; view outside windows
-  (kbd "SPC d w") 'edebug-where              ; where am I
-  (kbd "SPC d d") 'edebug-pop-to-backtrace
-  (kbd "SPC d q") 'edebug-top-level-nonstop  ; quit debugging
+  ;; Core stepping commands
+  (kbd "SPC d SPC") 'edebug-step-mode              ; step (the main stepping key)
+  (kbd "SPC d s") 'edebug-step-mode              ; step (the main stepping key)
+  (kbd "SPC d n") 'edebug-next-mode                ; next (step over function calls)
+  (kbd "SPC d i") 'edebug-step-in                  ; step into (force entry to function)
+  (kbd "SPC d o") 'edebug-step-out                 ; step out (finish current function)
+  (kbd "SPC d g") 'edebug-go-mode                  ; go (continue until breakpoint)
+  (kbd "SPC d c") 'edebug-continue-mode            ; continue with brief pauses
+  (kbd "SPC d C") 'edebug-Continue-fast-mode       ; continue without pauses
+  (kbd "SPC d G") 'edebug-Go-nonstop-mode          ; go nonstop (ignore breakpoints)
+  (kbd "SPC d t") 'edebug-Trace-fast-mode          ; trace without stopping
+  (kbd "SPC d T") 'edebug-Trace-fast-mode          ; trace (capital T)
+
+  ;; Breakpoints
+  (kbd "SPC d b") 'edebug-set-breakpoint           ; set/unset breakpoint
+  (kbd "SPC d u") 'edebug-unset-breakpoint         ; unset breakpoint
+  (kbd "SPC d x") 'edebug-set-conditional-breakpoint ; conditional breakpoint
+  (kbd "SPC d X") 'edebug-set-global-break-condition ; global break condition
+
+  ;; Evaluation and inspection
+  (kbd "SPC d e") 'edebug-eval-expression          ; eval expression
+  (kbd "SPC d C-e") 'edebug-eval-last-sexp         ; eval last sexp
+  (kbd "SPC d E") 'edebug-visit-eval-list          ; visit eval list
+
+  ;; Navigation and display
+  (kbd "SPC d w") 'edebug-where                    ; where am I
+  (kbd "SPC d p") 'edebug-bounce-point             ; show point in source
+  (kbd "SPC d P") 'edebug-view-outside             ; view outside windows
+  (kbd "SPC d W") 'edebug-toggle-save-windows      ; toggle save windows
+  (kbd "SPC d v") 'edebug-visit-eval-list          ; visit eval list
+
+  ;; Control and exit
+  (kbd "SPC d Q") 'top-level                       ; quit (abort)
+  (kbd "SPC d q") 'edebug-top-level-nonstop        ; quit nonstop
+  (kbd "SPC d a") 'abort-recursive-edit            ; abort
+  (kbd "SPC d S") 'edebug-stop                     ; stop
+
+  ;; Backtrace and help
+  (kbd "SPC d d") 'edebug-pop-to-backtrace         ; show backtrace
+  (kbd "SPC d =") 'edebug-temp-display-freq-count  ; show frequency count
+  (kbd "SPC d ?") 'edebug-help                     ; help
   )
 
 ;; Optional: Configure Edebug behavior
