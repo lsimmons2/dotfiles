@@ -200,4 +200,37 @@ export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 [[ ! -r '/Users/leo/.opam/opam-init/init.zsh' ]] || source '/Users/leo/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
 # END opam configuration
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
+# vterm integration - dynamically update buffer name with directory and command
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    # Function to update vterm buffer name
+    function vterm_set_buffer_name() {
+        local cwd="${PWD/#$HOME/~}"
+        local current_cmd="$1"
+        # Send escape sequence to vterm to update buffer name
+        # Format: \e]51;E<command> <arg>\e\\
+        printf '\e]51;Evterm-buffer-name "%s"\e\\' "$cwd | $current_cmd"
+    }
+
+    # Track the current running command
+    function vterm_preexec() {
+        local cmd="$1"
+        # Extract the base command (first word)
+        local base_cmd="${cmd%% *}"
+        vterm_set_buffer_name "$base_cmd"
+    }
+
+    # When waiting for next command at prompt
+    function vterm_precmd() {
+        vterm_set_buffer_name "zsh"
+    }
+
+    # Hook into zsh's command execution
+    autoload -U add-zsh-hook
+    add-zsh-hook preexec vterm_preexec
+    add-zsh-hook precmd vterm_precmd
+
+    # Set initial buffer name
+    vterm_set_buffer_name "zsh"
+fi
+
 source ~/.sensitive.sh

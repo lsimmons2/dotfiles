@@ -88,6 +88,14 @@
   (setq vterm-term-environment-variable "xterm-256color")  ;; Enable 256 color support
   (setq vterm-max-scrollback 100000)  ;; Large scrollback buffer
   (setq vterm-enable-manipulate-selection-data-by-osc52 t)  ;; Enable clipboard integration
+
+  ;; Handle custom escape sequences from shell for buffer naming
+  (defun vterm--rename-buffer-as-title (title)
+    "Rename vterm buffer based on directory and command from shell.
+The second argument 't' to rename-buffer ensures unique names by appending <2>, <3>, etc."
+    (rename-buffer (format "%s" title) t))
+
+  (add-to-list 'vterm-eval-cmds '("vterm-buffer-name" vterm--rename-buffer-as-title))
   )
 
 ;; Force vterm buffers to update colors when theme changes
