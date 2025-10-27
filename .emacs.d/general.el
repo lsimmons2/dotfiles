@@ -174,8 +174,7 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global (kbd "SPC u") 'universal-argument)
-  (evil-define-key 'visual 'global (kbd "SPC u") 'universal-argument)
-  )
+  (evil-define-key 'visual 'global (kbd "SPC u") 'universal-argument))
 
 (defun my-dired-create-and-open-file (filename)
   "Create an empty file and open it in the current buffer."
@@ -203,6 +202,38 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
   (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)) ;; Redo
 
 (tab-bar-mode 1)
+
+(defun my-tab-name-from-common-directory ()
+  "Return tab name derived from most common default-directory in tab's windows."
+  (let* ((windows (window-list-1 nil 'nomini))
+         (directories (mapcar (lambda (win)
+                                (with-current-buffer (window-buffer win)
+                                  default-directory))
+                              windows))
+         (dir-counts (make-hash-table :test 'equal))
+         most-common-dir
+         max-count)
+    ;; Count directories
+    (dolist (dir directories)
+      (puthash dir (1+ (gethash dir dir-counts 0)) dir-counts))
+    ;; Find most common
+    (setq max-count 0)
+    (maphash (lambda (dir count)
+               (when (> count max-count)
+                 (setq max-count count)
+                 (setq most-common-dir dir)))
+             dir-counts)
+    ;; Return directory name or buffer name as fallback
+    (if most-common-dir
+        (let ((dir-name (file-name-nondirectory
+                         (directory-file-name most-common-dir))))
+          (if (string-empty-p dir-name)
+              (buffer-name)
+            dir-name))
+      (buffer-name))))
+
+(setq tab-bar-tab-name-function 'my-tab-name-from-common-directory)
+
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
     (kbd "M-t") 'tab-new
