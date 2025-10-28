@@ -361,9 +361,8 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 
 
 (with-eval-after-load 'vterm
-  (add-hook 'vterm-mode-hook
-            (lambda ()
-              (evil-insert-state))))
+  ;; Set vterm buffers to start in insert state immediately
+  (evil-set-initial-state 'vterm-mode 'insert))
 
 (defun my-vterm-enter-normal-mode ()
   "Switch to Evil normal mode in vterm."
