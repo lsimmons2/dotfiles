@@ -395,6 +395,7 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
   (evil-define-key 'normal vterm-mode-map (kbd "p") 'vterm-yank)
   ;; Override vterm's default M-: binding to access Emacs eval
   (evil-define-key 'normal vterm-mode-map (kbd "M-:") 'eval-expression)
+  (evil-define-key 'insert vterm-mode-map (kbd "<escape>") 'vterm-send-escape)
   (evil-define-key 'insert vterm-mode-map (kbd "C-c") 'vterm--self-insert)
   (evil-define-key 'insert vterm-mode-map (kbd "C-d") 'vterm--self-insert)
   (evil-define-key 'insert vterm-mode-map (kbd "C-r") 'vterm--self-insert)
@@ -500,9 +501,12 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 
 ;; Make 'j' and 'k' move by visual lines in Evil mode
 (defun my-evil-visual-line-navigation ()
-  "Make `j` and `k` move by visual lines instead of logical lines."
+  "Make `j`, `k`, `$`, `0`, and `_` work with visual lines instead of logical lines."
   (define-key evil-motion-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-motion-state-map (kbd "k") 'evil-previous-visual-line))
+  (define-key evil-motion-state-map (kbd "k") 'evil-previous-visual-line)
+  (define-key evil-motion-state-map (kbd "$") 'evil-end-of-visual-line)
+  (define-key evil-motion-state-map (kbd "0") 'evil-beginning-of-visual-line)
+  (define-key evil-motion-state-map (kbd "_") 'evil-first-non-blank-of-visual-line))
 
 ;; Apply the navigation adjustment after Evil mode loads
 (with-eval-after-load 'evil
