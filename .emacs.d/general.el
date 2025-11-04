@@ -47,6 +47,7 @@
   (setq helm-M-x-requires-pattern 2)              ;; Start matching after 2 characters
   (setq helm-ff-skip-boring-files t)              ;; Skip boring files in file listing
   (setq helm-display-line-numbers-prefix t)       ;; Show line numbers in helm buffers
+  (setq history-delete-duplicates t)              ;; Remove duplicate entries from command history
   )
 
 (use-package projectile
@@ -419,9 +420,19 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 (with-eval-after-load 'helm-buffers
   (define-key helm-buffer-map (kbd "DEL") 'helm-buffer-run-kill-buffers))
 
+(defun my/helm-projectile-find-file-from-root ()
+  "Find file in project, always showing all project files (not just dired buffer files)."
+  (interactive)
+  (require 'helm-projectile)
+  (if (projectile-project-p)
+      (helm :sources '(helm-source-projectile-files-list)
+            :buffer "*helm projectile*"
+            :prompt "Find file: ")
+    (helm-find-files nil)))
+
 ;; Global Helm bindings
 (global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-p") 'project-find-file)
+(global-set-key (kbd "C-x C-p") 'my/helm-projectile-find-file-from-root)
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 
 (defun my/helm-projectile-dired ()
