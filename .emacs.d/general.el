@@ -27,8 +27,8 @@
 
 (use-package helm
   :ensure t
-  :config
-  (helm-mode 1)
+  :defer t
+  :init
   (setq helm-boring-file-regexp-list
         '("\\.git$"
           "node_modules"
@@ -48,21 +48,22 @@
   (setq helm-ff-skip-boring-files t)              ;; Skip boring files in file listing
   (setq helm-display-line-numbers-prefix t)       ;; Show line numbers in helm buffers
   (setq history-delete-duplicates t)              ;; Remove duplicate entries from command history
-  )
+  :config
+  (helm-mode 1))
 
 (use-package projectile
   :ensure t
+  :defer 1
+  :custom
+  (projectile-enable-caching t)              ;; Enable caching for faster performance
+  (projectile-completion-system 'helm)
   :config
-  (setq projectile-enable-caching t)              ;; Enable caching for faster performance
   (setq projectile-globally-ignored-directories
 	(append projectile-globally-ignored-directories '(".git" "node_modules" "dist" "__pycache__" "*.pyc" ".pytest_cache" ".mypy_cache")))
   (setq projectile-globally-ignored-files
 	(append projectile-globally-ignored-files '("*.pyc")))
   (projectile-mode +1)
-  (add-to-list 'projectile-ignored-projects "~/")
-  :custom
-  (projectile-completion-system 'helm)
-  )
+  (add-to-list 'projectile-ignored-projects "~/"))
 
 
 (use-package helm-projectile
@@ -436,13 +437,18 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 
 (defun my/helm-projectile-dired ()
-  "Open a Helm list of projects and open Dired in the selected project's root."
+  "Open a Helm list of projects and open Dired in the selected project's root.
+In vterm buffers, cd to the selected project instead."
   (interactive)
   (require 'helm-projectile)
   (helm :sources (helm-build-sync-source "Projectile Projects"
                    :candidates (projectile-relevant-known-projects)
                    :action (lambda (project)
-                             (dired (expand-file-name project))))
+                             (if (eq major-mode 'vterm-mode)
+                                 (progn
+                                   (vterm-send-string (format "cd %s" (shell-quote-argument (expand-file-name project))))
+                                   (vterm-send-return))
+                               (dired (expand-file-name project)))))
         :buffer "*helm projectile dired*"))
 
 (defun my/helm-projectile-dired-new-tab ()
@@ -561,6 +567,7 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 ;; diff-hl for showing git changes in the fringe with Evil keybindings
 (use-package diff-hl
   :ensure t
+  :defer 1
   :config
   (global-diff-hl-mode)
   ;; Disable diff-hl for .txt files

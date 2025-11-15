@@ -10,7 +10,7 @@
   :ensure t
   :custom
   (lsp-pyright-langserver-command "pyright")
-  (lsp-pyright-multi-root t))  ;; Enable multi-root for better project detection
+  (lsp-pyright-multi-root nil))  ;; Disable multi-root: each project gets its own server
 
 (dap-register-debug-template
  "Python: Run Script (Interactive)"

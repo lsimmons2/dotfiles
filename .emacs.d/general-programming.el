@@ -8,27 +8,39 @@
   :hook (prog-mode . origami-mode))
 
 
-;; Function to conditionally enable LSP (skip for TRAMP connections)
-(defun my/lsp-deferred-unless-tramp ()
-  "Enable LSP unless we're in a TRAMP buffer."
-  (lsp-deferred))
-;; (unless (file-remote-p default-directory)
-;;   (lsp-deferred)))
+;; Function to conditionally enable LSP (only in projectile projects, skip TRAMP)
+(defun my/lsp-deferred-conditional ()
+  "Enable LSP only if we're in a projectile project and not in a TRAMP buffer."
+  (let ((is-tramp (file-remote-p default-directory))
+        (has-projectile (fboundp 'projectile-project-root))
+        (project-root (condition-case nil
+                          (when (fboundp 'projectile-project-root)
+                            (projectile-project-root))
+                        (error nil))))
+    (cond
+     (is-tramp
+      (message "my/lsp-deferred-conditional: Skipping TRAMP buffer: %s" (buffer-file-name)))
+     ((not has-projectile)
+      (message "my/lsp-deferred-conditional: Projectile not available in buffer, skipping LSP: %s" (buffer-file-name)))
+     ((not project-root)
+      (message "my/lsp-deferred-conditional: Not in a projectile project, skipping LSP for: %s" (buffer-file-name)))
+     (t
+      (message "my/lsp-deferred-conditional: Starting in project %s for file: %s" project-root (buffer-file-name))
+      (lsp-deferred)))))
 
 (use-package lsp-mode
   :ensure t
   :hook
-  ((typescript-ts-mode . my/lsp-deferred-unless-tramp)
-   (tsx-ts-mode . my/lsp-deferred-unless-tramp)
-   (js-mode . my/lsp-deferred-unless-tramp)
-   (js-jsx-mode . my/lsp-deferred-unless-tramp)
-   (java-mode . my/lsp-deferred-unless-tramp)
-   (python-mode . my/lsp-deferred-unless-tramp)
-   (python-ts-mode . my/lsp-deferred-unless-tramp)  ;; Add this line
+  ((typescript-ts-mode . my/lsp-deferred-conditional)
+   (tsx-ts-mode . my/lsp-deferred-conditional)
+   (js-mode . my/lsp-deferred-conditional)
+   (js-jsx-mode . my/lsp-deferred-conditional)
+   (java-mode . my/lsp-deferred-conditional)
+   (python-mode . my/lsp-deferred-conditional)
+   (python-ts-mode . my/lsp-deferred-conditional)  ;; Add this line
    (lsp-mode . lsp-diagnostics-mode))
   ;; Rest of your config remains the same
   :init
-  (setq lsp-auto-guess-root t)
   ;; atow: putting this here so that lsp doesn't complain about no servers being available
   ;; when accessing a file via TRAMP
   (setq lsp-warn-no-matched-clients nil)
@@ -181,8 +193,9 @@
              (sh-mode . bash-ts-mode)
              (sh-base-mode . bash-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))
-  :config
-  (os/setup-install-grammars))
+  ;; :config
+  ;; (run-with-idle-timer 1 nil #'os/setup-install-grammars)
+  )
 
 
 (use-package apheleia
@@ -215,6 +228,7 @@
 ;;to try to get apheleia to have access to globally-installed prettier
 (use-package exec-path-from-shell
   :ensure t
+  :defer 2
   :config
   (exec-path-from-shell-initialize))
 
@@ -301,6 +315,7 @@
 
 (use-package yasnippet
   :ensure t
+  :defer 2
   :config
   (yas-global-mode 1)
   ;; Define Yasnippet keybindings with your leader key

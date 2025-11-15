@@ -140,8 +140,13 @@
 
 (defun my/customize-mode-line ()
   "Customize mode-line to have distinct colors for active/inactive windows."
-  (let ((active-bg (face-attribute 'company-tooltip-search :background nil t))
-        (active-fg (face-attribute 'company-tooltip-search :foreground nil t))
+  ;; Use region face as fallback since company is disabled
+  (let ((active-bg (if (facep 'company-tooltip-search)
+                       (face-attribute 'company-tooltip-search :background nil t)
+                     (face-attribute 'region :background nil t)))
+        (active-fg (if (facep 'company-tooltip-search)
+                       (face-attribute 'company-tooltip-search :foreground nil t)
+                     (face-attribute 'default :foreground nil t)))
         (inactive-bg (face-attribute 'mode-line-inactive :background))
         (default-bg (face-attribute 'default :background)))
     (set-face-attribute 'mode-line nil
