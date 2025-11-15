@@ -37,11 +37,6 @@
           (my/apply-theme my/light-theme)))))
 
 
-;; Run once on startup to set the correct theme
-(my/toggle-theme-based-on-system)
-
-;; Check and toggle theme every 3 seconds
-(run-at-time nil (* 3 1) 'my/toggle-theme-based-on-system)
 
 
 					;(load-theme 'doom-feather-light t)
@@ -140,15 +135,9 @@
 
 (defun my/customize-mode-line ()
   "Customize mode-line to have distinct colors for active/inactive windows."
-  ;; Use region face as fallback since company is disabled
-  (let ((active-bg (if (facep 'company-tooltip-search)
-                       (face-attribute 'company-tooltip-search :background nil t)
-                     (face-attribute 'region :background nil t)))
-        (active-fg (if (facep 'company-tooltip-search)
-                       (face-attribute 'company-tooltip-search :foreground nil t)
-                     (face-attribute 'default :foreground nil t)))
-        (inactive-bg (face-attribute 'mode-line-inactive :background))
-        (default-bg (face-attribute 'default :background)))
+  (let ((active-bg (face-background 'completions-highlight nil t))
+        (active-fg (face-foreground 'completions-highlight nil t))
+        (inactive-bg (face-background 'mode-line-inactive nil t)))
     (set-face-attribute 'mode-line nil
                         :background active-bg
                         :foreground active-fg
@@ -161,8 +150,14 @@
                         :box nil)
     ))
 
-(add-hook 'after-init-hook 'my/customize-mode-line)
+;; Don't run at after-init-hook, only after theme loads
 (advice-add 'load-theme :after (lambda (&rest _) (my/customize-mode-line)))
+
+;; Run once on startup to set the correct theme (AFTER advice is set up)
+(my/toggle-theme-based-on-system)
+
+;; Check and toggle theme every 3 seconds
+(run-at-time nil (* 3 1) 'my/toggle-theme-based-on-system)
 
 (custom-set-faces
  '(company-tooltip-selection ((t (:background "#b3ccf5" :foreground "black")))))
