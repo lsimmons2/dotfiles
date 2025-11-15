@@ -6,14 +6,6 @@
 ;;; Code:
 
 ;;; Theme Configuration
-;; Title bar color sync with system (macOS)
-;;TODO: remove this if I can remove the title bar alltogether?
-;; title bar to change color depending on light/dark mode
-(use-package ns-auto-titlebar
-  :ensure t
-  :config
-  (ns-auto-titlebar-mode))
-
 (use-package doom-themes
   :ensure t
   :config
@@ -50,6 +42,9 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+
+;; Hide macOS titlebar
+(add-to-list 'default-frame-alist '(undecorated . t))
 
 ;; Window behavior
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
