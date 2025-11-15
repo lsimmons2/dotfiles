@@ -1,3 +1,12 @@
+;;; appearance.el --- Visual appearance configuration -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Configuration for themes, fonts, mode-line, and UI elements
+
+;;; Code:
+
+;;; Theme Configuration
+;; Title bar color sync with system (macOS)
 ;;TODO: remove this if I can remove the title bar alltogether?
 ;; title bar to change color depending on light/dark mode
 (use-package ns-auto-titlebar
@@ -10,9 +19,11 @@
   :config
   (load-theme 'doom-one t))
 
+;; Theme variables
 (defvar my/dark-theme 'doom-one)
 (defvar my/light-theme 'doom-feather-light)
 
+;; Theme switching functions
 (defun my/detect-macos-dark-mode ()
   "Check if macOS is in dark mode and return t if it is."
   (let ((appearance (string-trim
@@ -21,62 +32,36 @@
 
 (defun my/apply-theme (theme)
   "Apply THEME, disabling any other active themes to prevent conflicts."
-  (mapc #'disable-theme custom-enabled-themes) ;; Disable current themes
+  (mapc #'disable-theme custom-enabled-themes)
   (load-theme theme t)
-  (message "Switched to theme: %s" theme)
-  )
+  (message "Switched to theme: %s" theme))
 
 (defun my/toggle-theme-based-on-system ()
   "Toggle between `my/dark-theme` and `my/light-theme` based on macOS appearance."
   (if (my/detect-macos-dark-mode)
-      (progn
-        (if (not (member my/dark-theme custom-enabled-themes))
-            (my/apply-theme my/dark-theme)))
-    (progn
-      (if (not (member my/light-theme custom-enabled-themes))
-          (my/apply-theme my/light-theme)))))
+      (when (not (member my/dark-theme custom-enabled-themes))
+        (my/apply-theme my/dark-theme))
+    (when (not (member my/light-theme custom-enabled-themes))
+      (my/apply-theme my/light-theme))))
 
-
-
-
-					;(load-theme 'doom-feather-light t)
-					;(load-theme 'doom-one t)
-
+;;; UI Elements
+;; Disable unnecessary UI elements
 (setq ring-bell-function 'ignore)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; Start Emacs taking up full screen (not its own deskptop/workspace), at least on mac
+;; Window behavior
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-
 (setq display-buffer-base-action '(display-buffer-same-window))
 
-
-;; Enable hl-line-mode globally
+;; Highlight current line
 (global-hl-line-mode 1)
 
-
-
-
-(setq-default mode-line-buffer-identification
-              '(:eval (if (and (featurep 'projectile)
-                               (projectile-project-root)
-                               buffer-file-name)
-                          (file-relative-name buffer-file-name (projectile-project-root))
-                        "%b")))
-					;(setq-default mode-line-buffer-identification
-					;'(:eval (if (and (featurep 'projectile) (projectile-project-root))
-					;(file-relative-name buffer-file-name (projectile-project-root))
-					;"%b")))
-
-
-
-
+;;; Font Configuration
 (set-face-attribute 'default nil
-                    :family "Monaco"   ;; Replace "Menlo" with your preferred font family
-                    :height 140)      ;; Replace 140 with the desired font size (e.g., 140 for 14pt)
+                    :family "Monaco"
+                    :height 140)
 
 (defun switch-to-laptop-size ()
   "Switch font to a smaller size suitable for laptop screens."
@@ -94,45 +79,19 @@
                       :height 140)
   (message "Switched to monitor font size (140)"))
 
-(defun my/customize-lsp-ui-sideline ()
-  "Customize `lsp-ui-sideline` faces based on the current theme."
-  (let ((bg (face-attribute 'default :background))   ;; Background from default face
-        (fg (face-attribute 'shadow :foreground))   ;; Foreground from shadow face
-        (info-fg (face-attribute 'success :foreground)) ;; Info from success face
-        (warning-fg (face-attribute 'warning :foreground)) ;; Warning from warning face
-        (error-fg (face-attribute 'error :foreground))) ;; Error from error face
-
-    ;; Customize the base sideline face
-    (set-face-attribute 'lsp-ui-sideline-global nil
-                        :background bg
-                        :foreground fg)
-
-    ;; Customize the diagnostic face for errors
-    (set-face-attribute 'lsp-ui-sideline-symbol nil
-                        :background bg
-                        :foreground fg)
-
-    ;; Customize the current symbol face
-    (set-face-attribute 'lsp-ui-sideline-current-symbol nil
-                        :background bg
-                        :foreground info-fg
-                        :weight 'bold)
-
-    ;; Customize code actions (like rename suggestions)
-    (set-face-attribute 'lsp-ui-sideline-code-action nil
-                        :background bg
-                        :foreground info-fg
-                        :weight 'bold)))
-
-;; Apply the customizations when loading lsp-ui
-;; (with-eval-after-load 'lsp-ui
-;;   (my/customize-lsp-ui-sideline))
-
-
-
-;; in the section of the modeline that normall shows the major and all the minor modes, just show the major mode
+;;; Mode-Line Configuration
+;; Show only major mode, hide minor modes
 (setq minor-mode-alist nil)
 
+;; Show project-relative path in buffer identification
+(setq-default mode-line-buffer-identification
+              '(:eval (if (and (featurep 'projectile)
+                               (projectile-project-root)
+                               buffer-file-name)
+                          (file-relative-name buffer-file-name (projectile-project-root))
+                        "%b")))
+
+;; Customize mode-line colors
 (defun my/customize-mode-line ()
   "Customize mode-line to have distinct colors for active/inactive windows."
   (let ((active-bg (face-background 'completions-highlight nil t))
@@ -147,17 +106,19 @@
                         :box nil)
     (set-face-attribute 'header-line nil
                         :inherit 'mode-line-inactive
-                        :box nil)
-    ))
+                        :box nil)))
 
-;; Don't run at after-init-hook, only after theme loads
+;; Apply mode-line customization after theme loads
 (advice-add 'load-theme :after (lambda (&rest _) (my/customize-mode-line)))
 
-;; Run once on startup to set the correct theme (AFTER advice is set up)
+;; IMPORTANT: Must run after the advice above
+;; Apply system theme on startup and check every 3 seconds
 (my/toggle-theme-based-on-system)
-
-;; Check and toggle theme every 3 seconds
 (run-at-time nil (* 3 1) 'my/toggle-theme-based-on-system)
 
+;;; Face Customization
 (custom-set-faces
  '(company-tooltip-selection ((t (:background "#b3ccf5" :foreground "black")))))
+
+(provide 'appearance)
+;;; appearance.el ends here
