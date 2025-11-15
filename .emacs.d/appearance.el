@@ -75,8 +75,15 @@
   (message "Switched to monitor font size (140)"))
 
 ;;; Mode-Line Configuration
-;; Show only major mode, hide minor modes
-(setq minor-mode-alist nil)
+;; Hide all modes (both major and minor)
+(setq mode-line-modes nil)
+
+;; Hide encoding information
+(setq-default mode-line-mule-info nil)
+
+;; Show line number in format "Line 123 / 456"
+(setq-default mode-line-position
+              '("Line %l / " (:eval (number-to-string (line-number-at-pos (point-max))))))
 
 ;; Show project-relative path in buffer identification
 (setq-default mode-line-buffer-identification
@@ -85,6 +92,10 @@
                                buffer-file-name)
                           (file-relative-name buffer-file-name (projectile-project-root))
                         "%b")))
+
+;; Add default-directory to the end of mode-line (with ~ for home)
+(setq-default mode-line-format
+              (append mode-line-format '(" " (:eval (abbreviate-file-name default-directory)))))
 
 ;; Customize mode-line colors
 (defun my/customize-mode-line ()
