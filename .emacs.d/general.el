@@ -264,60 +264,53 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
   (evil-define-key 'normal 'global (kbd "S") 'save-buffer-or-eval-scratch)
   (evil-define-key 'normal 'global (kbd "SPC S") 'save-all-buffers))
 
-(defun split-window-left ()
-  "Split the current window and create a new one on the left."
+(defun my/split-window-right ()
+  "Split window to the right and focus the new window."
   (interactive)
-  (split-window-right)       ;; Create a new window to the right
-  (let ((new-window (next-window))) ;; Get the newly created window
-    (other-window 1)         ;; Switch to the new window
-    (set-window-buffer new-window (current-buffer)) ;; Swap buffers
-    (other-window 1)         ;; Move focus to the left window
-    (balance-windows)))      ;; Balance all windows
+  (split-window-right)
+  (other-window 1)
+  (balance-windows))
 
-(evil-define-key 'normal 'global (kbd "SPC s h") 'split-window-left)
-
-(evil-define-key 'normal 'global (kbd "SPC s l") 
-  (lambda ()
-    (interactive)
+(defun my/split-window-left ()
+  "Split window to the left and focus the new window."
+  (interactive)
+  ;; There's no native split-window-left, so we use split-window-right
+  ;; and then select back to the original window (which is now on the left)
+  (let ((original-window (selected-window)))
     (split-window-right)
-    (other-window 1)
+    (select-window original-window)
     (balance-windows)))
 
-(defun split-window-above ()
-  "Split the current window and create a new one above."
+(defun my/split-window-below ()
+  "Split window below and focus the new window."
   (interactive)
-  (split-window-below)       ;; Create a new window below
-  (let ((new-window (next-window))) ;; Get the newly created window
-    (other-window 1)         ;; Switch to the new window
-    (set-window-buffer new-window (current-buffer)) ;; Swap buffers
-    (other-window 1)         ;; Move focus to the above window
-    (balance-windows)))      ;; Balance all windows
+  (split-window-below)
+  (other-window 1)
+  (balance-windows))
 
-(evil-define-key 'normal 'global (kbd "SPC s k")  'split-window-above)
-
-(evil-define-key 'normal 'global (kbd "SPC s j") 
-  (lambda ()
-    (interactive)
+(defun my/split-window-above ()
+  "Split window above and focus the new window."
+  (interactive)
+  ;; There's no native split-window-above, so we use split-window-below
+  ;; and then select back to the original window (which is now above)
+  (let ((original-window (selected-window)))
     (split-window-below)
-    (other-window 1)
+    (select-window original-window)
     (balance-windows)))
+
+(evil-define-key 'normal 'global (kbd "SPC s l") 'my/split-window-right)
+(evil-define-key 'normal 'global (kbd "SPC s h") 'my/split-window-left)
+(evil-define-key 'normal 'global (kbd "SPC s j") 'my/split-window-below)
+(evil-define-key 'normal 'global (kbd "SPC s k") 'my/split-window-above)
 
 
 ;; window splitting mappings for dired buffers
 (with-eval-after-load 'dired
   (evil-define-key 'normal dired-mode-map
-    (kbd "SPC s h") 'split-window-left
-    (kbd "SPC s l") (lambda ()
-                      (interactive)
-                      (split-window-right)
-                      (other-window 1)
-                      (balance-windows))
-    (kbd "SPC s k") 'split-window-above
-    (kbd "SPC s j") (lambda ()
-                      (interactive)
-                      (split-window-below)
-                      (other-window 1)
-                      (balance-windows))))
+    (kbd "SPC s l") 'my/split-window-right
+    (kbd "SPC s h") 'my/split-window-left
+    (kbd "SPC s j") 'my/split-window-below
+    (kbd "SPC s k") 'my/split-window-above))
 
 
 
