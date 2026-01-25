@@ -185,10 +185,21 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
   (dired-create-empty-file filename)
   (find-file filename)) ;; Open the file in the current buffer
 
+(defun my-dired-open-file ()
+  "Open file at point. If it's a PDF, open with macOS `open` command.
+Otherwise use default dired-find-file."
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (if (string-equal "pdf" (downcase (or (file-name-extension file) "")))
+        (start-process "open-pdf" nil "open" file)
+      (dired-find-file))))
+
 
 (with-eval-after-load 'dired
   (add-hook 'dired-mode-hook
             (lambda ()
+              ;; Hide file details by default, show only filenames
+              (dired-hide-details-mode 1)
               ;; Use Evil's search module in dired
               (setq evil-search-module 'evil-search)
               ;; Define keybindings for search
@@ -197,6 +208,15 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
                 (kbd "n") 'evil-search-next     ;; Navigate to next match
                 (kbd "N") 'evil-search-previous ;; Navigate to previous match
                 (kbd "%") 'my-dired-create-and-open-file
+                (kbd "RET") 'my-dired-open-file ;; Open PDFs in OS, others normally
+                (kbd "v") 'evil-visual-char     ;; Enable visual mode
+                (kbd "V") 'evil-visual-line     ;; Enable visual line mode
+                (kbd "w") 'evil-forward-word-begin
+                (kbd "W") 'evil-forward-WORD-begin
+                (kbd "e") 'evil-forward-word-end
+                (kbd "E") 'evil-forward-WORD-end
+                (kbd "b") 'evil-backward-word-begin
+                (kbd "B") 'evil-backward-WORD-begin
                 (kbd "gg") 'evil-goto-first-line ;; Go to the top of the buffer
                 (kbd "G") 'evil-goto-line))))    ;; Go to the bottom of the buffer
 
@@ -253,7 +273,6 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 (defun save-buffer-or-eval-scratch ()
   "Save buffer normally, but if in lisp-interaction-mode, evaluate the entire buffer."
   (interactive)
-  (message "wtf")
   (if (equal (buffer-name) "*scratch*")
       (progn
 	(eval-buffer)
@@ -431,16 +450,14 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
 
 (defun my/helm-projectile-dired ()
   "Open a Helm list of projects and open Dired in the selected project's root.
-In vterm buffers, cd to the selected project instead."
+In vterm buffers, change default-directory to the selected project."
   (interactive)
   (require 'helm-projectile)
   (helm :sources (helm-build-sync-source "Projectile Projects"
                    :candidates (projectile-relevant-known-projects)
                    :action (lambda (project)
                              (if (eq major-mode 'vterm-mode)
-                                 (progn
-                                   (vterm-send-string (format "cd %s" (shell-quote-argument (expand-file-name project))))
-                                   (vterm-send-return))
+                                 (cd (expand-file-name project))
                                (dired (expand-file-name project)))))
         :buffer "*helm projectile dired*"))
 
