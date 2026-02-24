@@ -394,6 +394,9 @@
   (find-file (concat "/ssh:rz:" "/home/leo/dev/research-buddy"))
   )
 
+(defun g5-dired ()
+  (interactive)
+  (find-file (concat "/ssh:g5:" "/home/ubuntu/dev/m-service")))
 
 (use-package dockerfile-mode
   :ensure t)

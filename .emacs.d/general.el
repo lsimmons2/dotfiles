@@ -91,22 +91,63 @@
   (setq vterm-max-scrollback 100000)  ;; Large scrollback buffer
   (setq vterm-enable-manipulate-selection-data-by-osc52 t)  ;; Enable clipboard integration
 
-  ;; Handle custom escape sequences from shell for buffer naming
-  (defun vterm--rename-buffer-as-title (title)
-    "Rename vterm buffer based on directory and command from shell.
-The second argument 't' to rename-buffer ensures unique names by appending <2>, <3>, etc."
-    (rename-buffer (format "%s" title) t))
+  ;; Process-based buffer naming and directory tracking
+  ;; All handled via timer-based process inspection - no shell hooks needed
+  (defun my/get-running-command (shell-pid)
+    "Get the currently running command in the shell with SHELL-PID.
+Returns nil if shell is idle (no child processes)."
+    (let* ((children-output (shell-command-to-string
+                            (format "pgrep -P %d 2>/dev/null || true" shell-pid)))
+           (children-pids (split-string children-output "\n" t)))
+      (when children-pids
+        ;; Get the immediate child command (not the deepest child)
+        (let* ((child-pid (string-to-number (car children-pids)))
+               (args-output (shell-command-to-string
+                            (format "ps -p %d -o args= 2>/dev/null || true" child-pid)))
+               (args (string-trim args-output))
+               ;; Extract first word from command line
+               (first-word (car (split-string args)))
+               ;; Get basename of the command
+               (cmd-name (when first-word (file-name-nondirectory first-word))))
+          cmd-name))))
 
-  ;; Handle directory tracking - update default-directory when shell changes directories
-  (defun vterm--set-directory (path)
-    "Update the buffer's default-directory to track shell's current directory."
-    ;; NB: doing this not for any particular reason/usecase atow (10.21.2025) but just
-    ;; b/c it felt wrong for default-directory not to be the directory that shell/zsh
-    ;; is currently in
-    (setq default-directory (file-name-as-directory path)))
+  (defun my/get-process-cwd (pid)
+    "Get the current working directory of process PID."
+    (let* ((cwd-output (shell-command-to-string
+                       (format "lsof -a -p %d -d cwd -Fn 2>/dev/null | tail -1 | cut -c2-" pid)))
+           (cwd (string-trim cwd-output)))
+      (if (and cwd (not (string-empty-p cwd)))
+          cwd
+        default-directory)))
 
-  (add-to-list 'vterm-eval-cmds '("vterm-buffer-name" vterm--rename-buffer-as-title))
-  (add-to-list 'vterm-eval-cmds '("vterm-set-directory" vterm--set-directory))
+  (defun my/vterm-update-buffer-names ()
+    "Update vterm buffer names and default-directory based on running processes."
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (eq major-mode 'vterm-mode)
+          (let* ((proc (get-buffer-process (current-buffer)))
+                 (pid (when proc (process-id proc))))
+            (when pid
+              (let* ((cwd (my/get-process-cwd pid))
+                     (running-cmd (my/get-running-command pid))
+                     (dir-name (file-name-nondirectory
+                               (directory-file-name cwd))))
+                ;; Update default-directory to match shell's cwd
+                (setq default-directory (file-name-as-directory cwd))
+                ;; Update buffer name
+                (if running-cmd
+                    (rename-buffer (format "vterm: %s | %s" dir-name running-cmd) t)
+                  (rename-buffer (format "vterm: %s | zsh" dir-name) t)))))))))
+
+  ;; Start timer to update vterm buffer names every 2 seconds
+  (defvar my/vterm-name-update-timer nil
+    "Timer for updating vterm buffer names.")
+
+  (when my/vterm-name-update-timer
+    (cancel-timer my/vterm-name-update-timer))
+
+  (setq my/vterm-name-update-timer
+        (run-with-timer 2 2 'my/vterm-update-buffer-names))
   )
 
 ;; Force vterm buffers to update colors when theme changes
@@ -149,16 +190,9 @@ The second argument 't' to rename-buffer ensures unique names by appending <2>, 
   (load-file (expand-file-name "init.el" user-emacs-directory))
   (message "Emacs configuration reloaded!"))
 
-(defun my-vterm-new ()
-  "Open a new terminal buffer with a unique name and process."
-  (interactive)
-  (let ((term-buffer (generate-new-buffer-name "vterm")))
-    (vterm)
-    (rename-buffer term-buffer)))
-
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
-    (kbd "M-o") 'my-vterm-new))
+    (kbd "M-o") 'vterm))
 
 
 (setq evil-symbol-word-search t)
@@ -419,14 +453,25 @@ Otherwise use default dired-find-file."
 
 (defun my/helm-projectile-dired ()
   "Open a Helm list of projects and open Dired in the selected project's root.
-In vterm buffers, change default-directory to the selected project."
+In vterm buffers, cd to the project if shell is idle, otherwise create new vterm."
   (interactive)
   (require 'helm-projectile)
   (helm :sources (helm-build-sync-source "Projectile Projects"
                    :candidates (projectile-relevant-known-projects)
                    :action (lambda (project)
                              (if (eq major-mode 'vterm-mode)
-                                 (cd (expand-file-name project))
+                                 (let* ((proc (get-buffer-process (current-buffer)))
+                                        (pid (when proc (process-id proc)))
+                                        (has-running-process (and pid (my/get-running-command pid))))
+                                   (if has-running-process
+                                       ;; Process is running, create new vterm in project
+                                       (let ((default-directory (expand-file-name project)))
+                                         (message "Process running in vterm, creating new vterm in %s" project)
+                                         (vterm))
+                                     ;; Shell is idle, send cd command
+                                     (progn
+                                       (vterm-send-string (format "cd %s" (shell-quote-argument (expand-file-name project))))
+                                       (vterm-send-return))))
                                (dired (expand-file-name project)))))
         :buffer "*helm projectile dired*"))
 
@@ -464,7 +509,9 @@ In vterm buffers, change default-directory to the selected project."
 
 ;;jump back (../) in dired with <
 (with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "<") 'dired-up-directory))
+  (define-key dired-mode-map (kbd "<") 'dired-up-directory)
+  ;; Unbind SPC so Evil global bindings starting with SPC- work in dired
+  (define-key dired-mode-map (kbd "SPC") nil))
 
 (global-auto-revert-mode 1)
 (setq auto-revert-verbose nil)                  ;; Suppress messages about reverting
@@ -536,9 +583,15 @@ In vterm buffers, change default-directory to the selected project."
   (end-of-line)
   (insert (format-time-string "%m.%d.%Y")))
 
+(defun my-insert-current-time ()
+  (interactive)
+  (end-of-line)
+  (insert (format-time-string "%I:%M%p")))
+
 (evil-define-key 'normal global-map
   (kbd "SPC a k") 'my-insert-current-date
   (kbd "SPC a d") 'my-insert-current-date
+  (kbd "SPC a t") 'my-insert-current-time
   (kbd "SPC a c") 'my-append-checkmark
   (kbd "SPC a x") 'my-append-crossmark)
 
