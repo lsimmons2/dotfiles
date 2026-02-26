@@ -1,4 +1,6 @@
 
+;; Treat underscore as part of a word so evil motions (w, b, e) don't split on it
+;; e.g. `w` on foo_bar moves to the next word, not to _bar
 (add-hook 'prog-mode-hook
           (lambda ()
             (modify-syntax-entry ?_ "w")))
@@ -35,7 +37,6 @@
    (tsx-ts-mode . my/lsp-deferred-conditional)
    (js-mode . my/lsp-deferred-conditional)
    (js-jsx-mode . my/lsp-deferred-conditional)
-   (java-mode . my/lsp-deferred-conditional)
    (python-mode . my/lsp-deferred-conditional)
    (python-ts-mode . my/lsp-deferred-conditional)  ;; Add this line
    (lsp-mode . lsp-diagnostics-mode))
@@ -87,14 +88,6 @@
   (tooltip-mode 1) ;; NB keeping this always on per https://claude.ai/chat/720e6166-e7f2-4e2d-b8ac-f14e55293ed1 on 06.23.2025
   ;; (dap-ui-controls-mode 1)
   
-  ;; Displaying debug windows on session startup
-  ;; (add-hook 'dap-session-created-hook
-  ;; (lambda (&_rest) (dap-hydra)))
-  
-  ;;; Display debug buffer after stepping
-  ;; (add-hook 'dap-stopped-hook
-  ;; (lambda (&_rest) (dap-hydra)))
-  
   )
 
 
@@ -103,10 +96,6 @@
           (lambda ()
             (remove-hook 'before-save-hook 'lsp--before-save t)))
 
-
-;;(with-eval-after-load 'lsp-mode
-;;(setq lsp-disabled-clients '(pylsp pyls mspyls ruff-lsp semgrep-lsp)) ;; Disable other clients
-;;(add-to-list 'lsp-enabled-clients 'pyright)) ;; Enable pyright
 
 (use-package lsp-ui
   :ensure t
@@ -242,34 +231,6 @@
 ;;   )
 
 
-(defun copy-flycheck-error-at-point ()
-  "Copy the flycheck error message at point to the kill ring."
-  (interactive)
-  (let ((errors (flycheck-overlay-errors-at (point))))
-    (if (not errors)
-        (message "No flycheck error at point")
-      (let* ((error (car errors))
-             (error-message (flycheck-error-message error))
-             (error-id (flycheck-error-id error))
-             (error-line (line-number-at-pos (flycheck-error-pos error)))
-             (error-column (flycheck-error-column error))
-             (error-level (flycheck-error-level error))
-             (formatted-error 
-              (format "%s:%d:%d: %s: %s%s"
-                      (buffer-name)
-                      error-line
-                      (or error-column 0)
-                      error-level
-                      error-message
-                      (if error-id (format " [%s]" error-id) ""))))
-        (kill-new formatted-error)
-        (message "Copied to clipboard: %s" formatted-error)))))
-
-(with-eval-after-load 'evil
-  (evil-define-key 'normal global-map (kbd "SPC y") 'copy-flycheck-error-at-point)
-  )
-
-
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global (kbd "SPC o h") 'toggle-evil-search-highlight))
 
@@ -287,8 +248,6 @@
 
 
 (with-eval-after-load 'evil
-  ;; (add-hook 'lsp-mode-hook
-  (message "setting general lsp bindings!")
   (evil-define-key 'normal 'global
     (kbd "gd") 'lsp-find-definition        ;; Go to definition
     (kbd "gt") 'lsp-find-type-definition   ;; Go to type definition
@@ -296,7 +255,6 @@
     (kbd "SPC r") 'lsp-rename                 ;; Rename symbol
     (kbd "]e") 'flycheck-next-error        ;; Next Flycheck error
     (kbd "[e") 'flycheck-previous-error)   ;; Previous Flycheck error
-  ;; )
   )
 
 
@@ -313,70 +271,6 @@
 
 
 
-(use-package yasnippet
-  :ensure t
-  :defer 2
-  :config
-  (yas-global-mode 1)
-  ;; Define Yasnippet keybindings with your leader key
-  (evil-define-key 'normal global-map (kbd "SPC k i") 'yas-insert-snippet) ;; Insert snippet
-  (evil-define-key 'normal global-map (kbd "SPC k n") 'yas-new-snippet)    ;; Create a new snippet
-  (evil-define-key 'visual global-map (kbd "SPC k n") 'yas-new-snippet)    ;; Create a new snippet
-  (evil-define-key 'normal global-map (kbd "SPC k a") 'yas-new-snippet)    ;; Create a new snippet
-  (evil-define-key 'visual global-map (kbd "SPC k a") 'yas-new-snippet)    ;; Create a new snippet
-  (evil-define-key 'normal global-map (kbd "SPC k f") 'yas-visit-snippet-file) ;; Visit/edit snippet
-  (evil-define-key 'normal global-map (kbd "SPC k r") 'yas-reload-all)     ;; Reload snippets
-  (evil-define-key 'normal global-map (kbd "SPC k d") 'yas-describe-tables) ;; Describe active snippets
-  )
-
-;; (use-package yasnippet-snippets
-;;   :ensure t)
-
-
-					;(use-package posframe
-					;:ensure t
-					;:config
-					;(defun my/eldoc-posframe-display (info _context)
-					;"Display Eldoc INFO in a posframe below the cursor.
-                                        ;INFO may be a string or a list. _CONTEXT is ignored."
-					;(if info
-					;(let* ((clean-info (if (stringp info)
-					;info
-					;(mapconcat #'identity (flatten-list info) "\n"))))
-          ;;; Wrap text to a maximum width of 80 characters while preserving properties
-					;(setq clean-info (with-temp-buffer
-					;(insert clean-info)
-                             ;;; Fill region without stripping text properties
-					;(let ((fill-column 80))
-					;(fill-region (point-min) (point-max)))
-					;(buffer-substring (point-min) (point-max))))
-          ;;; Display in posframe
-					;(posframe-show " *eldoc-posframe*"
-					;:string clean-info
-					;:poshandler 'posframe-poshandler-point-bottom-left-corner
-					;:background-color (face-attribute 'tooltip :background)
-					;:foreground-color (face-attribute 'tooltip :foreground)
-					;:width 80
-					;:height 10
-					;:hidehandler #'posframe-hidehandler-quick-setup))
-      ;;; Hide posframe if there is no INFO
-					;(posframe-hide " *eldoc-posframe*")))
-
-  ;;; Hide the posframe when switching buffers
-					;(add-hook 'buffer-list-update-hook
-					;(lambda () (posframe-hide " *eldoc-posframe*")))
-
-  ;;; Hide the posframe when navigating to a different part of the buffer
-					;(add-hook 'post-command-hook
-					;(lambda ()
-					;(unless (eldoc--documentation-function) ;; Check if eldoc info is available
-					;(posframe-hide " *eldoc-posframe*"))))
-
-  ;;; Set `my/eldoc-posframe-display` as the display function for eldoc
-					;(setq eldoc-display-functions '(my/eldoc-posframe-display)))
-
-
-
 (defun my-debugger-setup (buffer alist)
   "Custom display function for the debugger."
   (let ((window (display-buffer-in-side-window buffer alist)))
@@ -389,10 +283,9 @@
       '(("\\*Backtrace\\*"
          (my-debugger-setup))))
 
-(defun rz-dired ()
+(defun tramp-test-ec2-dired ()
   (interactive)
-  (find-file (concat "/ssh:rz:" "/home/leo/dev/research-buddy"))
-  )
+  (find-file (concat "/ssh:test-ec2:" "/home/ubuntu/dev")))
 
 (defun g5-dired ()
   (interactive)

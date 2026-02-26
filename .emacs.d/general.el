@@ -1,9 +1,3 @@
-(use-package company
-  :disabled t
-  :hook (prog-mode . company-mode)
-  :config
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0.0))
 
 (use-package evil
   :ensure t
@@ -97,13 +91,13 @@
     "Get the currently running command in the shell with SHELL-PID.
 Returns nil if shell is idle (no child processes)."
     (let* ((children-output (shell-command-to-string
-                            (format "pgrep -P %d 2>/dev/null || true" shell-pid)))
+                             (format "pgrep -P %d 2>/dev/null || true" shell-pid)))
            (children-pids (split-string children-output "\n" t)))
       (when children-pids
         ;; Get the immediate child command (not the deepest child)
         (let* ((child-pid (string-to-number (car children-pids)))
                (args-output (shell-command-to-string
-                            (format "ps -p %d -o args= 2>/dev/null || true" child-pid)))
+                             (format "ps -p %d -o args= 2>/dev/null || true" child-pid)))
                (args (string-trim args-output))
                ;; Extract first word from command line
                (first-word (car (split-string args)))
@@ -114,7 +108,7 @@ Returns nil if shell is idle (no child processes)."
   (defun my/get-process-cwd (pid)
     "Get the current working directory of process PID."
     (let* ((cwd-output (shell-command-to-string
-                       (format "lsof -a -p %d -d cwd -Fn 2>/dev/null | tail -1 | cut -c2-" pid)))
+			(format "lsof -a -p %d -d cwd -Fn 2>/dev/null | tail -1 | cut -c2-" pid)))
            (cwd (string-trim cwd-output)))
       (if (and cwd (not (string-empty-p cwd)))
           cwd
@@ -131,7 +125,7 @@ Returns nil if shell is idle (no child processes)."
               (let* ((cwd (my/get-process-cwd pid))
                      (running-cmd (my/get-running-command pid))
                      (dir-name (file-name-nondirectory
-                               (directory-file-name cwd))))
+				(directory-file-name cwd))))
                 ;; Update default-directory to match shell's cwd
                 (setq default-directory (file-name-as-directory cwd))
                 ;; Update buffer name
@@ -184,12 +178,6 @@ Returns nil if shell is idle (no child processes)."
 
 
 
-(defun reload-emacs-config ()
-  "Reload Emacs configuration."
-  (interactive)
-  (load-file (expand-file-name "init.el" user-emacs-directory))
-  (message "Emacs configuration reloaded!"))
-
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
     (kbd "M-o") 'vterm))
@@ -207,10 +195,6 @@ Returns nil if shell is idle (no child processes)."
     ;; Open the current buffer's directory in dired
     (kbd "SPC w") (lambda () (interactive)
                     (find-file (file-name-directory (or buffer-file-name default-directory))))))
-
-(with-eval-after-load 'evil
-  (evil-define-key 'normal 'global (kbd "SPC u") 'universal-argument)
-  (evil-define-key 'visual 'global (kbd "SPC u") 'universal-argument))
 
 (defun my-dired-create-and-open-file (filename)
   "Create an empty file and open it in the current buffer."
@@ -273,17 +257,8 @@ Otherwise use default dired-find-file."
   (interactive)
   (save-some-buffers t (lambda () buffer-file-name))) ;; Only consider file-visiting buffers
 
-(defun save-buffer-or-eval-scratch ()
-  "Save buffer normally, but if in lisp-interaction-mode, evaluate the entire buffer."
-  (interactive)
-  (if (equal (buffer-name) "*scratch*")
-      (progn
-	(eval-buffer)
-	(message "Evaluated *scratch* buffer"))
-    (save-buffer)))
-
 (with-eval-after-load 'evil
-  (evil-define-key 'normal 'global (kbd "S") 'save-buffer-or-eval-scratch)
+  (evil-define-key 'normal 'global (kbd "S") 'save-buffer)
   (evil-define-key 'normal 'global (kbd "SPC S") 'save-all-buffers))
 
 (defun my/split-window-right ()
@@ -341,7 +316,7 @@ Otherwise use default dired-find-file."
     (interactive)
     (display-line-numbers-mode (if display-line-numbers-mode -1 1))))
 
-					;TODO: this doesn't behave like I want it to/like native hls in vim
+;;TODO: this doesn't behave like I want it to/like native hls in vim
 (defun toggle-evil-search-highlight ()
   "Toggle persistent search highlight for evil-mode, restoring highlights if re-enabled."
   (interactive)
@@ -475,28 +450,14 @@ In vterm buffers, cd to the project if shell is idle, otherwise create new vterm
                                (dired (expand-file-name project)))))
         :buffer "*helm projectile dired*"))
 
-(defun my/helm-projectile-dired-new-tab ()
-  "Open a Helm list of projects and open Dired in the selected project's root in a new tab."
-  (interactive)
-  (require 'helm-projectile)
-  (helm :sources (helm-build-sync-source "Projectile Projects"
-                   :candidates (projectile-relevant-known-projects)
-                   :action (lambda (project)
-                             (let ((default-directory (expand-file-name project)))
-                               (tab-bar-new-tab)
-                               (dired default-directory))))
-        :buffer "*helm projectile dired*"))
-
 
 (with-eval-after-load 'evil
   ;; Global mappings
   (evil-define-key 'normal 'global (kbd "SPC l") 'my/helm-projectile-dired)
-  (evil-define-key 'normal 'global (kbd "SPC L") 'my/helm-projectile-dired-new-tab)
 
   ;; Dired-specific mappings
   (with-eval-after-load 'dired
-    (evil-define-key 'normal dired-mode-map (kbd "SPC l") 'my/helm-projectile-dired)
-    (evil-define-key 'normal dired-mode-map (kbd "SPC L") 'my/helm-projectile-dired-new-tab)))
+    (evil-define-key 'normal dired-mode-map (kbd "SPC l") 'my/helm-projectile-dired)))
 
 
 
@@ -507,8 +468,8 @@ In vterm buffers, cd to the project if shell is idle, otherwise create new vterm
 
 
 
-;;jump back (../) in dired with <
 (with-eval-after-load 'dired
+  ;;jump back (../) in dired with <
   (define-key dired-mode-map (kbd "<") 'dired-up-directory)
   ;; Unbind SPC so Evil global bindings starting with SPC- work in dired
   (define-key dired-mode-map (kbd "SPC") nil))
@@ -520,12 +481,10 @@ In vterm buffers, cd to the project if shell is idle, otherwise create new vterm
 
 
 
-					;search all lines of project
+;;search all lines of project
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global (kbd "SPC /") 'helm-projectile-rg)
   (evil-define-key 'normal 'global (kbd "SPC ?") 'helm-projectile-rg)
-					;TODO: this isn't working 
-					;(evil-define-key 'normal 'global (kbd "/") 'helm-occur)
   )
 
 
@@ -554,16 +513,6 @@ In vterm buffers, cd to the project if shell is idle, otherwise create new vterm
 ;; Apply the navigation adjustment after Evil mode loads
 (with-eval-after-load 'evil
   (my-evil-visual-line-navigation))
-
-
-(with-eval-after-load 'evil
-  ;; Bind `C-u` to scroll up
-  ;; (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-  ;; (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-  ;; Bind `C-d` to scroll down (default in Evil, but ensure it's consistent)
-					;(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
-					;(define-key evil-visual-state-map (kbd "C-d") 'evil-scroll-down)
-  )
 
 
 ;; Define a function to append "✓"

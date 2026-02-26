@@ -18,8 +18,9 @@
 ;; Theme switching functions
 (defun my/detect-macos-dark-mode ()
   "Check if macOS is in dark mode and return t if it is."
-  (let ((appearance (string-trim
-                     (shell-command-to-string "defaults read -g AppleInterfaceStyle 2>/dev/null || echo Light"))))
+  (let* ((default-directory "~/")  ;; Force local execution - prevents TRAMP from running this on a remote machine
+         (appearance (string-trim
+                      (shell-command-to-string "defaults read -g AppleInterfaceStyle 2>/dev/null || echo Light"))))
     (string= appearance "Dark")))
 
 (defun my/apply-theme (theme)
@@ -46,8 +47,9 @@
 ;; Hide macOS titlebar
 (add-to-list 'default-frame-alist '(undecorated . t))
 
-;; Window behavior
+;; Start every frame maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; Open buffers in current window instead of splitting (can conflict with some packages)
 (setq display-buffer-base-action '(display-buffer-same-window))
 
 ;; Highlight current line
@@ -85,14 +87,6 @@
 (setq-default mode-line-position
               '("Line %l / " (:eval (number-to-string (line-number-at-pos (point-max))))))
 
-;; Show project-relative path in buffer identification
-(setq-default mode-line-buffer-identification
-              '(:eval (if (and (featurep 'projectile)
-                               (projectile-project-root)
-                               buffer-file-name)
-                          (file-relative-name buffer-file-name (projectile-project-root))
-                        "%b")))
-
 ;; Add default-directory to the end of mode-line (with ~ for home)
 (setq-default mode-line-format
               (append mode-line-format '(" " (:eval (abbreviate-file-name default-directory)))))
@@ -123,6 +117,7 @@
 (run-at-time nil (* 3 1) 'my/toggle-theme-based-on-system)
 
 ;;; Face Customization
+;; TODO: do I still use company/this?
 (custom-set-faces
  '(company-tooltip-selection ((t (:background "#b3ccf5" :foreground "black")))))
 
