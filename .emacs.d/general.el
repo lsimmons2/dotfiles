@@ -482,18 +482,33 @@ In vterm buffers, cd to the project if shell is idle, otherwise create new vterm
 
 
 ;;search all lines of project
-(with-eval-after-load 'evil
-  (evil-define-key 'normal 'global (kbd "SPC /") 'helm-projectile-rg)
-  (evil-define-key 'normal 'global (kbd "SPC ?") 'helm-projectile-rg)
-  )
 
+;; Use the remote machine's own PATH so TRAMP can find rg (and other binaries) on the remote.
+;; By default TRAMP uses a hardcoded minimal path (/bin:/usr/bin etc.) and won't find binaries
+;; installed in non-standard locations. tramp-own-remote-path tells it to also use the remote
+;; user's actual $PATH.
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
+(defun my/project-search ()
+  "Search project with ripgrep.
+Uses helm's built-in helm-grep-ag over TRAMP connections (runs rg on the
+remote machine via start-file-process, so rg must be installed on the remote),
+and helm-projectile-rg locally."
+  (interactive)
+  (if (file-remote-p default-directory)
+      (helm-grep-ag (projectile-project-root) nil)
+    (helm-projectile-rg)))
+
+;; TODO: don't know why I need my-helm-projectile-rg-clear-input
 (defun my-helm-projectile-rg-clear-input (orig-fun &rest args)
   "Clear default input for helm-projectile-rg."
   (let ((helm-ag-insert-at-point 'symbol)) ;; Set to nil to prevent default
     (apply orig-fun args)))
 
 (advice-add 'helm-projectile-rg :around #'my-helm-projectile-rg-clear-input)
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global (kbd "SPC /") 'my/project-search))
 
 
 
