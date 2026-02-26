@@ -9,19 +9,16 @@
   :ensure t
   :hook (prog-mode . origami-mode))
 
-
-;; Function to conditionally enable LSP (only in projectile projects, skip TRAMP)
+(setq lsp-log-io t)
+;; Function to conditionally enable LSP (only in projectile projects)
 (defun my/lsp-deferred-conditional ()
-  "Enable LSP only if we're in a projectile project and not in a TRAMP buffer."
-  (let ((is-tramp (file-remote-p default-directory))
-        (has-projectile (fboundp 'projectile-project-root))
+  "Enable LSP only if we're in a projectile project. Works for both local and TRAMP buffers."
+  (let ((has-projectile (fboundp 'projectile-project-root))
         (project-root (condition-case nil
                           (when (fboundp 'projectile-project-root)
                             (projectile-project-root))
                         (error nil))))
     (cond
-     (is-tramp
-      (message "my/lsp-deferred-conditional: Skipping TRAMP buffer: %s" (buffer-file-name)))
      ((not has-projectile)
       (message "my/lsp-deferred-conditional: Projectile not available in buffer, skipping LSP: %s" (buffer-file-name)))
      ((not project-root)
@@ -44,7 +41,7 @@
   :init
   ;; atow: putting this here so that lsp doesn't complain about no servers being available
   ;; when accessing a file via TRAMP
-  (setq lsp-warn-no-matched-clients nil)
+  ;; (setq lsp-warn-no-matched-clients nil)
   ;; Kill workspace when closing last buffer to prevent accumulation
   (setq lsp-keep-workspace-alive nil)
   ;; Prevent lsp-mode from auto-configuring dap-mode
@@ -247,9 +244,15 @@
   (evil-define-key 'visual global-map (kbd "SPC c") 'my-toggle-comment))
 
 
+(defun my/goto-definition ()
+  "Go to definition using LSP."
+  (interactive)
+  (lsp-find-definition))
+
 (with-eval-after-load 'evil
   (evil-define-key 'normal 'global
-    (kbd "gd") 'lsp-find-definition        ;; Go to definition
+    (kbd "gd") 'my/goto-definition        ;; Go to definition
+    (kbd "C-]") 'my/goto-definition       ;; Go to definition (vim-standard jump-to-tag)
     (kbd "gt") 'lsp-find-type-definition   ;; Go to type definition
     (kbd "gr") 'lsp-find-references        ;; Find references
     (kbd "SPC r") 'lsp-rename                 ;; Rename symbol
@@ -283,13 +286,6 @@
       '(("\\*Backtrace\\*"
          (my-debugger-setup))))
 
-(defun tramp-test-ec2-dired ()
-  (interactive)
-  (find-file (concat "/ssh:test-ec2:" "/home/ubuntu/dev")))
-
-(defun g5-dired ()
-  (interactive)
-  (find-file (concat "/ssh:g5:" "/home/ubuntu/dev/m-service")))
 
 (use-package dockerfile-mode
   :ensure t)

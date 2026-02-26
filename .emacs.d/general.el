@@ -489,6 +489,22 @@ In vterm buffers, cd to the project if shell is idle, otherwise create new vterm
 ;; user's actual $PATH.
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
+;; Skip VC (git status etc.) checks for remote files - these require SSH round trips and slow
+;; down opening files over TRAMP noticeably.
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              tramp-file-name-regexp
+              vc-ignore-dir-regexp))
+
+;; Quick-open functions for remote servers
+(defun tramp-test-ec2-dired ()
+  (interactive)
+  (find-file "/ssh:test-ec2:/home/ubuntu/dev/research-buddy"))
+
+(defun g5-dired ()
+  (interactive)
+  (find-file "/ssh:g5:/home/ubuntu/dev/m-service"))
+
 (defun my/project-search ()
   "Search project with ripgrep.
 Uses helm's built-in helm-grep-ag over TRAMP connections (runs rg on the
