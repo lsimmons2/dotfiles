@@ -85,6 +85,9 @@
   (setq vterm-max-scrollback 100000)  ;; Large scrollback buffer
   (setq vterm-enable-manipulate-selection-data-by-osc52 t)  ;; Enable clipboard integration
 
+  (add-hook 'vterm-mode-hook
+            (lambda () (face-remap-add-relative 'default :family "Menlo")))
+
   ;; Process-based buffer naming and directory tracking
   ;; All handled via timer-based process inspection - no shell hooks needed
   (defun my/get-running-command (shell-pid)
