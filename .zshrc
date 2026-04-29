@@ -202,3 +202,5 @@ export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 
 source ~/.sensitive.sh
+
+source /Users/leo/.docker/init-zsh.sh || true # Added by Docker Desktop
