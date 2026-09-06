@@ -292,10 +292,7 @@
 
 (use-package helm-lsp
   :ensure t
-  :commands helm-lsp-workspace-symbol
-  :config
-  (evil-define-key 'normal global-map (kbd "C-m") 'helm-lsp-workspace-symbol)
-  )
+  :commands helm-lsp-workspace-symbol)
 
 
 (defun my/show-lsp-symbols-with-colored-types ()
