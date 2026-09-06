@@ -9,7 +9,7 @@
   :ensure t
   :hook (prog-mode . origami-mode))
 
-(setq lsp-log-io t)
+(setq lsp-log-io nil)
 ;; Function to conditionally enable LSP (only in projectile projects)
 (defun my/lsp-deferred-conditional ()
   "Enable LSP only if we're in a projectile project. Works for both local and TRAMP buffers."

@@ -163,73 +163,47 @@ Returns nil if shell is idle (no child processes)."
 ;; test with:
 ;; while true; do printf 'tick %s\n' "$(date +%H:%M:%S.%N)"; sleep 0.5; done
 
-;; Auto-toggle vterm-copy-mode based on point's line vs. the live vterm cursor:
-;; - Scroll up off the cursor's line -> enter copy-mode (freezes view)
-;; - Point catches back up           -> exit copy-mode  (resumes live tailing)
-;;
-;; We compare against `vterm--get-cursor-point' rather than point-max or the
-;; process-mark: vterm pre-allocates a full screen of blank rows below the
-;; prompt (so eobp lies) and pins process-mark at position 1 (so it lies too).
-;; The libvterm cursor position is the only reliable "where is live output"
-;; signal.
-;;
-;; NOTE on the tradeoff: while copy-mode is on, vterm pauses its render loop
-;; -- libvterm still receives output and updates its internal screen state,
-;; but those updates aren't flushed to the buffer until copy-mode exits.
-;; So you won't see new output stream by while scrolled up; you'll snap to
-;; the latest state when you scroll back down. This is by vterm's design,
-;; not a bug in this hook.
-(defun my/vterm-auto-toggle-copy-mode ()
-  "Enter `vterm-copy-mode' when point falls behind the live vterm cursor; exit when caught up."
-  (when (derived-mode-p 'vterm-mode)
-    (let* ((cursor (and (fboundp 'vterm--get-cursor-point)
-                        (vterm--get-cursor-point)))
-           ;; "live" = point is on the same line as the live vterm cursor (or past it).
-           ;; If we can't get the cursor, default to live so we never trap the user.
-           (live (or (null cursor)
-                     (>= (line-number-at-pos)
-                         (line-number-at-pos cursor))))
-           (in-copy (bound-and-true-p vterm-copy-mode)))
-      (cond
-       ((and (not in-copy) (not live)) (vterm-copy-mode 1))
-       ((and in-copy live)             (vterm-copy-mode -1))))))
+;;; vterm auto copy-mode ------------------------------------------------------
+;; In evil normal state: freeze vterm output (enter `vterm-copy-mode') when point
+;; leaves the last line, resume (exit) when it returns. Toggles only on a state
+;; CHANGE, so we never re-send tcflow on every keystroke. "At bottom" is the O(1)
+;; `eobp' test -- no `line-number-at-pos' (which is O(buffer size)).
 
-;; Modeline indicator: shows [COPY] (frozen) or [LIVE] (tailing) right after
-;; the major-mode name. Re-evaluated on every redisplay via the `:eval' form.
+(defun my/vterm-copy-control ()
+  (when (and (derived-mode-p 'vterm-mode) (evil-normal-state-p))
+    (let ((at-bottom (save-excursion (end-of-line) (eobp)))
+          (frozen (bound-and-true-p vterm-copy-mode)))
+      (cond
+       ((and (not at-bottom) (not frozen)) (vterm-copy-mode 1))     ; left bottom -> freeze
+       ((and at-bottom frozen)             (vterm-copy-mode -1))))))  ; back at bottom -> resume
+
+;; Never stay frozen in insert state: entering evil insert resumes output.
+(defun my/vterm-exit-copy-on-insert ()
+  (when (and (derived-mode-p 'vterm-mode) (bound-and-true-p vterm-copy-mode))
+    (vterm-copy-mode -1)))
+
+;; Leaving insert snaps point to the very bottom, so escape-chord artifacts
+;; (jk/kj) can't read as "navigated off the bottom" and spuriously freeze.
+;; Use `point-max' (not `vterm-reset-cursor-point') so it's defined in the same
+;; terms as the `eobp' check in `my/vterm-copy-control'.
+(defun my/vterm-snap-to-bottom ()
+  (when (derived-mode-p 'vterm-mode)
+    (goto-char (point-max))))
+
+;; Modeline: " [COPY]" when frozen, " [LIVE]" when tailing.
 (defun my/vterm-modeline-status ()
   (if (bound-and-true-p vterm-copy-mode)
       (propertize " [COPY]" 'face 'warning)
     (propertize " [LIVE]" 'face 'success)))
 
-;; Install the check as a buffer-local post-command-hook for each vterm buffer.
-;; post-command-hook runs after every interactive command, but NOT on process
-;; output -- so streamed output won't trigger it. The `nil t' on the inner
-;; add-hook scopes the hook to this buffer only, instead of globally.
-;; Named (not anonymous) so it can be removed from vterm-mode-hook later.
-(defun my/vterm-install-auto-copy-mode ()
-  (add-hook 'post-command-hook #'my/vterm-auto-toggle-copy-mode nil t)
-  ;; Prepend the LIVE/COPY indicator to the buffer-local mode-line-format so
-  ;; it's the first thing shown -- mode-line-process is technically rendered
-  ;; (inside mode-line-modes) but gets visually buried in a busy modeline.
+(defun my/vterm-install-copy-control ()
+  (add-hook 'post-command-hook #'my/vterm-copy-control nil t)
+  (add-hook 'evil-insert-state-entry-hook #'my/vterm-exit-copy-on-insert nil t)
+  (add-hook 'evil-insert-state-exit-hook  #'my/vterm-snap-to-bottom nil t)
   (setq-local mode-line-format
               (cons '(:eval (my/vterm-modeline-status)) mode-line-format)))
 
-(add-hook 'vterm-mode-hook #'my/vterm-install-auto-copy-mode)
-
-;; In vterm-copy-mode + evil insert state, C-c snaps back to the live cursor
-;; (exits copy-mode and jumps to the libvterm cursor position). Workflow:
-;; scroll up to read -> hit `i' to ready a command -> C-c to commit back to live.
-(defun my/vterm-exit-copy-and-resume ()
-  "Exit `vterm-copy-mode' and jump to the live vterm cursor."
-  (interactive)
-  (when (bound-and-true-p vterm-copy-mode)
-    (vterm-copy-mode -1))
-  (when (fboundp 'vterm-reset-cursor-point)
-    (vterm-reset-cursor-point)))
-
-(with-eval-after-load 'vterm
-  (evil-define-key 'insert vterm-copy-mode-map
-    (kbd "C-c") #'my/vterm-exit-copy-and-resume))
+(add-hook 'vterm-mode-hook #'my/vterm-install-copy-control)
 
 (use-package highlight-symbol
   :ensure t
@@ -640,7 +614,7 @@ and helm-projectile-rg locally."
 (defun my-insert-current-time ()
   (interactive)
   (end-of-line)
-  (insert (format-time-string "%I:%M%p")))
+  (insert (format-time-string "%-I:%M%p")))
 
 (evil-define-key 'normal global-map
   (kbd "SPC a k") 'my-insert-current-date
